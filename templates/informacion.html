@@ -1,23 +1,42 @@
 <!doctype html>
+
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Quiénes somos · FightZone</title>
 
-  <!-- Respeta el estilo de tu web -->
-  <link rel="stylesheet" href="/FightZone/css/styles.css">
 
+    <link href="/FightZone/css/styles.css" rel="stylesheet">
   <!-- Estilos mínimos, scopeados para no alterar tu theme -->
   <style>
-    .about-page { padding: 48px 16px; }
+    /* ===== NAV local (puedes eliminarlo si ya tienes uno global) ===== */
+    .site-nav {
+      position: sticky; top: 0;
+      background: var(--nav-bg, rgba(231, 231, 231, 0.7));
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 10;
+    }
+    .site-nav .nav-container {
+      max-width: 1100px; margin: 0 auto; padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .site-nav .brand { font-weight: 700; letter-spacing: .5px; }
+    .site-nav a { text-decoration: none; }
+    .site-nav .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-radius: 8px;
+    }
+    .site-nav .back-link:hover { text-decoration: underline; }
+
+    /* ===== Página ===== */
+    .about-page { padding: 32px 16px 48px; }
     .about-page .container { max-width: 1100px; margin: 0 auto; }
-    .about-hero { margin-bottom: 32px; }
+    .about-hero { margin-bottom: 24px; }
     .about-hero h1 { margin: 0 0 8px; }
     .about-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
+      display: grid; grid-template-columns: 1fr; gap: 24px;
     }
     @media (min-width: 900px) {
       .about-grid { grid-template-columns: 1fr 1fr; }
@@ -31,60 +50,40 @@
     }
     .about-card h2 { margin-top: 0; }
 
-    /* Sección de mapa – preparada para Google Maps */
+    /* Mapa (responsive 16:9) + lazy load */
     .map-wrap {
-      margin-top: 24px;
+      margin-top: 16px;
       border: 1px solid rgba(0,0,0,0.12);
       border-radius: 12px;
       overflow: hidden;
       position: relative;
-      background: #f4f4f4; /* color neutro por si tarda en cargar */
+      background: #f4f4f4; /* fallback mientras carga */
     }
-    /* Ratio 16:9 para el mapa (responsive) */
-    .map-ratio {
-      position: relative;
-      width: 100%;
-      padding-bottom: 56.25%;
-      height: 0;
-    }
+    .map-ratio { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; }
     .map-iframe, .map-placeholder {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
+      position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
     }
-    /* Placeholder clicable para lazy-load del mapa */
     .map-placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: repeating-linear-gradient(
-        45deg,
-        rgba(0,0,0,0.04),
-        rgba(0,0,0,0.04) 10px,
-        rgba(0,0,0,0.06) 10px,
-        rgba(0,0,0,0.06) 20px
-      );
-      cursor: pointer;
-      text-align: center;
-      padding: 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: repeating-linear-gradient(45deg,
+        rgba(0,0,0,0.04), rgba(0,0,0,0.04) 10px,
+        rgba(0,0,0,0.06) 10px, rgba(0,0,0,0.06) 20px);
+      cursor: pointer; text-align: center; padding: 16px;
     }
-    .map-placeholder .hint {
-      max-width: 90%;
-      opacity: .9;
-    }
+    .map-placeholder .hint { max-width: 90%; opacity: .9; }
     .about-actions { margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
     .about-actions .btn { padding: 10px 16px; }
   </style>
 </head>
 
 <body>
-    <nav>
-        <li><a href="index.html">Inicio</a></li>
-    </nav>
 
-
+  <!-- NAV superior -->
+  <nav class="site-nav">
+    <div class="nav-container">
+      <div class="brand"><a href="index.html">Inicio</a></div>
+    </div>
+  </nav>
 
   <main class="about-page">
     <div class="container">
@@ -92,7 +91,10 @@
       <!-- HERO -->
       <header class="about-hero">
         <h1 class="h2">Quiénes somos</h1>
-        <p>En <strong>FightZone</strong> vivimos el deporte de contacto con pasión. Combinamos producto, asesoramiento y comunidad para que entrenes mejor, compitas con seguridad y disfrutes cada golpe.</p>
+        <p>
+          En <strong>FightZone</strong> vivimos el deporte de contacto con pasión. Combinamos producto, asesoramiento y comunidad
+          para que entrenes mejor, compitas con seguridad y disfrutes cada golpe.
+        </p>
       </header>
 
       <!-- CONTENIDO -->
@@ -102,7 +104,7 @@
         <article class="about-card">
           <h2 class="h3">Qué hacemos</h2>
           <p>
-            Seleccionamos equipamiento de alta calidad para boxeo, kickboxing y artes marciales: guantes, sacos, protecciones, ropa técnica y accesorios. 
+            Seleccionamos equipamiento de alta calidad para boxeo, kickboxing y artes marciales: guantes, sacos, protecciones, ropa técnica y accesorios.
             Probamos marcas, escuchamos a atletas y ajustamos el catálogo para que encuentres lo que realmente funciona.
           </p>
           <ul>
@@ -116,13 +118,12 @@
         <article class="about-card">
           <h2 class="h3">Nuestra esencia</h2>
           <p>
-            Creemos en el trabajo constante, la seguridad y el respeto por el deporte. 
+            Creemos en el trabajo constante, la seguridad y el respeto por el deporte.
             Apoyamos a la escena local, colaboramos con gimnasios y cuidamos que cada compra sea una mejora real en tu entrenamiento.
           </p>
-          <p>
-            Si te apasionan los deportes de contacto, aquí tienes tu esquina.
-          </p>
+          <p>Si te apasionan los deportes de contacto, aquí tienes tu esquina.</p>
         </article>
+
 
         <!-- Dónde estamos -->
         <article class="about-card" style="grid-column: 1 / -1;">
