@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiénes somos · FightZone</title>
+
+  <!-- Respeta el estilo de tu web -->
+  <link rel="stylesheet" href="/FightZone/css/styles.css">
+
+  <!-- Estilos mínimos, scopeados para no alterar tu theme -->
+  <style>
+    .about-page { padding: 48px 16px; }
+    .about-page .container { max-width: 1100px; margin: 0 auto; }
+    .about-hero { margin-bottom: 32px; }
+    .about-hero h1 { margin: 0 0 8px; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 900px) {
+      .about-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .about-card {
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      padding: 20px;
+      background: transparent; /* hereda colores del theme */
+    }
+    .about-card h2 { margin-top: 0; }
+
+    /* Sección de mapa – preparada para Google Maps */
+    .map-wrap {
+      margin-top: 24px;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      background: #f4f4f4; /* color neutro por si tarda en cargar */
+    }
+    /* Ratio 16:9 para el mapa (responsive) */
+    .map-ratio {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
+    }
+    .map-iframe, .map-placeholder {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    /* Placeholder clicable para lazy-load del mapa */
+    .map-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(0,0,0,0.04),
+        rgba(0,0,0,0.04) 10px,
+        rgba(0,0,0,0.06) 10px,
+        rgba(0,0,0,0.06) 20px
+      );
+      cursor: pointer;
+      text-align: center;
+      padding: 16px;
+    }
+    .map-placeholder .hint {
+      max-width: 90%;
+      opacity: .9;
+    }
+    .about-actions { margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .about-actions .btn { padding: 10px 16px; }
+  </style>
+</head>
+
+<body>
+    <nav>
+        <li><a href="index.html">Inicio</a></li>
+    </nav>
+
+
+
+  <main class="about-page">
+    <div class="container">
+
+      <!-- HERO -->
+      <header class="about-hero">
+        <h1 class="h2">Quiénes somos</h1>
+        <p>En <strong>FightZone</strong> vivimos el deporte de contacto con pasión. Combinamos producto, asesoramiento y comunidad para que entrenes mejor, compitas con seguridad y disfrutes cada golpe.</p>
+      </header>
+
+      <!-- CONTENIDO -->
+      <section class="about-grid">
+
+        <!-- Qué hacemos -->
+        <article class="about-card">
+          <h2 class="h3">Qué hacemos</h2>
+          <p>
+            Seleccionamos equipamiento de alta calidad para boxeo, kickboxing y artes marciales: guantes, sacos, protecciones, ropa técnica y accesorios. 
+            Probamos marcas, escuchamos a atletas y ajustamos el catálogo para que encuentres lo que realmente funciona.
+          </p>
+          <ul>
+            <li>Asesoramiento personalizado para cada nivel (iniciación a competición).</li>
+            <li>Material verificado en entrenamientos y sparrings.</li>
+            <li>Envíos rápidos y soporte postventa cercano.</li>
+          </ul>
+        </article>
+
+        <!-- Nuestra esencia -->
+        <article class="about-card">
+          <h2 class="h3">Nuestra esencia</h2>
+          <p>
+            Creemos en el trabajo constante, la seguridad y el respeto por el deporte. 
+            Apoyamos a la escena local, colaboramos con gimnasios y cuidamos que cada compra sea una mejora real en tu entrenamiento.
+          </p>
+          <p>
+            Si te apasionan los deportes de contacto, aquí tienes tu esquina.
+          </p>
+        </article>
+
+        <!-- Dónde estamos -->
+        <article class="about-card" style="grid-column: 1 / -1;">
+          <h2 class="h3">Dónde estamos</h2>
+          <p>
+            Estamos en <strong>C/ de Jerónima Galés, 34, Jesús, 46017 València</strong>. Puedes visitarnos, recoger pedidos o probar material seleccionado.
+          </p>
+
+          <div class="map-wrap">
+            <div class="map-ratio">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1583.3431650221366!2d-0.39116518589104726!3d39.45318928927743!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1ses!2ses!4v1772145836998!5m2!1ses!2ses" width="1200" height="600" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+
+          <div class="about-actions">
+            <!-- Enlace alternativo por si el usuario prefiere abrir Maps aparte -->
+            <a class="btn btn-primary" href="https://maps.app.goo.gl/WGXYCKboVYLA32PG6" target="_blank" rel="noopener">
+              Abrir en Google Maps
+            </a>
+          </div>
+        </article>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- JS mínimo para lazy-load del mapa -->
+  <script>
+    (function(){
+      const ph = document.getElementById('mapPlaceholder');
+      if (!ph) return;
+      ph.addEventListener('click', function(){
+        const src = ph.getAttribute('data-embed');
+        if (!src) return;
+        const iframe = document.createElement('iframe');
+        iframe.className = 'map-iframe';
+        iframe.src = src;
+        iframe.loading = 'lazy';
+        iframe.allowFullscreen = true;
+        iframe.referrerPolicy = 'no-referrer-when-downgrade';
+        ph.replaceWith(iframe);
+      });
+    })();
+  </script>
+</body>
+</html>

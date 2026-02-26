@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FightZone</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="/FightZone/css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Cursor (solo desktop) -->
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <div class="toast-icon">✓</div>
+  <span>Añadido al carrito</span>
+</div>
+
+<!-- ══ NAV ════════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="logo"><span class="logo-dot"></span> FightZone</a>
+  <ul class="nav-links">
+    <li><a href="productos.html">Productos</a></li>
+    <li><a href="informacion.html">Quienes Somos</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="login.html">Mi cuenta</a>
+    <a href="#" class="nav-cta" id="cartBtn">
+      🛒 Carrito <span class="cart-badge" id="cCount">0</span>
+    </a>
+    <button class="hamburger" id="burger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Guantes</a>
+  <a href="#">Sacos</a>
+  <a href="#">Ropa</a>
+  <a href="#">Protección</a>
+  <a href="#">Vendas</a>
+</div>
+
+<!-- ══ HERO ═══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-pill"><span class="hero-pill-dot"></span> Colección Élite 2026</div>
+    <h1 class="hero-h1">
+      El arte<br>de <span class="hi-red">luchar</span><br>
+      <span class="hi-outline">sin límites</span>
+    </h1>
+    <p class="hero-desc">Equipamiento forjado para campeones. Diseñado con precisión para rendir cuando más importa.</p>
+    <div class="hero-btns">
+      <a href="#shop" class="btn-primary">🔥 Explorar tienda</a>
+      <a href="#" class="btn-secondary">Ver lookbook →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hs"><div class="hs-val">500+</div><div class="hs-label">Productos</div></div>
+      <div class="hs-sep"></div>
+      <div class="hs"><div class="hs-val">12K</div><div class="hs-label">Atletas</div></div>
+      <div class="hs-sep"></div>
+      <div class="hs"><div class="hs-val">10</div><div class="hs-label">Años</div></div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-card">
+      <div class="hero-glove">🥊</div>
+      <div class="hero-card-label">
+        <div class="hero-card-name">Pro Elite 16oz</div>
+        <div class="hero-card-price">89,95€ — Más vendido</div>
+      </div>
+    </div>
+    <div class="fbadge fb1">
+      <span>⚡</span>
+      <div><div>Envío rápido</div><div class="fb-sub">24-48h España</div></div>
+    </div>
+    <div class="fbadge fb3">
+      <span>🔄</span>
+      <div><div>Devuelves gratis</div><div class="fb-sub">30 días</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TICKER ════════════════════════════════════════ -->
+<div class="ticker">
+  <div class="tick-track">
+    <span class="tick-item">Guantes Pro Series</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Envío Gratis +50€</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Sale — hasta 30%</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Nuevos Sacos RX-100</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Devolución 30 Días</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Guantes Pro Series</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Envío Gratis +50€</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Sale — hasta 30%</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Nuevos Sacos RX-100</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item">Devolución 30 Días</span><span class="tick-item tick-sep">✦</span>
+  </div>
+</div>
+
+<!-- ══ CATEGORIES ═══════════════════════════════════ -->
+<section class="cats-section">
+  <div class="sec-wrap">
+    <div class="sec-row">
+      <div><div class="sec-eyebrow">Explorar</div><h2 class="sec-h2">Todas las <i>categorías</i></h2></div>
+      <a href="productos.html" class="link-more">Ver todo →</a>
+    </div>
+    <div class="cats-grid">
+      <div class="ccat feat ani">
+        <span class="ccat-icon">🥊</span>
+        <div class="ccat-name">Guantes</div>
+        <div class="ccat-count">48 productos</div>
+        <div class="ccat-arrow">↗</div>
+      </div>
+      <div class="ccat ani d1">
+        <span class="ccat-icon">🩱</span>
+        <div class="ccat-name">Ropa</div>
+        <div class="ccat-count">62 productos</div>
+        <div class="ccat-arrow">↗</div>
+      </div>
+      <div class="ccat ani d2">
+        <span class="ccat-icon">🛡️</span>
+        <div class="ccat-name">Protección</div>
+        <div class="ccat-count">35 productos</div>
+        <div class="ccat-arrow">↗</div>
+      </div>
+      <div class="ccat ani d3">
+        <span class="ccat-icon">💪</span>
+        <div class="ccat-name">Accesorios</div>
+        <div class="ccat-count">91 productos</div>
+        <div class="ccat-arrow">↗</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FEATURE BANNER ════════════════════════════════ -->
+<section class="feature-section">
+  <div class="sec-wrap">
+    <div class="feature-inner">
+      <div class="feat-left">
+        <div class="feat-eyebrow">Producto del Mes</div>
+        <h2 class="feat-h">Saco <i>RX-100</i><br>Professional</h2>
+        <p class="feat-desc">Cuero genuino de primera calidad con relleno de élite. Diseñado para los entrenamientos más exigentes, durante años.</p>
+        <div class="feat-price">
+          <span class="feat-price-val">229,95€</span>
+          <span class="feat-price-old">289€</span>
+        </div>
+        <button class="btn-primary" onclick="addCart()" style="border:none;cursor:pointer;width:fit-content;">🛒 Añadir al carrito</button>
+        <div class="feat-specs">
+          <div class="feat-spec"><div class="feat-spec-v">50kg</div><div class="feat-spec-k">Peso</div></div>
+          <div class="feat-spec"><div class="feat-spec-v">100%</div><div class="feat-spec-k">Cuero</div></div>
+          <div class="feat-spec"><div class="feat-spec-v">5 años</div><div class="feat-spec-k">Garantía</div></div>
+        </div>
+      </div>
+      <div class="feat-right">
+        <div class="feat-emoji">🎯</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══════════════════════════════════ -->
+<section class="testi-section">
+  <div class="sec-wrap">
+    <div class="sec-row">
+      <div><div class="sec-eyebrow">Reseñas</div><h2 class="sec-h2">Lo que <i>dicen</i></h2></div>
+      <a href="#" class="link-more">Ver todas →</a>
+    </div>
+    <div class="testi-grid">
+      <div class="tcard ani">
+        <div class="tstars">★★★★★</div>
+        <p class="ttext">Los mejores guantes que he probado en mis 10 años entrenando. La calidad es brutal y aguantan sesiones muy intensas sin deformarse.</p>
+        <div class="tauthor">
+          <div class="tavatar">🥊</div>
+          <div><div class="tname">Carlos Mendoza</div><div class="trole">Boxeador Profesional</div></div>
+        </div>
+      </div>
+      <div class="tcard dark ani d1">
+        <div class="tstars">★★★★★</div>
+        <p class="ttext">Increíble variedad y atención al cliente de 10. Llegó en 24h perfectamente embalado. Mi tienda de referencia para todo el equipo.</p>
+        <div class="tauthor">
+          <div class="tavatar">💪</div>
+          <div><div class="tname" style="color:white">Ana Reyes</div><div class="trole">Entrenadora Muay Thai</div></div>
+        </div>
+      </div>
+      <div class="tcard ani d2">
+        <div class="tstars">★★★★★</div>
+        <p class="ttext">Llevo 3 años comprando aquí y nunca me han fallado. Me ayudaron a elegir el saco perfecto para mi home gym. 100% recomendable.</p>
+        <div class="tauthor">
+          <div class="tavatar">🏆</div>
+          <div><div class="tname">Javier Torres</div><div class="trole">Campeón Regional 2024</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWSLETTER ════════════════════════════════════ -->
+<section class="nl-section">
+  <div class="nl-inner">
+    <div class="sec-eyebrow" style="justify-content:center;margin-bottom:1rem;">Newsletter</div>
+    <h2 class="nl-h">Entrena con <i>ventaja</i></h2>
+    <p class="nl-sub">Ofertas exclusivas, lanzamientos anticipados y consejos de los mejores entrenadores directo a tu bandeja.</p>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="tu@email.com">
+      <button class="nl-btn">Unirme →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo"><span class="logo-dot"></span> FightZone</div>
+        <p class="footer-tagline">Equipamiento premium para atletas que no se conforman con menos.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Tienda</div>
+        <ul><li><a href="#">Guantes</a></li><li><a href="#">Sacos</a></li><li><a href="#">Ropa</a></li><li><a href="#">Sale</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Ayuda</div>
+        <ul><li><a href="#">Envíos</a></li><li><a href="#">Devoluciones</a></li><li><a href="#">Tallas</a></li><li><a href="#">Contacto</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Legal</div>
+        <ul><li><a href="#">Privacidad</a></li><li><a href="#">Términos</a></li><li><a href="#">Cookies</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 FightZone — Todos los derechos reservados</div>
+      <div class="socials">
+        <a href="#" class="soc">ig</a>
+        <a href="#" class="soc">tw</a>
+        <a href="#" class="soc">yt</a>
+        <a href="#" class="soc">fb</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Cursor (solo desktop) ──
+if (window.matchMedia('(hover: hover)').matches) {
+  const cur = document.getElementById('cur');
+  const curR = document.getElementById('curR');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
+  (function loop(){ rx+=(mx-rx)*.11; ry+=(my-ry)*.11; curR.style.left=rx+'px'; curR.style.top=ry+'px'; requestAnimationFrame(loop); })();
+  document.querySelectorAll('a,button,.pcard,.ccat,.fil').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.classList.add('xl'); curR.classList.add('xl'); });
+    el.addEventListener('mouseleave', () => { cur.classList.remove('xl'); curR.classList.remove('xl'); });
+  });
+}
+
+// ── Hamburger menu ──
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+// Cerrar al hacer click en un link
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  });
+});
+
+// ── Carrito ──
+let ct = 0;
+const toast = document.getElementById('toast');
+const cc = document.getElementById('cCount');
+function addCart(e) {
+  if (e) e.stopPropagation();
+  ct++;
+  cc.textContent = ct;
+  toast.classList.add('up');
+  setTimeout(() => toast.classList.remove('up'), 2800);
+}
+// Evitar que los botones dentro del pcard disparen doble
+document.querySelectorAll('.padd-btn, .mobile-cart-btn').forEach(btn => {
+  btn.addEventListener('click', e => { e.stopPropagation(); addCart(); });
+});
+
+// ── Filtros ──
+function doFil(btn, cat) {
+  document.querySelectorAll('.fil').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.pcard').forEach(p => {
+    const show = cat === 'all' || p.dataset.c === cat;
+    p.style.display = show ? 'block' : 'none';
+    if (show) p.style.animation = 'fadeUp .4s ease both';
+  });
+}
+
+// ── Scroll reveal ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.ani').forEach(el => obs.observe(el));
+
+// ── Mobile: ocultar mobile-cart-btn en desktop ──
+if (window.innerWidth > 540) {
+  document.querySelectorAll('.mobile-cart-btn').forEach(b => b.style.display = 'none');
+}
+</script>
+</body>
+</html>

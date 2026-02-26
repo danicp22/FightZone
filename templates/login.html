@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mi cuenta</title>
+
+  <!-- Usa exactamente el MISMO CSS que tu index -->
+  <link rel="stylesheet" href="/FightZone/css/styles.css">
+
+  <style>
+    /* ====== Layout mínimo, sin cambiar colores ====== */
+    .auth-page {
+      display: flex;
+      justify-content: center;
+      padding: 64px 16px;
+    }
+    .auth { width: 100%; max-width: 460px; }
+    .auth__title { margin: 0 0 16px; }
+
+    /* Tarjeta contenedora. SIN colores: hereda los de tu theme */
+    .auth__card {
+      border-radius: 12px;
+      padding: 24px;
+      /* Si tu theme ya da fondo/borde/sombra a .card, puedes usar class="card" aquí */
+      border: 1px solid rgba(0,0,0,0.12);
+      background: transparent;
+    }
+
+    /* Inputs y botones: solo tamaño, el look lo da tu CSS existente */
+    .auth .form-group { margin-bottom: 14px; }
+    .auth label { display: block; margin-bottom: 6px; font-weight: 600; }
+    .auth .input { width: 100%; }
+    .auth .btn-primary { width: 100%; margin-top: 8px; }
+
+    .auth .helper { display: block; margin-top: 10px; font-size: .95rem; opacity: .85; }
+    .auth .error { color: #ff5252; margin-top: 8px; }
+    .auth .success { color: #4caf50; margin-top: 8px; }
+
+    /* ====== Anti-desaparición (scopeado solo a .auth) ======
+       Neutraliza reglas globales tipo :hover que alteren display/opacity/visibility */
+    .auth, .auth * {
+      animation: none !important;
+      transition: none !important;
+    }
+    .auth__card {
+      display: block !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      position: relative;
+      z-index: 2;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="auth-page">
+    <section class="auth">
+      <h1 class="auth__title h2">Mi cuenta</h1>
+
+      <div class="auth__card">
+        <form id="form-login" novalidate>
+          <div class="form-group">
+            <label for="login-email">Correo electrónico</label>
+            <input id="login-email" name="email" type="email" class="input" required autocomplete="email" placeholder="tuemail@dominio.com">
+          </div>
+
+          <div class="form-group">
+            <label for="login-password">Contraseña</label>
+            <input id="login-password" name="password" type="password" class="input" required autocomplete="current-password" placeholder="••••••••">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Entrar</button>
+
+          <p class="helper">
+            ¿No tienes cuenta?
+            <a href="registro.html">Crea tu cuenta</a>
+          </p>
+
+          <div id="login-feedback" class="helper"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // JS estable, sin tabs ni referencias a nodos inexistentes
+    (function() {
+      const form = document.getElementById('form-login');
+      const feedback = document.getElementById('login-feedback');
+      if (!form) return;
+      const show = (msg, cls='helper') => { feedback.textContent = msg; feedback.className = cls; };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        show('');
+
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        if (!email || !password) return show('Por favor, completa todos los campos.', 'error');
+
+        try {
+          const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+          });
+          let data = {};
+          try { data = await res.json(); } catch {}
+          if (!res.ok) throw new Error(data?.message || 'Error al iniciar sesión.');
+
+          show('Inicio de sesión correcto. Redirigiendo…', 'success');
+          setTimeout(() => { window.location.href = '/mi-cuenta'; }, 700);
+        } catch (err) {
+          show(err.message || 'No se pudo conectar con el servidor.', 'error');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

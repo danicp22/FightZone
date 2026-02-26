@@ -11,6 +11,11 @@ CREATE TABLE usuarios (
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+INSERT INTO usuarios (nombre, email, password, rol)
+VALUES ('Administrador', 'admin@fightzone.com', 'Admin123!', 'admin')
+ON DUPLICATE KEY UPDATE rol = 'admin';
+
+
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL
