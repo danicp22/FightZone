@@ -56,3 +56,7 @@ INSERT INTO categorias (nombre) VALUES
 ('Proteccion'),
 ('Ropa'),
 ('Vendas');
+
+CREATE USER "daniel"@"localhost" IDENTIFIED BY "Dani12345&";
+GRANT ALL PRIVILEGES ON *.* TO "daniel"@"localhost";
+FLUSH PRIVILEGES;

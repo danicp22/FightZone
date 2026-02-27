@@ -891,3 +891,15 @@ footer { background: var(--dark2); padding: 4.5rem 2rem 2rem; }
   .filters::-webkit-scrollbar { display: none; }
   .fil { flex-shrink: 0; }
 }
+#tienda{
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 20px !important;
+}
+.hero-glove{
+  width: 100% !important;
+  height: 100%!important;
+}
+a{
+  text-decoration: none !important;
+}
