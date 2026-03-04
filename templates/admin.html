@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FightZone — Panel Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --r1:#FF4D1C; --r2:#FF8C42; --r3:#FFB347;
+  --dark:#0F0A08; --dark3:#261A0E;
+  --sand:#F2E8D9; --sand2:#E8D9C0;
+  --cream:#FAF6F0; --mid:#8C7B6B; --text:#1C1108;
+  --glow:rgba(255,77,28,.35); --white:#fff;
+  --sh-s:0 4px 16px rgba(28,17,8,.07);
+  --sh-m:0 8px 32px rgba(28,17,8,.12);
+  --ok:#27AE60; --err:#E74C3C;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{min-height:100svh;background:var(--cream);color:var(--text);font-family:'Outfit',sans-serif;}
+
+/* SIDEBAR + LAYOUT */
+.admin-layout{display:grid;grid-template-columns:240px 1fr;min-height:100svh;}
+
+/* SIDEBAR */
+.sidebar{background:linear-gradient(180deg,var(--dark) 0%,var(--dark3) 100%);padding:2rem 1.5rem;display:flex;flex-direction:column;gap:0;position:sticky;top:0;height:100svh;overflow-y:auto;}
+.sidebar-logo{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;color:white;display:flex;align-items:center;gap:.4rem;text-decoration:none;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.sidebar-logo-dot{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r3));box-shadow:0 0 8px var(--glow);animation:blink 2.5s ease-in-out infinite;}
+.sidebar-section{font-family:'Syne',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:.5rem 0 .7rem;margin-top:1.2rem;}
+.sidebar-link{display:flex;align-items:center;gap:.75rem;padding:.7rem .9rem;border-radius:10px;font-size:.84rem;font-weight:500;color:rgba(255,255,255,.5);text-decoration:none;transition:all .2s;margin-bottom:.2rem;cursor:pointer;border:none;background:none;width:100%;text-align:left;}
+.sidebar-link:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);}
+.sidebar-link.active{background:linear-gradient(135deg,rgba(255,77,28,.25),rgba(255,140,66,.15));color:white;border:1px solid rgba(255,77,28,.2);}
+.sidebar-link-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+.sidebar-bottom{margin-top:auto;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.07);}
+.sidebar-user{display:flex;align-items:center;gap:.7rem;}
+.sidebar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r2));display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.sidebar-username{font-size:.82rem;font-weight:600;color:rgba(255,255,255,.7);}
+.sidebar-role{font-size:.66rem;color:rgba(255,255,255,.3);}
+
+/* MAIN */
+.admin-main{padding:2.5rem 2.5rem;overflow-y:auto;}
+.admin-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem;}
+.admin-page-title{font-family:'Instrument Serif',serif;font-size:2rem;color:var(--text);}
+.admin-page-title i{font-style:italic;color:var(--r1);}
+
+/* VIEWS */
+.view{display:none;}
+.view.active{display:block;animation:fadeUp .4s ease both;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem;}
+.stat-card{background:var(--white);border-radius:18px;padding:1.5rem;box-shadow:var(--sh-s);}
+.stat-icon{font-size:1.6rem;margin-bottom:.8rem;}
+.stat-val{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text);}
+.stat-lbl{font-size:.72rem;color:var(--mid);margin-top:.2rem;}
+
+/* TABLA */
+.table-card{background:var(--white);border-radius:20px;box-shadow:var(--sh-s);overflow:hidden;}
+.table-header{padding:1.4rem 1.8rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--sand2);gap:1rem;flex-wrap:wrap;}
+.table-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;}
+.table-search{display:flex;align-items:center;gap:.5rem;background:var(--cream);border:1.5px solid var(--sand2);border-radius:10px;padding:.45rem .9rem;font-size:.82rem;}
+.table-search input{background:none;border:none;outline:none;font-family:'Outfit',sans-serif;font-size:.82rem;color:var(--text);width:180px;cursor:auto;}
+.table-search input::placeholder{color:var(--mid);opacity:.6;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);padding:.9rem 1.2rem;text-align:left;border-bottom:1px solid var(--sand2);background:var(--cream);}
+tbody tr{border-bottom:1px solid var(--sand);transition:background .15s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--cream);}
+td{padding:.9rem 1.2rem;font-size:.85rem;vertical-align:middle;}
+.td-img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:var(--sand);display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.td-name{font-weight:600;}
+.td-cat{font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,77,28,.08);color:var(--r1);padding:.22rem .65rem;border-radius:100px;display:inline-block;}
+.td-price{font-family:'Instrument Serif',serif;font-size:1.1rem;}
+.td-stock{font-size:.8rem;font-weight:500;}
+.td-stock.ok{color:var(--ok);}
+.td-stock.low{color:#E67E22;}
+.td-stock.out{color:var(--err);}
+.td-actions{display:flex;gap:.4rem;}
+.act-btn{width:32px;height:32px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s;}
+.act-edit{background:rgba(255,77,28,.08);color:var(--r1);}
+.act-edit:hover{background:rgba(255,77,28,.18);}
+.act-del{background:rgba(231,76,60,.08);color:var(--err);}
+.act-del:hover{background:rgba(231,76,60,.18);}
+.table-empty{text-align:center;padding:3rem;color:var(--mid);font-size:.88rem;}
+
+/* FORMULARIO */
+.form-card{background:var(--white);border-radius:20px;box-shadow:var(--sh-s);overflow:hidden;max-width:680px;}
+.form-card-header{padding:1.4rem 1.8rem;border-bottom:1px solid var(--sand2);display:flex;align-items:center;justify-content:space-between;}
+.form-card-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;}
+.form-body{padding:1.8rem;}
+.field{margin-bottom:1.2rem;}
+.field-label{display:block;font-family:'Syne',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.45rem;}
+.field-label .req{color:var(--r1);}
+.field-input,.field-select,.field-textarea{width:100%;background:var(--cream);border:1.5px solid var(--sand2);border-radius:12px;padding:.78rem 1rem;font-family:'Outfit',sans-serif;font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;}
+.field-input:focus,.field-select:focus,.field-textarea:focus{border-color:var(--r1);background:var(--white);box-shadow:0 0 0 3px rgba(255,77,28,.1);}
+.field-input.err,.field-select.err,.field-textarea.err{border-color:var(--err);box-shadow:0 0 0 3px rgba(231,76,60,.1);}
+.field-input.ok{border-color:var(--ok);}
+.field-err-msg{font-size:.68rem;color:var(--err);margin-top:.28rem;display:none;}
+.field-input.err ~ .field-err-msg,.field-select.err ~ .field-err-msg,.field-textarea.err ~ .field-err-msg{display:block;}
+.field-hint{font-size:.7rem;color:var(--mid);margin-top:.3rem;}
+.field-textarea{min-height:110px;resize:vertical;}
+.field-row-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+
+/* Image preview */
+.img-preview-wrap{margin-top:.7rem;display:none;}
+.img-preview-wrap.show{display:block;}
+.img-preview{width:100%;max-height:200px;object-fit:contain;border-radius:12px;background:var(--cream);border:1.5px solid var(--sand2);}
+
+/* Form footer */
+.form-footer-btns{display:flex;gap:.8rem;padding:1.2rem 1.8rem;border-top:1px solid var(--sand2);}
+.btn-save{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;border:none;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;padding:.85rem;border-radius:12px;box-shadow:0 6px 22px var(--glow);transition:all .3s;cursor:pointer;}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(255,77,28,.5);}
+.btn-save.loading{opacity:.7;pointer-events:none;}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:none;}
+.btn-save.loading .spinner{display:block;}
+.btn-save.loading .btn-txt{display:none;}
+.btn-cancel{background:var(--cream);color:var(--mid);border:1.5px solid var(--sand2);font-family:'Syne',sans-serif;font-size:.82rem;font-weight:600;padding:.85rem 1.4rem;border-radius:12px;cursor:pointer;transition:all .2s;}
+.btn-cancel:hover{border-color:var(--text);color:var(--text);}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9980;background:var(--white);border-radius:14px;padding:.85rem 1.3rem;display:flex;align-items:center;gap:.65rem;box-shadow:var(--sh-m);transform:translateY(120%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;border:1px solid rgba(255,77,28,.12);}
+.toast.up{transform:translateY(0);}
+.toast.error{border-color:rgba(231,76,60,.2);}
+.toast-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:.8rem;flex-shrink:0;}
+.toast-icon.ok-bg{background:linear-gradient(135deg,var(--ok),#2ECC71);}
+.toast-icon.err-bg{background:linear-gradient(135deg,var(--err),#E74C3C);}
+
+/* MODAL confirm */
+.modal-overlay{position:fixed;inset:0;background:rgba(28,17,8,.5);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:20px;padding:2rem;max-width:380px;width:90%;box-shadow:var(--sh-m);text-align:center;animation:fadeUp .3s ease both;}
+.modal-icon{font-size:2.5rem;margin-bottom:.8rem;}
+.modal-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:.5rem;}
+.modal-desc{font-size:.84rem;color:var(--mid);font-weight:300;line-height:1.6;margin-bottom:1.5rem;}
+.modal-btns{display:flex;gap:.7rem;}
+.modal-confirm{flex:1;background:linear-gradient(135deg,var(--err),#C0392B);color:white;border:none;font-family:'Syne',sans-serif;font-size:.82rem;font-weight:700;padding:.8rem;border-radius:10px;cursor:pointer;transition:all .2s;}
+.modal-confirm:hover{opacity:.85;}
+.modal-cancel{flex:1;background:var(--cream);color:var(--mid);border:1.5px solid var(--sand2);font-family:'Syne',sans-serif;font-size:.82rem;font-weight:600;padding:.8rem;border-radius:10px;cursor:pointer;transition:all .2s;}
+.modal-cancel:hover{border-color:var(--text);color:var(--text);}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Responsive */
+@media(max-width:860px){
+  .admin-layout{grid-template-columns:1fr;}
+  .sidebar{display:none;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:540px){
+  .admin-main{padding:1.5rem 1.2rem;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .field-row-2{grid-template-columns:1fr;}
+  table thead{display:none;}
+  tbody tr{display:flex;flex-direction:column;padding:.8rem 1rem;gap:.3rem;}
+  td{padding:.1rem 0;border:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast">
+  <div class="toast-icon ok-bg" id="toastIcon">✓</div>
+  <span id="toastMsg">Producto guardado</span>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">¿Eliminar producto?</div>
+    <p class="modal-desc">Esta acción no se puede deshacer. El producto se eliminará permanentemente de la base de datos.</p>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="modal-confirm" id="modalConfirmBtn">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="/" class="sidebar-logo"><span class="sidebar-logo-dot"></span> FightZone</a>
+
+    <div class="sidebar-section">Principal</div>
+    <button class="sidebar-link active" id="navDashboard" onclick="showView('dashboard')">
+      <span class="sidebar-link-icon">📊</span> Dashboard
+    </button>
+    <button class="sidebar-link" id="navProductos" onclick="showView('productos')">
+      <span class="sidebar-link-icon">🥊</span> Productos
+    </button>
+    <button class="sidebar-link" id="navNuevo" onclick="showView('nuevo')">
+      <span class="sidebar-link-icon">➕</span> Añadir producto
+    </button>
+
+    <div class="sidebar-section">Sistema</div>
+    <a href="/productos" class="sidebar-link">
+      <span class="sidebar-link-icon">🏪</span> Ver tienda
+    </a>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">👤</div>
+        <div>
+          <div class="sidebar-username">Administrador</div>
+          <div class="sidebar-role">admin@fightzone.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="admin-main">
+
+    <!-- ── DASHBOARD ────────────────────────────────── -->
+    <div class="view active" id="view-dashboard">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">Panel <i>Admin</i></h1>
+      </div>
+
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card"><div class="stat-icon">🥊</div><div class="stat-val" id="statTotal">—</div><div class="stat-lbl">Productos totales</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" id="statStock">—</div><div class="stat-lbl">Con stock</div></div>
+        <div class="stat-card"><div class="stat-icon">⚠️</div><div class="stat-val" id="statLow">—</div><div class="stat-lbl">Stock bajo (≤5)</div></div>
+        <div class="stat-card"><div class="stat-icon">❌</div><div class="stat-val" id="statOut">—</div><div class="stat-lbl">Sin stock</div></div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-title">Últimos productos añadidos</span>
+          <button class="sidebar-link active" style="width:auto;padding:.5rem 1rem;border-radius:10px;" onclick="showView('nuevo')">➕ Añadir nuevo</button>
+        </div>
+        <div id="dashTable"><div class="table-empty">Cargando…</div></div>
+      </div>
+    </div>
+
+    <!-- ── LISTA PRODUCTOS ───────────────────────────── -->
+    <div class="view" id="view-productos">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title">Todos los <i>productos</i></h1>
+        <button class="sidebar-link active" style="width:auto;padding:.6rem 1.2rem;border-radius:10px;" onclick="showView('nuevo')">➕ Añadir producto</button>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <span class="table-title" id="productCount">—</span>
+          <div class="table-search">
+            <span>🔍</span>
+            <input type="text" id="tableSearch" placeholder="Buscar producto…" oninput="filterTable()">
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="productTable"><tr><td colspan="6" class="table-empty">Cargando…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FORMULARIO NUEVO / EDITAR ─────────────────── -->
+    <div class="view" id="view-nuevo">
+      <div class="admin-topbar">
+        <h1 class="admin-page-title" id="formViewTitle">Añadir <i>producto</i></h1>
+      </div>
+      <div class="form-card">
+        <div class="form-card-header">
+          <span class="form-card-title" id="formCardTitle">Nuevo producto</span>
+          <button class="btn-cancel" onclick="showView('productos')">← Cancelar</button>
+        </div>
+        <div class="form-body">
+          <input type="hidden" id="editId">
+
+          <div class="field">
+            <label class="field-label" for="fNombre">Nombre <span class="req">*</span></label>
+            <input class="field-input" type="text" id="fNombre" placeholder="Ej: Guantes Pro Elite 16oz">
+            <div class="field-err-msg">El nombre es obligatorio</div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="fDesc">Descripción <span class="req">*</span></label>
+            <textarea class="field-textarea" id="fDesc" placeholder="Describe el producto, materiales, uso…"></textarea>
+            <div class="field-err-msg">La descripción es obligatoria</div>
+          </div>
+
+          <div class="field-row-2">
+            <div class="field">
+              <label class="field-label" for="fPrecio">Precio (€) <span class="req">*</span></label>
+              <input class="field-input" type="number" id="fPrecio" placeholder="29.95" min="0" step="0.01">
+              <div class="field-err-msg">Introduce un precio válido</div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="fStock">Stock <span class="req">*</span></label>
+              <input class="field-input" type="number" id="fStock" placeholder="0" min="0">
+              <div class="field-err-msg">Introduce el stock</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="fCat">Categoría <span class="req">*</span></label>
+            <select class="field-select" id="fCat">
+              <option value="">Selecciona una categoría</option>
+            </select>
+            <div class="field-err-msg">Selecciona una categoría</div>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="fImagen">URL de imagen</label>
+            <input class="field-input" type="text" id="fImagen" placeholder="https://… o ruta relativa /img/guante.jpg">
+            <div class="field-hint">Deja vacío si no tienes imagen todavía.</div>
+            <div class="img-preview-wrap" id="imgPreviewWrap">
+              <img class="img-preview" id="imgPreview" src="" alt="Preview">
+            </div>
+          </div>
+        </div>
+        <div class="form-footer-btns">
+          <button class="btn-cancel" onclick="showView('productos')">Cancelar</button>
+          <button class="btn-save" id="saveBtn" onclick="saveProduct()">
+            <div class="spinner"></div>
+            <span class="btn-txt">💾 Guardar producto</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const API = 'http://localhost:5000/api';
+const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
+
+let allProducts = [];
+let deleteTarget = null;
+
+// ── Vistas ───────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.sidebar-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  const nav = document.getElementById('nav'+name.charAt(0).toUpperCase()+name.slice(1));
+  if(nav) nav.classList.add('active');
+  if(name==='nuevo') resetForm();
+  if(name==='productos') renderTable(allProducts);
+}
+
+// ── Toast ─────────────────────────────────────────────
+function showToast(msg, isError=false){
+  const t=document.getElementById('toast');
+  const ic=document.getElementById('toastIcon');
+  document.getElementById('toastMsg').textContent=msg;
+  ic.className='toast-icon '+(isError?'err-bg':'ok-bg');
+  ic.textContent=isError?'✕':'✓';
+  t.className='toast'+(isError?' error':'');
+  t.classList.add('up');
+  setTimeout(()=>t.classList.remove('up'),3000);
+}
+
+// ── Modal borrar ─────────────────────────────────────
+function openModal(id, nombre){
+  deleteTarget=id;
+  document.getElementById('deleteModal').classList.add('open');
+  document.getElementById('modalConfirmBtn').onclick=()=>confirmDelete();
+}
+function closeModal(){ document.getElementById('deleteModal').classList.remove('open'); deleteTarget=null; }
+
+// ── Cargar categorías ─────────────────────────────────
+async function loadCats(){
+  let cats=[];
+  try{ const r=await fetch(`${API}/categorias`); cats=await r.json(); }
+  catch(e){ cats=[{id:1,nombre:'Guantes'},{id:2,nombre:'Sacos'},{id:3,nombre:'Proteccion'},{id:4,nombre:'Ropa'},{id:5,nombre:'Vendas'}]; }
+  const sel=document.getElementById('fCat');
+  cats.forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.id; o.textContent=c.nombre;
+    sel.appendChild(o);
+  });
+}
+
+// ── Cargar productos ──────────────────────────────────
+async function loadProducts(){
+  try{
+    const r=await fetch(`${API}/productos?por_pagina=200`);
+    const d=await r.json();
+    allProducts=d.productos||[];
+  } catch(e){ allProducts=[]; }
+  renderStats();
+  renderTable(allProducts);
+  renderDashTable();
+}
+
+// ── Stats ─────────────────────────────────────────────
+function renderStats(){
+  const total=allProducts.length;
+  const conStock=allProducts.filter(p=>p.stock>5).length;
+  const bajo=allProducts.filter(p=>p.stock>0&&p.stock<=5).length;
+  const sin=allProducts.filter(p=>p.stock===0).length;
+  document.getElementById('statTotal').textContent=total;
+  document.getElementById('statStock').textContent=conStock;
+  document.getElementById('statLow').textContent=bajo;
+  document.getElementById('statOut').textContent=sin;
+}
+
+// ── Tabla completa ────────────────────────────────────
+function renderTable(products){
+  document.getElementById('productCount').textContent=`${products.length} producto${products.length!==1?'s':''}`;
+  const tbody=document.getElementById('productTable');
+  if(!products.length){ tbody.innerHTML='<tr><td colspan="6" class="table-empty">No hay productos.</td></tr>'; return; }
+  tbody.innerHTML=products.map(p=>{
+    const sc=p.stock===0?'out':p.stock<=5?'low':'ok';
+    const st=p.stock===0?'Sin stock':p.stock<=5?`⚠ ${p.stock}`:p.stock;
+    const emoji=EMOJIS[p.categoria_nombre]??'📦';
+    return `<tr>
+      <td><div class="td-img">${p.imagen?`<img src="${esc(p.imagen)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.textContent='${emoji}'">`:`${emoji}`}</div></td>
+      <td><span class="td-name">${esc(p.nombre)}</span></td>
+      <td><span class="td-cat">${esc(p.categoria_nombre??'—')}</span></td>
+      <td><span class="td-price">${fmt(p.precio)}€</span></td>
+      <td><span class="td-stock ${sc}">${st}</span></td>
+      <td><div class="td-actions">
+        <button class="act-btn act-edit" title="Editar" onclick='editProduct(${JSON.stringify(p)})'>✏️</button>
+        <button class="act-btn act-del" title="Eliminar" onclick="openModal(${p.id},'${esc(p.nombre)}')">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Dashboard tabla (últimos 5) ───────────────────────
+function renderDashTable(){
+  const last=[...allProducts].reverse().slice(0,5);
+  const wrap=document.getElementById('dashTable');
+  if(!last.length){ wrap.innerHTML='<div class="table-empty">Aún no hay productos.</div>'; return; }
+  wrap.innerHTML=`<div style="overflow-x:auto;"><table>
+    <thead><tr><th>Imagen</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead>
+    <tbody>${last.map(p=>{
+      const sc=p.stock===0?'out':p.stock<=5?'low':'ok';
+      const st=p.stock===0?'Sin stock':p.stock<=5?`⚠ ${p.stock}`:p.stock;
+      const emoji=EMOJIS[p.categoria_nombre]??'📦';
+      return `<tr>
+        <td><div class="td-img">${p.imagen?`<img src="${esc(p.imagen)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;" onerror="this.parentElement.textContent='${emoji}'">`:`${emoji}`}</div></td>
+        <td><span class="td-name">${esc(p.nombre)}</span></td>
+        <td><span class="td-cat">${esc(p.categoria_nombre??'—')}</span></td>
+        <td><span class="td-price">${fmt(p.precio)}€</span></td>
+        <td><span class="td-stock ${sc}">${st}</span></td>
+        <td><div class="td-actions">
+          <button class="act-btn act-edit" title="Editar" onclick='editProduct(${JSON.stringify(p)})'>✏️</button>
+          <button class="act-btn act-del" title="Eliminar" onclick="openModal(${p.id},'${esc(p.nombre)}')">🗑️</button>
+        </div></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+// ── Filtro búsqueda ───────────────────────────────────
+function filterTable(){
+  const q=document.getElementById('tableSearch').value.toLowerCase();
+  renderTable(allProducts.filter(p=>p.nombre.toLowerCase().includes(q)||(p.categoria_nombre??'').toLowerCase().includes(q)));
+}
+
+// ── Resetear formulario ───────────────────────────────
+function resetForm(){
+  document.getElementById('editId').value='';
+  document.getElementById('fNombre').value='';
+  document.getElementById('fDesc').value='';
+  document.getElementById('fPrecio').value='';
+  document.getElementById('fStock').value='';
+  document.getElementById('fCat').value='';
+  document.getElementById('fImagen').value='';
+  document.getElementById('imgPreviewWrap').classList.remove('show');
+  document.querySelectorAll('.field-input,.field-select,.field-textarea').forEach(el=>el.classList.remove('err','ok'));
+  document.getElementById('formViewTitle').innerHTML='Añadir <i>producto</i>';
+  document.getElementById('formCardTitle').textContent='Nuevo producto';
+  document.getElementById('saveBtn').querySelector('.btn-txt').textContent='💾 Guardar producto';
+}
+
+// ── Editar producto ───────────────────────────────────
+function editProduct(p){
+  showView('nuevo');
+  document.getElementById('editId').value=p.id;
+  document.getElementById('fNombre').value=p.nombre;
+  document.getElementById('fDesc').value=p.descripcion;
+  document.getElementById('fPrecio').value=p.precio;
+  document.getElementById('fStock').value=p.stock;
+  document.getElementById('fCat').value=p.categoria_id??'';
+  document.getElementById('fImagen').value=p.imagen??'';
+  if(p.imagen){ document.getElementById('imgPreview').src=p.imagen; document.getElementById('imgPreviewWrap').classList.add('show'); }
+  document.getElementById('formViewTitle').innerHTML='Editar <i>producto</i>';
+  document.getElementById('formCardTitle').textContent='Editar producto';
+  document.getElementById('saveBtn').querySelector('.btn-txt').textContent='💾 Actualizar producto';
+}
+
+// ── Preview imagen ────────────────────────────────────
+document.getElementById('fImagen').addEventListener('input', function(){
+  const val=this.value.trim();
+  const wrap=document.getElementById('imgPreviewWrap');
+  const img=document.getElementById('imgPreview');
+  if(val){ img.src=val; wrap.classList.add('show'); img.onerror=()=>wrap.classList.remove('show'); }
+  else { wrap.classList.remove('show'); }
+});
+
+// ── Guardar ───────────────────────────────────────────
+async function saveProduct(){
+  const id=document.getElementById('editId').value;
+  const nombre=document.getElementById('fNombre').value.trim();
+  const desc=document.getElementById('fDesc').value.trim();
+  const precio=document.getElementById('fPrecio').value;
+  const stock=document.getElementById('fStock').value;
+  const cat=document.getElementById('fCat').value;
+  const imagen=document.getElementById('fImagen').value.trim();
+
+  let ok=true;
+  const vf=(fId,cond)=>{ const el=document.getElementById(fId); cond?(el.classList.remove('err'),el.classList.add('ok')):(el.classList.add('err'),ok=false); };
+  vf('fNombre', nombre!=='');
+  vf('fDesc', desc!=='');
+  vf('fPrecio', precio!==''&&+precio>=0);
+  vf('fStock', stock!==''&&+stock>=0);
+  vf('fCat', cat!=='');
+  if(!ok) return;
+
+  const btn=document.getElementById('saveBtn');
+  btn.classList.add('loading');
+
+  const body={nombre,descripcion:desc,precio:+precio,stock:+stock,categoria_id:+cat,imagen:imagen||null};
+
+  try{
+    const url=id ? `${API}/productos/${id}` : `${API}/productos`;
+    const method=id ? 'PUT' : 'POST';
+    const r=await fetch(url,{method,headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify(body)});
+    if(!r.ok) throw new Error();
+    showToast(id?'Producto actualizado correctamente':'Producto añadido correctamente');
+    await loadProducts();
+    showView('productos');
+  } catch(e){
+    showToast('Error al guardar el producto', true);
+  } finally{
+    btn.classList.remove('loading');
+  }
+}
+
+// ── Eliminar ──────────────────────────────────────────
+async function confirmDelete(){
+  closeModal();
+  if(!deleteTarget) return;
+  try{
+    const r=await fetch(`${API}/productos/${deleteTarget}`,{method:'DELETE',credentials:'include'});
+    if(!r.ok) throw new Error();
+    showToast('Producto eliminado');
+    await loadProducts();
+  } catch(e){ showToast('Error al eliminar el producto', true); }
+}
+
+// ── Helpers ───────────────────────────────────────────
+function esc(s){ return String(s??'').replace(/[<>"'&]/g,c=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c])); }
+function fmt(n){ return parseFloat(n).toFixed(2).replace('.',','); }
+
+// ── Init ──────────────────────────────────────────────
+loadCats();
+loadProducts();
+</script>
+</body>
+</html>
