@@ -86,6 +86,12 @@ nav {
   color: var(--mid); text-decoration: none; transition: color .2s;
 }
 .nav-links a:hover { color: var(--accent); }
+/* Enlaces del nav: estado activo */
+.nav-links a.active {
+  color: var(--accent);                 /* mismo color que hover */
+  position: relative;
+}
+
 
 .nav-right { display: flex; align-items: center; gap: .8rem; }
 
@@ -262,9 +268,12 @@ nav {
   display: flex; align-items: center; justify-content: center;
   padding: 2rem;
 }
+
+/* ⬆️ CAMBIO: tarjeta más grande y relación más alta */
 .hero-card {
-  width: 380px; max-width: 100%;
-  aspect-ratio: 3/4;
+  width: 520px;         /* antes 380px */
+  max-width: 100%;
+  aspect-ratio: 4/5;    /* antes 3/4 */
   background: var(--white);
   border-radius: 28px;
   box-shadow: var(--shadow-l);
@@ -274,7 +283,8 @@ nav {
 .hero-card::before {
   content: '';
   position: absolute; top: -60px; right: -60px;
-  width: 260px; height: 260px; border-radius: 50%;
+  width: 260px; height: 260px; border-radius: 50%
+  ;
   background: radial-gradient(circle, rgba(192,57,43,.12) 0%, transparent 70%);
 }
 .hero-card::after {
@@ -288,6 +298,10 @@ nav {
   animation: float 5s ease-in-out infinite;
   filter: drop-shadow(0 16px 32px rgba(192,57,43,.35));
   position: relative; z-index: 1;
+
+  /* asegura que ocupa todo el card para que la imagen crezca */
+  width: 100%;
+  height: 100%;
 }
 .hero-card-label {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -746,9 +760,13 @@ footer { background: var(--dark2); padding: 4.5rem 2rem 2rem; }
     padding: 1.5rem 1.8rem 0;
     justify-content: center;
   }
+
+  /* ⬆️ CAMBIO tablet */
   .hero-card {
-    width: 280px;
+    width: 360px;      /* antes 280px */
+    aspect-ratio: 4/5; /* consistente con desktop */
   }
+
   /* Ocultar badges flotantes en tablet */
   .fbadge { display: none; }
 
@@ -811,7 +829,9 @@ footer { background: var(--dark2); padding: 4.5rem 2rem 2rem; }
     margin-top: 2rem;
   }
   .hs-sep { display: none; }
-  .hero-card { width: 230px; }
+
+  /* ⬆️ CAMBIO móvil */
+  .hero-card { width: 280px; } /* antes 230px */
   .hero-card .hero-glove { font-size: 5.5rem; }
 
   /* Ticker */
@@ -891,15 +911,20 @@ footer { background: var(--dark2); padding: 4.5rem 2rem 2rem; }
   .filters::-webkit-scrollbar { display: none; }
   .fil { flex-shrink: 0; }
 }
+
+/* ⬆️ Ajustes de imagen del héroe */
 #tienda{
   width: 100% !important;
   height: 100% !important;
+  object-fit: cover;              /* para que se recorte bien sin deformar */
   border-radius: 20px !important;
 }
+
 .hero-glove{
   width: 100% !important;
-  height: 100%!important;
+  height: 100% !important;
 }
+
 a{
   text-decoration: none !important;
 }
