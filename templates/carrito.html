@@ -1,1 +1,583 @@
-hola
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FightZone — Carrito</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --r1:#FF4D1C; --r2:#FF8C42; --r3:#FFB347;
+  --dark:#0F0A08; --dark3:#261A0E;
+  --sand:#F2E8D9; --sand2:#E8D9C0;
+  --cream:#FAF6F0; --mid:#8C7B6B; --text:#1C1108;
+  --glow:rgba(255,77,28,.35); --white:#fff;
+  --sh-s:0 4px 16px rgba(28,17,8,.07);
+  --sh-m:0 8px 32px rgba(28,17,8,.12);
+  --sh-l:0 20px 56px rgba(28,17,8,.15);
+  --ok:#27AE60;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{min-height:100svh;background:var(--cream);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;cursor:none;}
+body::after{content:'';position:fixed;inset:0;z-index:9990;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");opacity:.45;}
+
+/* CURSOR */
+.cur{position:fixed;width:10px;height:10px;background:var(--r1);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:multiply;}
+.cur-r{position:fixed;width:40px;height:40px;border:1.5px solid var(--r1);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .16s;opacity:.5;}
+.cur.xl{width:17px;height:17px;} .cur-r.xl{width:60px;height:60px;opacity:1;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(250,246,240,.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,77,28,.1);}
+.logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:.4rem;}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r3));box-shadow:0 0 10px var(--glow);animation:blink 2.5s ease-in-out infinite;}
+.nav-links{display:flex;gap:1.8rem;list-style:none;}
+.nav-links a{font-size:.76rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--r1);}
+.nav-right{display:flex;align-items:center;gap:.8rem;}
+.nav-cta{font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;text-decoration:none;padding:.5rem 1.2rem;border-radius:100px;box-shadow:0 4px 18px var(--glow);transition:box-shadow .25s,transform .2s;display:flex;align-items:center;gap:.4rem;}
+.nav-cta:hover{box-shadow:0 6px 26px rgba(255,77,28,.5);transform:translateY(-1px);}
+.cart-badge{background:white;color:var(--r1);font-size:.58rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:.4rem;cursor:pointer;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mob-menu{display:none;position:fixed;top:68px;left:0;right:0;background:var(--white);border-bottom:1px solid var(--sand2);padding:1.5rem 2rem;z-index:999;box-shadow:var(--sh-m);flex-direction:column;gap:1rem;}
+.mob-menu.open{display:flex;}
+.mob-menu a{font-size:.9rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--text);text-decoration:none;padding:.3rem 0;border-bottom:1px solid var(--sand);}
+
+/* LAYOUT */
+.wrap{max-width:1200px;margin:0 auto;padding:0 2rem;}
+main{padding-top:88px;padding-bottom:5rem;}
+
+/* BREADCRUMB */
+.breadcrumb{display:flex;align-items:center;gap:.5rem;margin-bottom:2rem;font-size:.76rem;color:var(--mid);}
+.breadcrumb a{color:var(--mid);text-decoration:none;transition:color .2s;}
+.breadcrumb a:hover{color:var(--r1);}
+.breadcrumb-sep{opacity:.4;}
+.breadcrumb-current{color:var(--text);font-weight:500;}
+
+/* PAGE HEADER */
+.page-eyebrow{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--r1);display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;}
+.page-eyebrow::before{content:'';width:20px;height:2px;background:var(--r1);border-radius:2px;}
+.page-h1{font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3.2rem);line-height:.95;letter-spacing:-.02em;color:var(--text);margin-bottom:2.5rem;}
+.page-h1 i{font-style:italic;color:var(--r1);}
+
+/* MAIN GRID */
+.cart-layout{display:grid;grid-template-columns:1fr 380px;gap:2.5rem;align-items:start;}
+
+/* ── ITEMS ─────────────────────────────────────────── */
+.items-card{background:var(--white);border-radius:24px;box-shadow:var(--sh-s);overflow:hidden;}
+.items-header{padding:1.3rem 1.8rem;border-bottom:1px solid var(--sand2);display:flex;align-items:center;justify-content:space-between;}
+.items-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;}
+.items-count{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;background:var(--sand);color:var(--mid);padding:.25rem .7rem;border-radius:100px;}
+.btn-clear{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:none;border:none;color:var(--mid);cursor:pointer;transition:color .2s;padding:.3rem;}
+.btn-clear:hover{color:#E74C3C;}
+
+/* Línea de item */
+.cart-item{display:grid;grid-template-columns:80px 1fr auto;gap:1.2rem;align-items:center;padding:1.3rem 1.8rem;border-bottom:1px solid var(--sand);transition:background .2s;position:relative;animation:fadeUp .4s ease both;}
+.cart-item:last-child{border-bottom:none;}
+.cart-item:hover{background:var(--cream);}
+
+/* imagen miniatura */
+.item-img{width:80px;height:80px;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.item-img.warm{background:linear-gradient(145deg,#FFF0EE,#FFDBD6);}
+.item-img.cool{background:linear-gradient(145deg,#EEF2FF,#D6E0FF);}
+.item-img.green{background:linear-gradient(145deg,#EDFFF5,#D6F5E6);}
+.item-img.gold{background:linear-gradient(145deg,#FFF8EE,#FFE8C0);}
+.item-img img{width:100%;height:100%;object-fit:cover;}
+.item-emoji{font-size:2.2rem;filter:drop-shadow(0 4px 8px rgba(28,17,8,.12));}
+
+/* info */
+.item-info{}
+.item-cat{font-size:.6rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--r1);margin-bottom:.2rem;}
+.item-name{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:.5rem;line-height:1.35;}
+.item-unit-price{font-size:.78rem;color:var(--mid);font-weight:300;}
+
+/* cantidad + precio */
+.item-right{display:flex;flex-direction:column;align-items:flex-end;gap:.8rem;flex-shrink:0;}
+.item-price{font-family:'Instrument Serif',serif;font-size:1.3rem;color:var(--text);}
+.qty-ctrl{display:flex;align-items:center;background:var(--cream);border:1.5px solid var(--sand2);border-radius:10px;overflow:hidden;}
+.qty-btn{width:34px;height:34px;background:none;border:none;font-size:1rem;color:var(--text);cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;font-weight:700;}
+.qty-btn:hover{background:var(--sand2);}
+.qty-num{width:38px;text-align:center;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;color:var(--text);}
+
+/* botón eliminar */
+.item-del{position:absolute;top:.9rem;right:1.2rem;width:26px;height:26px;border-radius:50%;background:none;border:none;color:var(--sand2);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.item-del:hover{background:rgba(231,76,60,.1);color:#E74C3C;}
+
+/* ITEM que se elimina */
+.cart-item.removing{animation:slideOut .35s ease forwards;}
+@keyframes slideOut{to{opacity:0;transform:translateX(24px);max-height:0;padding:0;margin:0;}}
+
+/* ── RESUMEN ───────────────────────────────────────── */
+.summary-card{background:var(--white);border-radius:24px;box-shadow:var(--sh-s);overflow:hidden;position:sticky;top:88px;}
+.summary-header{padding:1.3rem 1.8rem;border-bottom:1px solid var(--sand2);}
+.summary-title{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;}
+
+.summary-body{padding:1.5rem 1.8rem;}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;font-size:.88rem;}
+.summary-row .lbl{color:var(--mid);font-weight:300;}
+.summary-row .val{font-weight:500;color:var(--text);}
+.summary-divider{height:1px;background:var(--sand2);margin:.8rem 0;}
+.summary-total-row{display:flex;justify-content:space-between;align-items:baseline;padding:.4rem 0;}
+.summary-total-lbl{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);}
+.summary-total-val{font-family:'Instrument Serif',serif;font-size:2rem;color:var(--text);}
+
+/* Envío radio */
+.shipping-opts{display:flex;flex-direction:column;gap:.5rem;margin:.8rem 0;}
+.ship-opt{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border:1.5px solid var(--sand2);border-radius:12px;cursor:pointer;transition:all .2s;}
+.ship-opt:hover{border-color:rgba(255,77,28,.3);}
+.ship-opt.selected{border-color:var(--r1);background:rgba(255,77,28,.04);}
+.ship-opt-left{display:flex;align-items:center;gap:.7rem;}
+.ship-radio{width:16px;height:16px;border-radius:50%;border:2px solid var(--sand2);transition:all .2s;flex-shrink:0;position:relative;}
+.ship-opt.selected .ship-radio{border-color:var(--r1);}
+.ship-opt.selected .ship-radio::after{content:'';position:absolute;inset:3px;border-radius:50%;background:var(--r1);}
+.ship-name{font-family:'Syne',sans-serif;font-size:.76rem;font-weight:700;color:var(--text);}
+.ship-days{font-size:.68rem;color:var(--mid);font-weight:300;}
+.ship-price{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;color:var(--text);}
+.ship-price.free{color:var(--ok);}
+
+/* Cupón */
+.coupon-row{display:flex;gap:.5rem;margin:.8rem 0 1.2rem;}
+.coupon-input{flex:1;background:var(--cream);border:1.5px solid var(--sand2);border-radius:10px;padding:.65rem .9rem;font-family:'Outfit',sans-serif;font-size:.82rem;color:var(--text);outline:none;transition:border-color .2s;cursor:auto;}
+.coupon-input:focus{border-color:var(--r1);}
+.coupon-input::placeholder{color:var(--mid);opacity:.55;}
+.coupon-btn{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;background:var(--sand);color:var(--mid);border:1.5px solid var(--sand2);padding:.65rem .9rem;border-radius:10px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.coupon-btn:hover{background:var(--sand2);color:var(--text);}
+.coupon-ok{font-size:.72rem;color:var(--ok);font-weight:600;margin-top:.3rem;display:none;}
+.coupon-ok.show{display:block;}
+
+.btn-checkout{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;border:none;font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;padding:1.1rem;border-radius:14px;box-shadow:0 8px 28px var(--glow);cursor:pointer;transition:all .3s;margin-bottom:.8rem;}
+.btn-checkout:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(255,77,28,.5);}
+.btn-checkout:disabled{background:var(--sand2);color:var(--mid);box-shadow:none;cursor:not-allowed;transform:none;}
+.btn-seguir{display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;background:none;border:1.5px solid var(--sand2);color:var(--mid);font-family:'Syne',sans-serif;font-size:.8rem;font-weight:600;padding:.85rem;border-radius:14px;cursor:pointer;transition:all .2s;text-decoration:none;}
+.btn-seguir:hover{border-color:var(--text);color:var(--text);}
+
+.summary-trust{display:flex;justify-content:center;gap:1.5rem;margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--sand2);}
+.trust-item{display:flex;align-items:center;gap:.35rem;font-size:.66rem;color:var(--mid);}
+.trust-item span:first-child{font-size:.85rem;}
+
+/* ── EMPTY STATE ───────────────────────────────────── */
+.cart-empty{text-align:center;padding:5rem 2rem;animation:fadeUp .5s ease both;}
+.empty-glove{font-size:6rem;display:block;margin-bottom:1.5rem;animation:float 4s ease-in-out infinite;}
+.empty-title{font-family:'Instrument Serif',serif;font-size:2.2rem;color:var(--text);margin-bottom:.6rem;}
+.empty-title i{font-style:italic;color:var(--r1);}
+.empty-desc{font-size:.9rem;color:var(--mid);font-weight:300;margin-bottom:2rem;line-height:1.7;}
+.btn-go-shop{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;text-decoration:none;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;padding:.95rem 2rem;border-radius:100px;box-shadow:0 8px 28px var(--glow);transition:all .3s;}
+.btn-go-shop:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(255,77,28,.5);}
+
+/* ── SKELETON ──────────────────────────────────────── */
+.skeleton{background:linear-gradient(90deg,var(--sand) 25%,var(--sand2) 50%,var(--sand) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:10px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-item{display:grid;grid-template-columns:80px 1fr auto;gap:1.2rem;padding:1.3rem 1.8rem;border-bottom:1px solid var(--sand);}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;z-index:9980;background:var(--white);border-radius:16px;padding:.9rem 1.4rem;display:flex;align-items:center;gap:.7rem;box-shadow:var(--sh-l);transform:translateY(120%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);font-family:'Syne',sans-serif;font-size:.8rem;font-weight:600;border:1px solid rgba(255,77,28,.12);}
+.toast.up{transform:translateY(0);}
+.toast-icon{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r2));display:flex;align-items:center;justify-content:center;color:white;font-size:.85rem;flex-shrink:0;}
+
+/* MODAL CHECKOUT */
+.modal-overlay{position:fixed;inset:0;background:rgba(28,17,8,.55);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--white);border-radius:26px;padding:2.5rem 2rem;max-width:420px;width:92%;box-shadow:var(--sh-l);text-align:center;animation:popIn .4s cubic-bezier(.34,1.4,.64,1) both;}
+.modal-success-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--ok),#2ECC71);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 1.2rem;box-shadow:0 8px 24px rgba(39,174,96,.3);}
+.modal-title{font-family:'Instrument Serif',serif;font-size:1.8rem;color:var(--text);margin-bottom:.5rem;}
+.modal-title i{font-style:italic;color:var(--ok);}
+.modal-desc{font-size:.88rem;color:var(--mid);font-weight:300;line-height:1.7;margin-bottom:1.8rem;}
+.modal-close{width:100%;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;border:none;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;padding:1rem;border-radius:12px;cursor:pointer;box-shadow:0 6px 22px var(--glow);transition:all .2s;}
+.modal-close:hover{transform:translateY(-1px);}
+
+/* FOOTER */
+footer{background:var(--dark);padding:2.5rem 2rem;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-copy{font-size:.72rem;color:rgba(255,255,255,.2);}
+
+/* ANIMATIONS */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .cart-layout{grid-template-columns:1fr;}
+  .summary-card{position:static;}
+}
+@media(max-width:860px){
+  .nav-links{display:none;} .hamburger{display:flex;}
+}
+@media(max-width:540px){
+  nav{padding:0 1.2rem;height:60px;} .mob-menu{top:60px;}
+  .logo{font-size:1.3rem;} .wrap{padding:0 1.2rem;}
+  main{padding-top:78px;}
+  .cart-item{grid-template-columns:64px 1fr;gap:.8rem;}
+  .item-img{width:64px;height:64px;}
+  .item-right{display:none;}
+  .item-info::after{content:attr(data-price);display:block;font-family:'Instrument Serif',serif;font-size:1.15rem;color:var(--text);margin-top:.4rem;}
+  .summary-trust{gap:.8rem;flex-wrap:wrap;justify-content:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+<div class="toast" id="toast"><div class="toast-icon" id="toastIcon">✓</div><span id="toastMsg">Listo</span></div>
+
+<div class="modal-overlay" id="successModal">
+  <div class="modal">
+    <div class="modal-success-icon">✓</div>
+    <h2 class="modal-title">¡Pedido <i>realizado</i>!</h2>
+    <p class="modal-desc">Gracias por tu compra. Recibirás un email de confirmación en breve con los detalles de tu pedido.</p>
+    <button class="modal-close" onclick="closeSuccessModal()">Volver a la tienda 🥊</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
+  <ul class="nav-links">
+    <li><a href="/productos">Productos</a></li>
+    <li><a href="/quienes-somos">Nosotros</a></li>
+    <li><a href="/contacto">Contacto</a></li>
+    <li><a href="/carrito" class="active">Carrito</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="/carrito" class="nav-cta">🛒 Carrito <span class="cart-badge" id="cCount">0</span></a>
+    <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="/productos">Productos</a>
+  <a href="/quienes-somos">Nosotros</a>
+  <a href="/carrito">Carrito</a>
+</div>
+
+<main>
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="/">Inicio</a>
+      <span class="breadcrumb-sep">›</span>
+      <a href="/productos">Productos</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">Carrito</span>
+    </div>
+
+    <div class="page-eyebrow">Tu selección</div>
+    <h1 class="page-h1">Tu <i>carrito</i></h1>
+
+    <div id="cartRoot"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="logo" style="color:white;"><span class="logo-dot"></span> FightZone</a>
+    <p class="footer-copy">© 2025 FightZone — Todos los derechos reservados</p>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════
+const API = 'http://localhost:5000/api';
+const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
+const BG_CLASSES = ['warm','cool','green','gold'];
+const SHIPPING_OPTS = [
+  { id:'std',  name:'Envío estándar', days:'3 – 5 días hábiles', price:0,    label:'Gratis' },
+  { id:'exp',  name:'Envío express',  days:'24 – 48h',           price:4.95, label:'4,95€'  },
+];
+const FREE_SHIPPING_FROM = 50;
+const VALID_COUPON = { code:'FIGHT10', discount:0.10, label:'Descuento 10%' };
+
+// ── Estado ───────────────────────────────────────
+let cart = [];         // [{ producto_id, cantidad, nombre, precio, imagen, categoria_nombre }]
+let shipping = 'std';
+let coupon = null;
+
+// ── Cursor ───────────────────────────────────────
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+function curOn(el){
+  el.addEventListener('mouseenter',()=>{cur.classList.add('xl');curR.classList.add('xl');});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('xl');curR.classList.remove('xl');});
+}
+document.querySelectorAll('a,button').forEach(curOn);
+
+// ── Hamburger ────────────────────────────────────
+const burger=document.getElementById('burger'),mm=document.getElementById('mobMenu');
+burger.addEventListener('click',()=>{burger.classList.toggle('open');mm.classList.toggle('open');});
+
+// ── Toast ─────────────────────────────────────────
+function showToast(msg){
+  document.getElementById('toastMsg').textContent=msg;
+  const t=document.getElementById('toast');
+  t.classList.add('up');
+  setTimeout(()=>t.classList.remove('up'),2600);
+}
+
+// ── Modal ─────────────────────────────────────────
+function closeSuccessModal(){
+  document.getElementById('successModal').classList.remove('open');
+  window.location.href='/productos';
+}
+
+// ── Cálculos ──────────────────────────────────────
+function subtotal(){ return cart.reduce((s,i)=>s+(i.precio*i.cantidad),0); }
+function shippingCost(){
+  if(subtotal()>=FREE_SHIPPING_FROM) return 0;
+  return shipping==='exp' ? SHIPPING_OPTS[1].price : 0;
+}
+function discount(){ return coupon ? subtotal()*coupon.discount : 0; }
+function total(){ return subtotal() - discount() + shippingCost(); }
+function totalItems(){ return cart.reduce((s,i)=>s+i.cantidad,0); }
+function fmt(n){ return parseFloat(n).toFixed(2).replace('.',','); }
+
+// ── Cargar carrito desde API ──────────────────────
+async function loadCart(){
+  document.getElementById('cartRoot').innerHTML = renderSkeleton();
+  try {
+    const res = await fetch(`${API}/carrito`, { credentials:'include' });
+    const data = await res.json();
+    // El endpoint devuelve { items: [{ producto_id, cantidad, nombre, precio, imagen, categoria_nombre }] }
+    cart = data.items || [];
+  } catch(e) {
+    // Si la API no responde, carrito vacío
+    cart = [];
+  }
+  render();
+}
+
+// ── Actualizar cantidad en API ────────────────────
+async function apiUpdate(producto_id, cantidad){
+  try {
+    if(cantidad <= 0){
+      await fetch(`${API}/carrito/${producto_id}`, { method:'DELETE', credentials:'include' });
+    } else {
+      await fetch(`${API}/carrito/${producto_id}`, {
+        method:'PUT', credentials:'include',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ cantidad })
+      });
+    }
+  } catch(e){}
+}
+
+// ── Renderizado ───────────────────────────────────
+function render(){
+  document.getElementById('cCount').textContent = totalItems();
+  const root = document.getElementById('cartRoot');
+
+  if(!cart.length){
+    root.innerHTML = `
+      <div class="cart-empty">
+        <span class="empty-glove">🥊</span>
+        <h2 class="empty-title">Tu carrito está <i>vacío</i></h2>
+        <p class="empty-desc">Parece que aún no has añadido ningún producto.<br>Echa un vistazo a nuestro catálogo y encuentra tu equipamiento.</p>
+        <a href="/productos" class="btn-go-shop">Ver productos →</a>
+      </div>`;
+    addCursors();
+    return;
+  }
+
+  const overFree = subtotal() >= FREE_SHIPPING_FROM;
+
+  root.innerHTML = `
+    <div class="cart-layout">
+
+      <!-- ITEMS -->
+      <div class="items-card">
+        <div class="items-header">
+          <span class="items-title">Productos</span>
+          <div style="display:flex;align-items:center;gap:.8rem;">
+            <span class="items-count">${totalItems()} artículo${totalItems()!==1?'s':''}</span>
+            <button class="btn-clear" onclick="clearCart()">Vaciar carrito</button>
+          </div>
+        </div>
+        ${cart.map((item,i)=>{
+          const bg = BG_CLASSES[i % BG_CLASSES.length];
+          const emoji = EMOJIS[item.categoria_nombre] ?? '📦';
+          return `
+          <div class="cart-item" id="item-${item.producto_id}" data-price="${fmt(item.precio*item.cantidad)}€">
+            <div class="item-img ${bg}">
+              ${item.imagen
+                ? `<img src="${esc(item.imagen)}" alt="${esc(item.nombre)}" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\\'item-emoji\\'>${emoji}</span>'">`
+                : `<span class="item-emoji">${emoji}</span>`}
+            </div>
+            <div class="item-info" data-price="${fmt(item.precio*item.cantidad)}€">
+              <div class="item-cat">${esc(item.categoria_nombre??'Boxeo')}</div>
+              <div class="item-name">${esc(item.nombre)}</div>
+              <div class="item-unit-price">${fmt(item.precio)}€ / unidad</div>
+            </div>
+            <div class="item-right">
+              <span class="item-price">${fmt(item.precio*item.cantidad)}€</span>
+              <div class="qty-ctrl">
+                <button class="qty-btn" onclick="changeQty(${item.producto_id},-1)">−</button>
+                <span class="qty-num">${item.cantidad}</span>
+                <button class="qty-btn" onclick="changeQty(${item.producto_id},+1)">+</button>
+              </div>
+            </div>
+            <button class="item-del" title="Eliminar" onclick="removeItem(${item.producto_id})">✕</button>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- RESUMEN -->
+      <div class="summary-card">
+        <div class="summary-header">
+          <span class="summary-title">Resumen del pedido</span>
+        </div>
+        <div class="summary-body">
+
+          <!-- Envío -->
+          <div style="margin-bottom:.5rem;">
+            <div style="font-family:'Syne',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.6rem;">Método de envío</div>
+            <div class="shipping-opts">
+              ${SHIPPING_OPTS.map(o=>`
+                <div class="ship-opt ${shipping===o.id?'selected':''}" onclick="setShipping('${o.id}')">
+                  <div class="ship-opt-left">
+                    <div class="ship-radio"></div>
+                    <div>
+                      <div class="ship-name">${o.name}</div>
+                      <div class="ship-days">${o.days}</div>
+                    </div>
+                  </div>
+                  <span class="ship-price ${overFree||o.price===0?'free':''}">
+                    ${overFree ? 'Gratis' : o.price===0?'Gratis':o.label}
+                  </span>
+                </div>`).join('')}
+            </div>
+            ${!overFree?`<div style="font-size:.72rem;color:var(--mid);text-align:center;margin-top:.4rem;">Añade <strong style="color:var(--r1)">${fmt(FREE_SHIPPING_FROM-subtotal())}€</strong> más para envío gratis</div>`:'<div style="font-size:.72rem;color:var(--ok);text-align:center;margin-top:.4rem;">✓ ¡Envío gratuito aplicado!</div>'}
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <!-- Cupón -->
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.6rem;">Cupón de descuento</div>
+            <div class="coupon-row">
+              <input class="coupon-input" type="text" id="couponInput" placeholder="Introduce tu cupón" style="cursor:auto;" value="${coupon?coupon.code:''}">
+              <button class="coupon-btn" onclick="applyCoupon()">Aplicar</button>
+            </div>
+            <div class="coupon-ok ${coupon?'show':''}" id="couponOk">✓ Cupón "${coupon?.code}" aplicado</div>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <!-- Desglose -->
+          <div class="summary-row"><span class="lbl">Subtotal</span><span class="val">${fmt(subtotal())}€</span></div>
+          ${coupon?`<div class="summary-row"><span class="lbl" style="color:var(--ok)">Descuento (${coupon.label})</span><span class="val" style="color:var(--ok)">−${fmt(discount())}€</span></div>`:''}
+          <div class="summary-row"><span class="lbl">Envío</span><span class="val ${shippingCost()===0?'':''}"><span style="color:${shippingCost()===0?'var(--ok)':'inherit'}">${shippingCost()===0?'Gratis':fmt(shippingCost())+'€'}</span></span></div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total-row">
+            <span class="summary-total-lbl">Total</span>
+            <span class="summary-total-val">${fmt(total())}€</span>
+          </div>
+
+          <div style="margin-top:1.5rem;">
+            <button class="btn-checkout" onclick="checkout()">Finalizar compra →</button>
+            <a href="/productos" class="btn-seguir">← Seguir comprando</a>
+          </div>
+
+          <div class="summary-trust">
+            <div class="trust-item"><span>🔒</span><span>Pago seguro</span></div>
+            <div class="trust-item"><span>🔄</span><span>30 días devolución</span></div>
+            <div class="trust-item"><span>🚀</span><span>Envío rápido</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>`;
+
+  addCursors();
+}
+
+function renderSkeleton(){
+  return `<div class="items-card">
+    ${[0,1,2].map(()=>`
+    <div class="skel-item">
+      <div class="skeleton" style="width:80px;height:80px;border-radius:14px;"></div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;justify-content:center;">
+        <div class="skeleton" style="height:10px;width:30%;"></div>
+        <div class="skeleton" style="height:14px;width:70%;"></div>
+        <div class="skeleton" style="height:10px;width:40%;"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;justify-content:center;">
+        <div class="skeleton" style="height:18px;width:60px;"></div>
+        <div class="skeleton" style="height:34px;width:100px;border-radius:10px;"></div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ── Acciones ──────────────────────────────────────
+function changeQty(id, delta){
+  const item = cart.find(i=>i.producto_id===id);
+  if(!item) return;
+  const newQty = item.cantidad + delta;
+  if(newQty <= 0){ removeItem(id); return; }
+  item.cantidad = newQty;
+  apiUpdate(id, newQty);
+  render();
+}
+
+function removeItem(id){
+  const el = document.getElementById('item-'+id);
+  if(el){ el.classList.add('removing'); setTimeout(()=>{ cart=cart.filter(i=>i.producto_id!==id); apiUpdate(id,0); render(); },320); }
+}
+
+function clearCart(){
+  cart.forEach(i=>apiUpdate(i.producto_id,0));
+  cart=[];
+  render();
+  showToast('Carrito vaciado');
+}
+
+function setShipping(id){
+  shipping=id;
+  render();
+}
+
+function applyCoupon(){
+  const code = document.getElementById('couponInput').value.trim().toUpperCase();
+  if(code===VALID_COUPON.code){
+    coupon=VALID_COUPON;
+    showToast('Cupón aplicado — 10% de descuento 🎉');
+  } else {
+    coupon=null;
+    showToast('Cupón no válido');
+  }
+  render();
+}
+
+async function checkout(){
+  try {
+    await fetch(`${API}/pedidos`, {
+      method:'POST', credentials:'include',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ items: cart, envio: shipping, total: total(), cupon: coupon?.code||null })
+    });
+  } catch(e){}
+  document.getElementById('successModal').classList.add('open');
+  cart=[];
+}
+
+function addCursors(){
+  document.querySelectorAll('a,button,.ship-opt').forEach(curOn);
+  document.querySelectorAll('input').forEach(el=>el.style.cursor='auto');
+}
+
+function esc(s){ return String(s??'').replace(/[<>"'&]/g,c=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c])); }
+
+// ── Init ──────────────────────────────────────────
+loadCart();
+</script>
+</body>
+</html>
