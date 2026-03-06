@@ -80,6 +80,32 @@ def get_or_create_carrito(usuario_id):
 
 
 # ══════════════════════════════════════════════════════
+#  ARREGLO INICIAL: hashear password del admin si es texto plano
+#  (el INSERT del SQL mete 'Admin123!' sin hashear)
+# ══════════════════════════════════════════════════════
+
+def fix_admin_password():
+    try:
+        con = conectar()
+        cur = con.cursor(dictionary=True)
+        cur.execute("SELECT id, password FROM usuarios WHERE email = 'admin@fightzone.com'")
+        admin = cur.fetchone()
+        if admin:
+            pwd = admin["password"]
+            # Si NO empieza por pbkdf2/scrypt/bcrypt, está en texto plano → hashear
+            if not pwd.startswith(("pbkdf2:", "scrypt:", "$2b$", "$2a$")):
+                hashed = generate_password_hash(pwd)
+                cur.execute("UPDATE usuarios SET password = %s WHERE id = %s",
+                            (hashed, admin["id"]))
+                con.commit()
+        con.close()
+    except Exception as e:
+        print(f"[fix_admin_password] {e}")
+
+fix_admin_password()
+
+
+# ══════════════════════════════════════════════════════
 #  PÁGINAS
 # ══════════════════════════════════════════════════════
 
@@ -156,11 +182,11 @@ def registro():
 @app.route("/guardar_usuario", methods=["POST"])
 def guardar_usuario():
     nombre   = request.form.get("nombre",   "").strip()
-    apellido = request.form.get("apellido", "").strip()
     email    = request.form.get("email",    "").strip()
     password = request.form.get("password", "")
 
-    if not all([nombre, apellido, email, password]):
+    # El campo apellido es opcional (la BD no lo tiene)
+    if not all([nombre, email, password]):
         return render_template("registro.html", error="Todos los campos son obligatorios.")
 
     hashed = generate_password_hash(password)
@@ -168,8 +194,8 @@ def guardar_usuario():
     cur = con.cursor()
     try:
         cur.execute(
-            "INSERT INTO usuarios (nombre, apellido, email, password) VALUES (%s, %s, %s, %s)",
-            (nombre, apellido, email, hashed)
+            "INSERT INTO usuarios (nombre, email, password) VALUES (%s, %s, %s)",
+            (nombre, email, hashed)
         )
         con.commit()
         con.close()
@@ -191,21 +217,31 @@ def login_usuario():
     email    = request.form.get("email",    "").strip()
     password = request.form.get("password", "")
 
+    if not email or not password:
+        return render_template("login.html", error="Introduce email y contrasena.")
+
     con = conectar()
     cur = con.cursor(dictionary=True)
     cur.execute("SELECT * FROM usuarios WHERE email = %s", (email,))
     usuario = cur.fetchone()
     con.close()
 
-    if usuario and check_password_hash(usuario["password"], password):
-        session["usuario_id"]     = usuario["id"]
-        session["usuario_nombre"] = usuario["nombre"]
-        session["rol"]            = usuario["rol"]
-        if usuario["rol"] == "admin":
-            return redirect(url_for("admin"))
-        return redirect(url_for("index"))
+    # Sin usuario encontrado
+    if not usuario:
+        return render_template("login.html", error="Email o contrasena incorrectos.")
 
-    return render_template("login.html", error="Email o contrasena incorrectos.")
+    # Comprobar password
+    if not check_password_hash(usuario["password"], password):
+        return render_template("login.html", error="Email o contrasena incorrectos.")
+
+    # Login correcto
+    session["usuario_id"]     = usuario["id"]
+    session["usuario_nombre"] = usuario["nombre"]
+    session["rol"]            = usuario["rol"]
+
+    if usuario["rol"] == "admin":
+        return redirect(url_for("admin"))
+    return redirect(url_for("index"))
 
 
 @app.route("/logout")
@@ -215,7 +251,7 @@ def logout():
 
 
 # ══════════════════════════════════════════════════════
-#  CARRITO (páginas)
+#  CARRITO
 # ══════════════════════════════════════════════════════
 
 @app.route("/carrito")
