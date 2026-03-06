@@ -199,6 +199,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
   <!-- RIGHT -->
   <div class="panel-right">
     <div class="form-card">
+      {% if error %}
+        <div style="background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#E74C3C;border-radius:10px;padding:.75rem 1rem;font-size:.82rem;margin-bottom:1.2rem;text-align:center;">{{ error }}</div>
+        {% endif %}
+        <form action="/guardar_usuario" method="POST" id="regForm">
       <div id="formState">
         <div class="form-header">
           <div class="form-icon">🥊</div>
@@ -218,7 +222,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
               <label class="field-label" for="fname">Nombre</label>
               <div class="field-wrap">
                 <span class="field-icon">👤</span>
-                <input class="field-input" type="text" id="fname" placeholder="Carlos" autocomplete="given-name">
+                <input class="field-input" type="text" id="fname" name="nombre" placeholder="Carlos" autocomplete="given-name">
                 <div class="field-err-msg">Introduce tu nombre</div>
               </div>
             </div>
@@ -226,7 +230,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
               <label class="field-label" for="lname">Apellidos</label>
               <div class="field-wrap">
                 <span class="field-icon">👤</span>
-                <input class="field-input" type="text" id="lname" placeholder="Mendoza" autocomplete="family-name">
+                <input class="field-input" type="text" id="lname" name="apellido" placeholder="Mendoza" autocomplete="family-name">
                 <div class="field-err-msg">Introduce tus apellidos</div>
               </div>
             </div>
@@ -236,7 +240,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
             <label class="field-label" for="email">Correo electrónico</label>
             <div class="field-wrap">
               <span class="field-icon">✉️</span>
-              <input class="field-input" type="email" id="email" placeholder="tu@email.com" autocomplete="email">
+              <input class="field-input" type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email">
               <div class="field-err-msg">Introduce un email válido</div>
             </div>
           </div>
@@ -245,7 +249,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
             <label class="field-label" for="pwd">Contraseña</label>
             <div class="field-wrap">
               <span class="field-icon">🔒</span>
-              <input class="field-input" type="password" id="pwd" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
+              <input class="field-input" type="password" id="pwd" name="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password">
               <button class="eye" id="eye1" type="button">👁️</button>
               <div class="field-err-msg">Mínimo 8 caracteres con letras y números</div>
             </div>
@@ -297,15 +301,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
 
           <div class="form-nav">
             <button class="btn-action btn-prev" id="prev2">←</button>
-            <button class="btn-action btn-submit" id="submitBtn">
+            <button class="btn-action btn-submit" type="submit" id="submitBtn">
               <div class="spinner"></div>
               <span class="btn-txt">Crear mi cuenta</span>
             </button>
           </div>
-          <div class="form-footer" style="margin-top:1rem;"><p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p></div>
+          <div class="form-footer" style="margin-top:1rem;"><p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p></div>
         </div>
       </div>
 
+      </form>
       <!-- SUCCESS -->
       <div class="success" id="successScreen">
         <span class="success-icon">🎉</span>
@@ -392,14 +397,12 @@ document.getElementById('prev2').addEventListener('click',()=>{
   document.getElementById('prog2').className='prog';
 });
 
-document.getElementById('submitBtn').addEventListener('click',()=>{
-  const terms=document.getElementById('terms').checked;
-  const err=document.getElementById('termsErr');
-  if(!terms){ err.style.display='block'; return; }
+document.getElementById('regForm').addEventListener('submit', function(e) {
+  const terms = document.getElementById('terms').checked;
+  const err = document.getElementById('termsErr');
+  if(!terms){ err.style.display='block'; e.preventDefault(); return; }
   err.style.display='none';
-  const btn=document.getElementById('submitBtn');
-  btn.classList.add('loading');
-  setTimeout(()=>{ document.getElementById('formState').style.display='none'; document.getElementById('successScreen').classList.add('show'); },2000);
+  document.getElementById('submitBtn').classList.add('loading');
 });
 </script>
 </body>

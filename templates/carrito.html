@@ -283,7 +283,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 // ═══════════════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════════════
-const API = 'http://localhost:5000/api';
+const API = '/api';
 const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
 const BG_CLASSES = ['warm','cool','green','gold'];
 const SHIPPING_OPTS = [
@@ -343,11 +343,10 @@ async function loadCart(){
   document.getElementById('cartRoot').innerHTML = renderSkeleton();
   try {
     const res = await fetch(`${API}/carrito`, { credentials:'include' });
+    if(res.status === 401){ window.location.href='/login'; return; }
     const data = await res.json();
-    // El endpoint devuelve { items: [{ producto_id, cantidad, nombre, precio, imagen, categoria_nombre }] }
     cart = data.items || [];
   } catch(e) {
-    // Si la API no responde, carrito vacío
     cart = [];
   }
   render();

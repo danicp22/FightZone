@@ -254,7 +254,7 @@ main{padding-top:100px;padding-bottom:5rem;}
 // ═══════════════════════════════════════════════════
 //  CONFIG — cambia la URL base si tu Flask corre en otro puerto
 // ═══════════════════════════════════════════════════
-const API = 'http://localhost:5000/api';
+const API = '/api';
 
 // Emojis de fallback por categoría
 const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
@@ -290,6 +290,10 @@ async function addCart(id, nombre, sinStock) {
   if (sinStock) return;
   try {
     // Llama a tu endpoint Flask: POST /api/carrito
+    // Redirigir al login si no hay sesion
+    const sessCheck = await fetch('/api/carrito', {credentials:'include'});
+    const sessData = await sessCheck.json();
+    if(sessCheck.status === 401){ window.location.href='/login'; return; }
     await fetch(`${API}/carrito`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

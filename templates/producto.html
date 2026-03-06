@@ -220,7 +220,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 </footer>
 
 <script>
-const API = 'http://localhost:5000/api';
+const API = '/api';
 const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
 let cartCount = 0;
 
@@ -366,7 +366,8 @@ async function loadProduct(){
     document.getElementById('addBtn').addEventListener('click',async ()=>{
       const qty = +document.getElementById('qtyVal').value;
       try {
-        await fetch(`${API}/carrito`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({producto_id:p.id,cantidad:qty})});
+        const r = await fetch(`${API}/carrito`,{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({producto_id:p.id,cantidad:qty})});
+        if(r.status === 401){ window.location.href='/login'; return; }
       } catch(e){}
       cartCount += qty;
       document.getElementById('cCount').textContent = cartCount;
