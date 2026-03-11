@@ -449,8 +449,32 @@ def api_categorias():
     return jsonify(cats)
 
 
-@app.route("/api/productos", methods=["GET"])
+@app.route("/api/productos", methods=["GET", "POST"])
 def api_productos():
+    if request.method == "POST":
+        if session.get("rol") != "admin":
+            return jsonify({"error": "No autorizado"}), 403
+        data         = request.get_json(force=True)
+        nombre       = data.get("nombre",       "").strip()
+        descripcion  = data.get("descripcion",  "").strip()
+        precio       = data.get("precio")
+        stock        = int(data.get("stock", 0))
+        categoria_id = data.get("categoria_id")
+        imagen       = data.get("imagen") or ""   # NOT NULL en BD → string vacío si no hay
+        if not nombre or precio is None or not categoria_id:
+            return jsonify({"error": "Faltan campos obligatorios"}), 400
+        con = conectar()
+        cur = con.cursor()
+        cur.execute("""
+            INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id, imagen)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (nombre, descripcion, float(precio), stock, categoria_id, imagen))
+        con.commit()
+        new_id = cur.lastrowid
+        con.close()
+        return jsonify({"ok": True, "id": new_id}), 201
+
+    # GET
     cat_id     = request.args.get("categoria_id", type=int)
     buscar     = request.args.get("buscar",        default="").strip()
     orden      = request.args.get("orden",         default="nombre")
@@ -496,8 +520,41 @@ def api_productos():
     return jsonify({"productos": rows, "total": total, "pagina": pagina})
 
 
-@app.route("/api/productos/<int:id>", methods=["GET"])
+@app.route("/api/productos/<int:id>", methods=["GET", "PUT", "DELETE"])
 def api_producto(id):
+    if request.method == "PUT":
+        if session.get("rol") != "admin":
+            return jsonify({"error": "No autorizado"}), 403
+        data         = request.get_json(force=True)
+        nombre       = data.get("nombre",       "").strip()
+        descripcion  = data.get("descripcion",  "").strip()
+        precio       = data.get("precio")
+        stock        = int(data.get("stock", 0))
+        categoria_id = data.get("categoria_id")
+        imagen       = data.get("imagen") or ""
+        con = conectar()
+        cur = con.cursor()
+        cur.execute("""
+            UPDATE productos
+            SET nombre=%s, descripcion=%s, precio=%s, stock=%s, categoria_id=%s, imagen=%s
+            WHERE id=%s
+        """, (nombre, descripcion, float(precio), stock, categoria_id, imagen, id))
+        con.commit()
+        con.close()
+        return jsonify({"ok": True})
+
+    if request.method == "DELETE":
+        if session.get("rol") != "admin":
+            return jsonify({"error": "No autorizado"}), 403
+        con = conectar()
+        cur = con.cursor()
+        cur.execute("DELETE FROM carrito_items WHERE producto_id = %s", (id,))
+        cur.execute("DELETE FROM productos WHERE id = %s", (id,))
+        con.commit()
+        con.close()
+        return jsonify({"ok": True})
+
+    # GET
     con = conectar()
     cur = con.cursor(dictionary=True)
     cur.execute("""
@@ -516,69 +573,32 @@ def api_producto(id):
     return jsonify(p)
 
 
-@app.route("/api/productos", methods=["POST"])
-def api_nuevo_producto():
-    if session.get("rol") != "admin":
-        return jsonify({"error": "No autorizado"}), 403
-    data         = request.get_json()
-    nombre       = data.get("nombre",       "").strip()
-    descripcion  = data.get("descripcion",  "").strip()
-    precio       = data.get("precio")
-    stock        = data.get("stock",        0)
-    categoria_id = data.get("categoria_id")
-    imagen       = data.get("imagen")
-    con = conectar()
-    cur = con.cursor()
-    cur.execute("""
-        INSERT INTO productos (nombre, descripcion, precio, stock, categoria_id, imagen)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    """, (nombre, descripcion, precio, stock, categoria_id, imagen))
-    con.commit()
-    new_id = cur.lastrowid
-    con.close()
-    return jsonify({"ok": True, "id": new_id}), 201
-
-
-@app.route("/api/productos/<int:id>", methods=["PUT"])
-def api_editar_producto(id):
-    if session.get("rol") != "admin":
-        return jsonify({"error": "No autorizado"}), 403
-    data         = request.get_json()
-    nombre       = data.get("nombre",       "").strip()
-    descripcion  = data.get("descripcion",  "").strip()
-    precio       = data.get("precio")
-    stock        = data.get("stock",        0)
-    categoria_id = data.get("categoria_id")
-    imagen       = data.get("imagen")
-    con = conectar()
-    cur = con.cursor()
-    cur.execute("""
-        UPDATE productos
-        SET nombre=%s, descripcion=%s, precio=%s, stock=%s, categoria_id=%s, imagen=%s
-        WHERE id=%s
-    """, (nombre, descripcion, precio, stock, categoria_id, imagen, id))
-    con.commit()
-    con.close()
-    return jsonify({"ok": True})
-
-
-@app.route("/api/productos/<int:id>", methods=["DELETE"])
-def api_eliminar_producto(id):
-    if session.get("rol") != "admin":
-        return jsonify({"error": "No autorizado"}), 403
-    con = conectar()
-    cur = con.cursor()
-    cur.execute("DELETE FROM carrito_items WHERE producto_id = %s", (id,))
-    cur.execute("DELETE FROM productos WHERE id = %s", (id,))
-    con.commit()
-    con.close()
-    return jsonify({"ok": True})
-
-
-@app.route("/api/carrito", methods=["GET"])
-def api_carrito_get():
+@app.route("/api/carrito", methods=["GET", "POST"])
+def api_carrito():
+    if request.method == "POST":
+        if "usuario_id" not in session:
+            return jsonify({"error": "No autenticado"}), 401
+        data        = request.get_json(force=True)
+        producto_id = data.get("producto_id")
+        cantidad    = int(data.get("cantidad", 1))
+        carrito_id  = get_or_create_carrito(session["usuario_id"])
+        con = conectar()
+        cur = con.cursor(dictionary=True)
+        cur.execute("SELECT id FROM carrito_items WHERE carrito_id=%s AND producto_id=%s",
+                    (carrito_id, producto_id))
+        existente = cur.fetchone()
+        if existente:
+            cur.execute("UPDATE carrito_items SET cantidad = cantidad + %s WHERE id = %s",
+                        (cantidad, existente["id"]))
+        else:
+            cur.execute("INSERT INTO carrito_items (carrito_id, producto_id, cantidad) VALUES (%s,%s,%s)",
+                        (carrito_id, producto_id, cantidad))
+        con.commit()
+        con.close()
+        return jsonify({"ok": True})
+    # GET
     if "usuario_id" not in session:
-        return jsonify({"items": []})
+        return jsonify({"items": []}), 401
     carrito_id = get_or_create_carrito(session["usuario_id"])
     con = conectar()
     cur = con.cursor(dictionary=True)
@@ -598,59 +618,25 @@ def api_carrito_get():
     return jsonify({"items": items})
 
 
-@app.route("/api/carrito", methods=["POST"])
-def api_carrito_agregar():
+@app.route("/api/carrito/<int:producto_id>", methods=["PUT", "DELETE"])
+def api_carrito_item(producto_id):
     if "usuario_id" not in session:
         return jsonify({"error": "No autenticado"}), 401
-    data        = request.get_json()
-    producto_id = data.get("producto_id")
-    cantidad    = data.get("cantidad", 1)
-    carrito_id  = get_or_create_carrito(session["usuario_id"])
-    con = conectar()
-    cur = con.cursor(dictionary=True)
-    cur.execute("SELECT id FROM carrito_items WHERE carrito_id=%s AND producto_id=%s",
-                (carrito_id, producto_id))
-    existente = cur.fetchone()
-    if existente:
-        cur.execute("UPDATE carrito_items SET cantidad = cantidad + %s WHERE id = %s",
-                    (cantidad, existente["id"]))
-    else:
-        cur.execute("INSERT INTO carrito_items (carrito_id, producto_id, cantidad) VALUES (%s,%s,%s)",
-                    (carrito_id, producto_id, cantidad))
-    con.commit()
-    con.close()
-    return jsonify({"ok": True})
-
-
-@app.route("/api/carrito/<int:producto_id>", methods=["PUT"])
-def api_carrito_actualizar(producto_id):
-    if "usuario_id" not in session:
-        return jsonify({"error": "No autenticado"}), 401
-    data       = request.get_json()
-    cantidad   = data.get("cantidad", 1)
     carrito_id = get_or_create_carrito(session["usuario_id"])
     con = conectar()
     cur = con.cursor()
-    if cantidad > 0:
-        cur.execute("UPDATE carrito_items SET cantidad=%s WHERE carrito_id=%s AND producto_id=%s",
-                    (cantidad, carrito_id, producto_id))
-    else:
+    if request.method == "DELETE":
         cur.execute("DELETE FROM carrito_items WHERE carrito_id=%s AND producto_id=%s",
                     (carrito_id, producto_id))
-    con.commit()
-    con.close()
-    return jsonify({"ok": True})
-
-
-@app.route("/api/carrito/<int:producto_id>", methods=["DELETE"])
-def api_carrito_eliminar(producto_id):
-    if "usuario_id" not in session:
-        return jsonify({"error": "No autenticado"}), 401
-    carrito_id = get_or_create_carrito(session["usuario_id"])
-    con = conectar()
-    cur = con.cursor()
-    cur.execute("DELETE FROM carrito_items WHERE carrito_id=%s AND producto_id=%s",
-                (carrito_id, producto_id))
+    else:
+        data     = request.get_json(force=True)
+        cantidad = int(data.get("cantidad", 1))
+        if cantidad > 0:
+            cur.execute("UPDATE carrito_items SET cantidad=%s WHERE carrito_id=%s AND producto_id=%s",
+                        (cantidad, carrito_id, producto_id))
+        else:
+            cur.execute("DELETE FROM carrito_items WHERE carrito_id=%s AND producto_id=%s",
+                        (carrito_id, producto_id))
     con.commit()
     con.close()
     return jsonify({"ok": True})
