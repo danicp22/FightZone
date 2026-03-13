@@ -423,17 +423,16 @@ function showError(msg){
 function esc(s){ return String(s??'').replace(/[<>"'&]/g,c=>({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c])); }
 function formatPrice(n){ return parseFloat(n).toFixed(2).replace('.',','); }
 
+// ── User dropdown ──
+const userBtn = document.getElementById('userBtn');
+const userMenu = document.getElementById('userMenu');
+if(userBtn && userMenu){
+  userBtn.addEventListener('click', e => { e.stopPropagation(); userMenu.classList.toggle('open'); });
+  document.addEventListener('click', () => userMenu.classList.remove('open'));
+  userMenu.addEventListener('click', e => e.stopPropagation());
+}
+
 loadProduct();
-
-  // ── User dropdown ──
-  const userBtn = document.getElementById('userBtn');
-  const userMenu = document.getElementById('userMenu');
-  if(userBtn && userMenu){
-    userBtn.addEventListener('click', e => { e.stopPropagation(); userMenu.classList.toggle('open'); });
-    document.addEventListener('click', () => userMenu.classList.remove('open'));
-    userMenu.addEventListener('click', e => e.stopPropagation());
-  }
-
 </script>
 </body>
 </html>

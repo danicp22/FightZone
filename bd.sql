@@ -60,3 +60,5 @@ INSERT INTO categorias (nombre) VALUES
 CREATE USER "daniel"@"localhost" IDENTIFIED BY "Dani12345&";
 GRANT ALL PRIVILEGES ON *.* TO "daniel"@"localhost";
 FLUSH PRIVILEGES;
+
+ALTER TABLE productos MODIFY imagen VARCHAR(1000) NOT NULL DEFAULT '';
