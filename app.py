@@ -11,10 +11,10 @@ app.secret_key = "fightzone_clave_secreta_2026"
 # ══════════════════════════════════════════════════════
 
 DB_CONFIG = {
-    "host":     "localhost",
-    "database": "FightZone",
-    "user":     "daniel",
-    "password": "Dani12345&"
+    "host":     "mysql.railway.internal",
+    "database": "railway",
+    "user":     "root",
+    "password": "gPTRzuSfplxbJIRdtpTrmjjCNdybJLNn"
 }
 
 def conectar():
