@@ -78,7 +78,7 @@ main{padding-top:100px;padding-bottom:5rem;}
 /* GRID */
 .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3rem;}
 
-.pcard{background:var(--white);border-radius:22px;overflow:hidden;box-shadow:var(--sh-s);transition:transform .35s cubic-bezier(.34,1.4,.64,1),box-shadow .35s;display:block;text-decoration:none;color:inherit;cursor:pointer;}
+.pcard{background:var(--white);border-radius:22px;overflow:hidden;box-shadow:var(--sh-s);transition:transform .35s cubic-bezier(.34,1.4,.64,1),box-shadow .35s;}
 .pcard:hover{transform:translateY(-7px);box-shadow:var(--sh-l);}
 
 .pimg{height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
@@ -399,7 +399,7 @@ async function loadProducts() {
       : '';
 
     return `
-    <a class="pcard ani ${delay}" data-id="${p.id}" href="/producto/${p.id}" style="text-decoration:none;display:block;">
+    <div class="pcard ani ${delay}" data-id="${p.id}" onclick="window.location='/producto/'+p.id" style="cursor:pointer">
       <div class="pimg">
         ${imgHtml}
         <span class="pimg-emoji" ${p.imagen?'style="display:none"':''}>${emoji}</span>
@@ -420,7 +420,7 @@ async function loadProducts() {
         </div>
         ${!sinStock?`<button class="padd-mobile" onclick="event.stopPropagation();addCart(${p.id},'${esc(p.nombre)}',false)">+ Añadir al carrito</button>`:''}
       </div>
-    </a>`;
+    </div>`;
   }).join('');
 
   // Cursor en las cards
@@ -501,7 +501,11 @@ function formatPrice(n) { return parseFloat(n).toFixed(2).replace('.',','); }
 document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key==='Enter') applySearch(); });
 document.getElementById('searchInput').style.cursor = 'text';
 
-// ── Init ─────────────────────────────────────────────
+// ── Init: leer categoría de la URL si viene del index ──
+const _urlParams = new URLSearchParams(window.location.search);
+const _catParam = parseInt(_urlParams.get('cat'));
+if(_catParam) state.cat = _catParam;
+
 loadCats();
 loadProducts();
 </script>

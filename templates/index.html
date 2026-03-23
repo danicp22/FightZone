@@ -5,23 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FightZone</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
-
-  <style>
-  .user-menu{position:relative;display:inline-flex;align-items:center;}
-  .user-btn{background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:.5rem;transition:color .2s;padding:0;}
-  .user-btn:hover{color:var(--r1);}
-  .user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r2));display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:white;font-family:'Syne',sans-serif;letter-spacing:0;box-shadow:0 2px 10px var(--glow);flex-shrink:0;}
-  .user-dropdown{position:absolute;right:0;top:calc(100% + 14px);background:white;border-radius:16px;box-shadow:0 16px 48px rgba(28,17,8,.13),0 2px 8px rgba(28,17,8,.05);border:1px solid rgba(28,17,8,.06);min-width:182px;padding:.5rem;z-index:9999;opacity:0;pointer-events:none;transform:translateY(6px) scale(.97);transform-origin:top right;transition:opacity .18s ease,transform .18s ease;}
-  .user-menu.open .user-dropdown{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
-  .user-dropdown::before{content:'';position:absolute;top:-5px;right:16px;width:10px;height:10px;background:white;border-left:1px solid rgba(28,17,8,.06);border-top:1px solid rgba(28,17,8,.06);transform:rotate(45deg);}
-  .dd-label{padding:.4rem .8rem .2rem;font-family:'Syne',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);opacity:.55;}
-  .user-dropdown a{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;color:var(--text);text-decoration:none;border-radius:10px;transition:background .15s,color .15s;}
-  .user-dropdown a:hover{background:rgba(255,77,28,.06);color:var(--r1);}
-  .dd-sep{height:1px;background:rgba(28,17,8,.06);margin:.3rem .3rem;}
-  .dd-logout{color:#C0392B!important;}
-  .dd-logout:hover{background:rgba(192,57,43,.06)!important;color:#C0392B!important;}
-  </style>
+<link href="../static/css/styles.css" rel="stylesheet">
 </head>
 <body>
 
@@ -44,26 +28,9 @@
     <li><a href="/quienes-somos">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
-    {% if usuario %}
-    <div class="user-menu" id="userMenu">
-      <button class="user-btn" id="userBtn">
-        <div class="user-avatar">{{ usuario[0]|upper }}</div>
-        {{ usuario }}
-      </button>
-      <div class="user-dropdown">
-        <div class="dd-label">Mi cuenta</div>
-        {% if session.get('rol') == 'admin' %}
-        <a href="/admin">⚙️ Panel admin</a>
-        <div class="dd-sep"></div>
-        {% endif %}
-        <a href="/logout" class="dd-logout">→ Cerrar sesión</a>
-      </div>
-    </div>
-    {% else %}
     <a href="/login">Mi cuenta</a>
-    {% endif %}
     <a href="/carrito" class="nav-cta" id="cartBtn">
-      🛒 Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span>
+      🛒 Carrito <span class="cart-badge" id="cCount">0</span>
     </a>
     <button class="hamburger" id="burger" aria-label="Menú">
       <span></span><span></span><span></span>
@@ -73,11 +40,11 @@
 
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#">Guantes</a>
-  <a href="#">Sacos</a>
-  <a href="#">Ropa</a>
-  <a href="#">Protección</a>
-  <a href="#">Vendas</a>
+  <a href="/productos?cat=1">Guantes</a>
+  <a href="/productos?cat=2">Sacos</a>
+  <a href="/productos?cat=4">Ropa</a>
+  <a href="/productos?cat=3">Protección</a>
+  <a href="/productos?cat=5">Vendas</a>
 </div>
 
 <!-- ══ HERO ═══════════════════════════════════════════ -->
@@ -101,7 +68,7 @@
 
   <div class="hero-right">
     <div class="hero-card">
-      <div class="hero-glove"><img src="{{ url_for('static', filename='fototiendaporfuera.png') }}" alt="tienda" id="tienda"></div>
+      <div class="hero-glove"><img src="../static/fototiendaporfuera.png" alt="tienda" id="tienda"></div>
       <div class="hero-card-label">
       </div>
     </div>
@@ -140,7 +107,7 @@
       <a href="/productos" class="link-more">Ver todo →</a>
     </div>
     <div class="cats-grid">
-      <a href="../templates/categorias/guantes.html" class="guantes">
+      <a href="/productos?cat=1">
           <div class="ccat feat ani">
             <span class="ccat-icon">🥊</span>
             <div class="ccat-name">Guantes</div>
@@ -148,7 +115,7 @@
             <div class="ccat-arrow">↗</div>
           </div>
       </a>
-      <a href="../templates/categorias/ropa.html">
+      <a href="/productos?cat=4">
         <div class="ccat ani d1">
           <span class="ccat-icon">🩱</span>
           <div class="ccat-name">Ropa</div>
@@ -156,7 +123,7 @@
           <div class="ccat-arrow">↗</div>
         </div>
       </a>
-      <a href="../templates/categorias/proteccion.html">
+      <a href="/productos?cat=3">
         <div class="ccat ani d2">
           <span class="ccat-icon">🛡️</span>
           <div class="ccat-name">Protección</div>
@@ -164,7 +131,7 @@
           <div class="ccat-arrow">↗</div>
         </div>
       </a>
-      <a href="../templates/categorias/sacos.html">
+      <a href="/productos?cat=2">
         <div class="ccat ani d3">
           <span class="ccat-icon">💥</span>
           <div class="ccat-name">Sacos</div>
@@ -347,17 +314,7 @@ const obs = new IntersectionObserver(entries => {
 }, { threshold: 0.08 });
 document.querySelectorAll('.ani').forEach(el => obs.observe(el));
 
-
-  // ── User dropdown ──
-  const userBtn = document.getElementById('userBtn');
-  const userMenu = document.getElementById('userMenu');
-  if(userBtn && userMenu){
-    userBtn.addEventListener('click', e => { e.stopPropagation(); userMenu.classList.toggle('open'); });
-    document.addEventListener('click', () => userMenu.classList.remove('open'));
-    userMenu.addEventListener('click', e => e.stopPropagation());
-  }
-
-  // ── Mobile: ocultar mobile-cart-btn en desktop ──
+// ── Mobile: ocultar mobile-cart-btn en desktop ──
 if (window.innerWidth > 540) {
   document.querySelectorAll('.mobile-cart-btn').forEach(b => b.style.display = 'none');
 }
