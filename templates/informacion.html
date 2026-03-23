@@ -186,7 +186,47 @@ footer{background:var(--dark);padding:3rem 2rem;}
   .dd-sep{height:1px;background:rgba(28,17,8,.06);margin:.3rem .3rem;}
   .dd-logout{color:#C0392B!important;}
   .dd-logout:hover{background:rgba(192,57,43,.06)!important;color:#C0392B!important;}
-  </style>
+  
+/* ── TRABAJA CON NOSOTROS ── */
+.jobs-section{padding:0 0 6rem;}
+.jobs-inner{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.jobs-left .sec-eyebrow{margin-bottom:1rem;}
+.jobs-h{font-family:'Instrument Serif',serif;font-size:2.6rem;line-height:1.15;color:var(--text);margin-bottom:1.2rem;}
+.jobs-h i{font-style:italic;color:var(--r1);}
+.jobs-desc{font-size:.95rem;color:var(--mid);font-weight:300;line-height:1.8;margin-bottom:2rem;}
+.jobs-perks{display:flex;flex-direction:column;gap:.75rem;margin-bottom:2rem;}
+.jobs-perk{display:flex;align-items:center;gap:.75rem;font-size:.88rem;color:var(--text);font-weight:400;}
+.jobs-perk-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,rgba(255,77,28,.12),rgba(255,140,66,.08));display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+
+.jobs-form-card{background:var(--white);border-radius:28px;padding:2.5rem;box-shadow:var(--sh-m);border:1px solid rgba(255,77,28,.07);}
+.jobs-form-title{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:1.6rem;color:var(--text);}
+.jfield{margin-bottom:1.1rem;}
+.jfield-label{display:block;font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);margin-bottom:.4rem;}
+.jfield-input,.jfield-select,.jfield-textarea{width:100%;background:var(--cream);border:1.5px solid var(--sand2);border-radius:12px;padding:.75rem 1rem;font-family:'Outfit',sans-serif;font-size:.88rem;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s;cursor:text;}
+.jfield-input:focus,.jfield-select:focus,.jfield-textarea:focus{border-color:var(--r1);background:var(--white);box-shadow:0 0 0 3px rgba(255,77,28,.1);}
+.jfield-textarea{min-height:90px;resize:vertical;}
+.jfield-file-wrap{position:relative;background:var(--cream);border:1.5px dashed var(--sand2);border-radius:12px;padding:1.4rem 1rem;text-align:center;transition:border-color .2s,background .2s;cursor:pointer;}
+.jfield-file-wrap:hover,.jfield-file-wrap.drag{border-color:var(--r1);background:rgba(255,77,28,.03);}
+.jfield-file-wrap input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.jfield-file-icon{font-size:1.6rem;margin-bottom:.4rem;}
+.jfield-file-text{font-size:.8rem;color:var(--mid);font-weight:400;}
+.jfield-file-text strong{color:var(--r1);font-weight:600;}
+.jfield-file-name{font-size:.78rem;color:var(--r1);font-weight:600;margin-top:.4rem;display:none;}
+.jfield-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.btn-jobs{width:100%;display:flex;align-items:center;justify-content:center;gap:.6rem;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;border:none;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.04em;padding:1rem;border-radius:14px;box-shadow:0 8px 28px var(--glow);transition:all .3s;cursor:pointer;margin-top:.5rem;}
+.btn-jobs:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(255,77,28,.5);}
+.btn-jobs.loading{opacity:.7;pointer-events:none;}
+.btn-jobs .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .6s linear infinite;display:none;}
+.btn-jobs.loading .spinner{display:block;}
+.btn-jobs.loading .btn-txt{display:none;}
+.jobs-success{text-align:center;padding:2rem 1rem;display:none;}
+.jobs-success-icon{font-size:3rem;margin-bottom:1rem;}
+.jobs-success-title{font-family:'Instrument Serif',serif;font-size:1.6rem;color:var(--text);margin-bottom:.5rem;}
+.jobs-success-title i{color:var(--r1);font-style:italic;}
+.jobs-success-desc{font-size:.88rem;color:var(--mid);font-weight:300;line-height:1.7;}
+@media(max-width:860px){.jobs-inner{grid-template-columns:1fr;gap:2.5rem;}}
+@media(max-width:540px){.jfield-row{grid-template-columns:1fr;}.jobs-form-card{padding:1.8rem 1.4rem;}}
+</style>
 </head>
 <body>
 
@@ -364,6 +404,115 @@ footer{background:var(--dark);padding:3rem 2rem;}
   </div>
 </section>
 
+<!-- ══ TRABAJA CON NOSOTROS ══════════════════════════ -->
+<section class="jobs-section">
+  <div class="wrap">
+    <div class="jobs-inner">
+
+      <!-- IZQUIERDA: texto -->
+      <div class="jobs-left ani">
+        <div class="sec-eyebrow">Únete al equipo</div>
+        <h2 class="jobs-h">Trabaja con<br><i>nosotros</i></h2>
+        <p class="jobs-desc">
+          En FightZone buscamos personas apasionadas por el deporte de combate.
+          Si quieres formar parte de un equipo joven y en crecimiento, envíanos tu candidatura.
+        </p>
+        <div class="jobs-perks">
+          <div class="jobs-perk">
+            <div class="jobs-perk-icon">🥊</div>
+            Descuentos exclusivos en todo el equipamiento
+          </div>
+          <div class="jobs-perk">
+            <div class="jobs-perk-icon">📈</div>
+            Plan de crecimiento interno
+          </div>
+          <div class="jobs-perk">
+            <div class="jobs-perk-icon">🏋️</div>
+            Ambiente deportivo y apasionado
+          </div>
+          <div class="jobs-perk">
+            <div class="jobs-perk-icon">📍</div>
+            València — presencial y remoto según el rol
+          </div>
+        </div>
+      </div>
+
+      <!-- DERECHA: formulario -->
+      <div class="ani d1">
+        <div class="jobs-form-card">
+          <div class="jobs-form-title">Envíanos tu candidatura</div>
+
+          <div id="jobsForm">
+            <div class="jfield-row">
+              <div class="jfield">
+                <label class="jfield-label">Nombre</label>
+                <input class="jfield-input" type="text" id="jNombre" placeholder="Carlos">
+              </div>
+              <div class="jfield">
+                <label class="jfield-label">Apellidos</label>
+                <input class="jfield-input" type="text" id="jApellido" placeholder="Mendoza">
+              </div>
+            </div>
+
+            <div class="jfield">
+              <label class="jfield-label">Email</label>
+              <input class="jfield-input" type="email" id="jEmail" placeholder="tu@email.com">
+            </div>
+
+            <div class="jfield">
+              <label class="jfield-label">Teléfono</label>
+              <input class="jfield-input" type="tel" id="jTel" placeholder="+34 600 000 000">
+            </div>
+
+            <div class="jfield">
+              <label class="jfield-label">Puesto de interés</label>
+              <select class="jfield-select" id="jPuesto">
+                <option value="">Selecciona un área</option>
+                <option value="tienda">Atención al cliente / Tienda</option>
+                <option value="almacen">Almacén y logística</option>
+                <option value="marketing">Marketing y redes sociales</option>
+                <option value="web">Desarrollo web</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <div class="jfield">
+              <label class="jfield-label">Cuéntanos algo sobre ti</label>
+              <textarea class="jfield-textarea" id="jMensaje" placeholder="Tu experiencia, motivación, disponibilidad…"></textarea>
+            </div>
+
+            <div class="jfield">
+              <label class="jfield-label">Currículum (PDF)</label>
+              <div class="jfield-file-wrap" id="fileWrap">
+                <input type="file" id="jCV" accept=".pdf,.doc,.docx">
+                <div class="jfield-file-icon">📄</div>
+                <div class="jfield-file-text"><strong>Haz clic</strong> o arrastra tu CV aquí</div>
+                <div class="jfield-file-name" id="fileName"></div>
+              </div>
+            </div>
+
+            <button class="btn-jobs" id="jobsBtn" onclick="submitJobs()">
+              <div class="spinner"></div>
+              <span class="btn-txt">Enviar candidatura →</span>
+            </button>
+          </div>
+
+          <div class="jobs-success" id="jobsSuccess">
+            <div class="jobs-success-icon">🎉</div>
+            <h3 class="jobs-success-title">¡Candidatura <i>recibida!</i></h3>
+            <p class="jobs-success-desc">
+              Gracias por tu interés en FightZone.<br>
+              Revisaremos tu perfil y nos pondremos en contacto contigo si hay una oportunidad que encaje.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-inner">
@@ -406,6 +555,45 @@ document.querySelectorAll('.ani').forEach(el=>obs.observe(el));
     document.addEventListener('click', () => userMenu.classList.remove('open'));
     userMenu.addEventListener('click', e => e.stopPropagation());
   }
+
+
+// ── Trabaja con nosotros ──
+document.getElementById('jCV').addEventListener('change', function(){
+  const name = this.files[0]?.name;
+  const fn = document.getElementById('fileName');
+  if(name){ fn.textContent = '📎 ' + name; fn.style.display='block'; }
+  else { fn.style.display='none'; }
+});
+
+// Drag & drop visual
+const fw = document.getElementById('fileWrap');
+fw.addEventListener('dragover', e => { e.preventDefault(); fw.classList.add('drag'); });
+fw.addEventListener('dragleave', () => fw.classList.remove('drag'));
+fw.addEventListener('drop', e => {
+  e.preventDefault(); fw.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if(f){ document.getElementById('jCV').files; document.getElementById('fileName').textContent='📎 '+f.name; document.getElementById('fileName').style.display='block'; }
+});
+
+function submitJobs(){
+  const nombre  = document.getElementById('jNombre').value.trim();
+  const email   = document.getElementById('jEmail').value.trim();
+  const puesto  = document.getElementById('jPuesto').value;
+  if(!nombre || !email || !puesto){ 
+    ['jNombre','jEmail','jPuesto'].forEach(id => {
+      const el = document.getElementById(id);
+      if(!el.value.trim()) el.style.borderColor = 'var(--r1)';
+    });
+    return; 
+  }
+  const btn = document.getElementById('jobsBtn');
+  btn.classList.add('loading');
+  // Simular envío (aquí conectarías con tu backend o servicio de email)
+  setTimeout(() => {
+    document.getElementById('jobsForm').style.display = 'none';
+    document.getElementById('jobsSuccess').style.display = 'block';
+  }, 1500);
+}
 
 </script>
 </body>
