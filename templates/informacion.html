@@ -226,7 +226,15 @@ footer{background:var(--dark);padding:3rem 2rem;}
 .jobs-success-desc{font-size:.88rem;color:var(--mid);font-weight:300;line-height:1.7;}
 @media(max-width:860px){.jobs-inner{grid-template-columns:1fr;gap:2.5rem;}}
 @media(max-width:540px){.jfield-row{grid-template-columns:1fr;}.jobs-form-card{padding:1.8rem 1.4rem;}}
+
+/* ── Language toggle ── */
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,background .2s;font-family:'Syne',sans-serif;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
 </style>
+<script src="/static/js/i18n.js"></script>
 </head>
 <body>
 
@@ -237,9 +245,9 @@ footer{background:var(--dark);padding:3rem 2rem;}
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/productos">Productos</a></li>
-    <li><a href="/quienes-somos" class="active">Quienes Somos</a></li>
+    <li><a href="/" data-i18n="nav.inicio">Inicio</a></li>
+    <li><a href="/productos" data-i18n="nav.productos">Productos</a></li>
+    <li><a href="/quienes-somos" class="active" data-i18n="nav.quienes">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
     {% if usuario %}
@@ -258,9 +266,10 @@ footer{background:var(--dark);padding:3rem 2rem;}
       </div>
     </div>
     {% else %}
-    <a href="/login">Mi cuenta</a>
+    <a href="/login" data-i18n="nav.cuenta">Mi cuenta</a>
     {% endif %}
-    <a href="/carrito" class="nav-cta">🛒 Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
+    <a href="/carrito" class="nav-cta">🛒 <span data-i18n="nav.carrito">Carrito</span> <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
+    <button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -385,7 +394,7 @@ footer{background:var(--dark);padding:3rem 2rem;}
         </div>
 
         <a href="https://maps.app.goo.gl/WGXYCKboVYLA32PG6" target="_blank" rel="noopener" class="btn-maps">
-          📌 Abrir en Google Maps
+          <span data-i18n="info.maps_btn">📌 Abrir en Google Maps</span>
         </a>
       </div>
 
@@ -411,8 +420,8 @@ footer{background:var(--dark);padding:3rem 2rem;}
 
       <!-- IZQUIERDA: texto -->
       <div class="jobs-left ani">
-        <div class="sec-eyebrow">Únete al equipo</div>
-        <h2 class="jobs-h">Trabaja con<br><i>nosotros</i></h2>
+        <div class="sec-eyebrow"><span data-i18n="info.jobs_eyebrow">Únete al equipo</span></div>
+        <h2 class="jobs-h"><span data-i18n="info.jobs_title">Trabaja con</span><br><i data-i18n="info.jobs_title_i">nosotros</i></h2>
         <p class="jobs-desc">
           En FightZone buscamos personas apasionadas por el deporte de combate.
           Si quieres formar parte de un equipo joven y en crecimiento, envíanos tu candidatura.

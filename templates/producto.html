@@ -169,7 +169,15 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
   .dd-sep{height:1px;background:rgba(28,17,8,.06);margin:.3rem .3rem;}
   .dd-logout{color:#C0392B!important;}
   .dd-logout:hover{background:rgba(192,57,43,.06)!important;color:#C0392B!important;}
-  </style>
+  
+/* ── Language toggle ── */
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,background .2s;font-family:'Syne',sans-serif;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
+</style>
+<script src="/static/js/i18n.js"></script>
 </head>
 <body>
 
@@ -180,7 +188,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/productos">Productos</a></li>
+    <li><a href="/productos" data-i18n="nav.productos">Productos</a></li>
     <li><a href="/quienes-somos">Nosotros</a></li>
     <li><a href="/contacto">Contacto</a></li>
   </ul>
@@ -201,9 +209,10 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
       </div>
     </div>
     {% else %}
-    <a href="/login">Mi cuenta</a>
+    <a href="/login" data-i18n="nav.cuenta">Mi cuenta</a>
     {% endif %}
-    <a href="/carrito" class="nav-cta">🛒 Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
+    <a href="/carrito" class="nav-cta">🛒 <span data-i18n="nav.carrito">Carrito</span> <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
+    <button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -216,7 +225,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 <main>
   <div class="wrap">
     <div class="breadcrumb" id="breadcrumb">
-      <a href="/">Inicio</a>
+      <a href="/" data-i18n="nav.inicio">Inicio</a>
       <span class="breadcrumb-sep">›</span>
       <a href="/productos">Productos</a>
       <span class="breadcrumb-sep">›</span>
@@ -311,7 +320,7 @@ async function loadProduct(){
   const stockBajo = p.stock > 0 && p.stock <= 5;
   const emoji = EMOJIS[p.categoria_nombre] ?? '📦';
   const stockClass = sinStock ? 'out' : stockBajo ? 'low' : 'in';
-  const stockText  = sinStock ? 'Sin stock' : stockBajo ? `⚠ Últimas ${p.stock} unidades` : '✓ En stock';
+  const stockText  = sinStock ? window.FZLang?window.FZLang.t('producto.sin_stock'):'Sin stock' : stockBajo ? `⚠ Últimas ${p.stock} unidades` : window.FZLang?window.FZLang.t('producto.en_stock'):'✓ En stock';
 
   document.getElementById('content').innerHTML = `
     <div class="product-layout" style="animation:fadeUp .6s ease both;">
@@ -360,7 +369,7 @@ async function loadProduct(){
         <!-- Acciones -->
         <div class="product-actions">
           <button class="btn-add" id="addBtn" ${sinStock?'disabled':''}>
-            ${sinStock ? '😞 Sin stock' : '🛒 Añadir al carrito'}
+            ${sinStock ? '😞 Sin stock' : window.FZLang?window.FZLang.t('producto.anadir'):'🛒 Añadir al carrito'}
           </button>
           <a href="/productos" class="btn-back">← Volver al catálogo</a>
         </div>

@@ -232,7 +232,15 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
   .dd-sep{height:1px;background:rgba(28,17,8,.06);margin:.3rem .3rem;}
   .dd-logout{color:#C0392B!important;}
   .dd-logout:hover{background:rgba(192,57,43,.06)!important;color:#C0392B!important;}
-  </style>
+  
+/* ── Language toggle ── */
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,background .2s;font-family:'Syne',sans-serif;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
+</style>
+<script src="/static/js/i18n.js"></script>
 </head>
 <body>
 
@@ -253,8 +261,8 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/productos">Productos</a></li>
+    <li><a href="/" data-i18n="nav.inicio">Inicio</a></li>
+    <li><a href="/productos" data-i18n="nav.productos">Productos</a></li>
     <li><a href="/quienes-somos">Quienes Somos </a></li>
     <li><a href="/carrito" class="active">Carrito</a></li>
   </ul>
@@ -275,9 +283,10 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
       </div>
     </div>
     {% else %}
-    <a href="/login">Mi cuenta</a>
+    <a href="/login" data-i18n="nav.cuenta">Mi cuenta</a>
     {% endif %}
-    <a href="/carrito" class="nav-cta">🛒 Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
+    <a href="/carrito" class="nav-cta">🛒 <span data-i18n="nav.carrito">Carrito</span> <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
+    <button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -299,7 +308,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
     </div>
 
     <div class="page-eyebrow">Tu selección</div>
-    <h1 class="page-h1">Tu <i>carrito</i></h1>
+    <h1 class="page-h1"><span data-i18n="carrito.title">Tu</span> <i data-i18n="carrito.title_i">carrito</i></h1>
 
     <div id="cartRoot"></div>
   </div>
@@ -320,7 +329,7 @@ const API = '/api';
 const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
 const BG_CLASSES = ['warm','cool','green','gold'];
 const SHIPPING_OPTS = [
-  { id:'std',  name:'Envío estándar', days:'3 – 5 días hábiles', price:0,    label:'Gratis' },
+  { id:'std',  name:'Envío estándar', days:'3 – 5 días hábiles', price:0,    label:window.FZLang?window.FZLang.t('carrito.gratis'):'Gratis' },
   { id:'exp',  name:'Envío express',  days:'24 – 48h',           price:4.95, label:'4,95€'  },
 ];
 const FREE_SHIPPING_FROM = 50;
@@ -497,7 +506,7 @@ function render(){
                     </div>
                   </div>
                   <span class="ship-price ${overFree||o.price===0?'free':''}">
-                    ${overFree ? 'Gratis' : o.price===0?'Gratis':o.label}
+                    ${overFree ? window.FZLang?window.FZLang.t('carrito.gratis'):'Gratis' : o.price===0?window.FZLang?window.FZLang.t('carrito.gratis'):'Gratis':o.label}
                   </span>
                 </div>`).join('')}
             </div>
@@ -521,7 +530,7 @@ function render(){
           <!-- Desglose -->
           <div class="summary-row"><span class="lbl">Subtotal</span><span class="val">${fmt(subtotal())}€</span></div>
           ${coupon?`<div class="summary-row"><span class="lbl" style="color:var(--ok)">Descuento (${coupon.label})</span><span class="val" style="color:var(--ok)">−${fmt(discount())}€</span></div>`:''}
-          <div class="summary-row"><span class="lbl">Envío</span><span class="val ${shippingCost()===0?'':''}"><span style="color:${shippingCost()===0?'var(--ok)':'inherit'}">${shippingCost()===0?'Gratis':fmt(shippingCost())+'€'}</span></span></div>
+          <div class="summary-row"><span class="lbl">Envío</span><span class="val ${shippingCost()===0?'':''}"><span style="color:${shippingCost()===0?'var(--ok)':'inherit'}">${shippingCost()===0?window.FZLang?window.FZLang.t('carrito.gratis'):'Gratis':fmt(shippingCost())+'€'}</span></span></div>
 
           <div class="summary-divider"></div>
 

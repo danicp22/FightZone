@@ -171,7 +171,15 @@ main{padding-top:100px;padding-bottom:5rem;}
   .pinfo{padding:1rem 1rem 1.2rem;}
   .padd-wrap{display:none;} .padd-mobile{display:block;}
 }
+
+/* ── Language toggle ── */
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,background .2s;font-family:'Syne',sans-serif;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
 </style>
+<script src="/static/js/i18n.js"></script>
 </head>
 <body>
 
@@ -183,12 +191,13 @@ main{padding-top:100px;padding-bottom:5rem;}
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/productos"class="active">Productos</a></li>
-    <li><a href="/quienes-somos">Quienes Somos</a></li>
+    <li><a href="/" data-i18n="nav.inicio">Inicio</a></li>
+    <li><a href="/productos"class="active" data-i18n="nav.productos">Productos</a></li>
+    <li><a href="/quienes-somos" data-i18n="nav.quienes">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
-    <a href="/carrito" class="nav-cta">🛒 Carrito <span class="cart-badge" id="cCount">0</span></a>
+    <a href="/carrito" class="nav-cta">🛒 <span data-i18n="nav.carrito">Carrito</span> <span class="cart-badge" id="cCount">0</span></a>
+    <button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -201,7 +210,7 @@ main{padding-top:100px;padding-bottom:5rem;}
   <div class="wrap">
     <!-- Header -->
     <div class="page-eyebrow">Catálogo</div>
-    <h1 class="page-h1">Todos los <i>productos</i></h1>
+    <h1 class="page-h1"><span data-i18n="productos.title">Todos los</span> <i data-i18n="productos.title_i">productos</i></h1>
     <p class="page-count" id="pageCount">Cargando productos…</p>
 
     <!-- Buscador -->
@@ -210,7 +219,7 @@ main{padding-top:100px;padding-bottom:5rem;}
         <span class="search-ic">🔍</span>
         <input class="search-input" type="text" id="searchInput" placeholder="Buscar guantes, sacos, vendas…" autocomplete="off">
       </div>
-      <button class="search-btn" onclick="applySearch()">Buscar</button>
+      <button class="search-btn" onclick="applySearch()"><span data-i18n="productos.btn_buscar">Buscar</span></button>
     </div>
 
     <!-- Toolbar -->
@@ -318,7 +327,7 @@ async function loadCats() {
 
   const all = document.createElement('button');
   all.className = 'fil' + (state.cat===0?' on':'');
-  all.textContent = 'Todos';
+  all.textContent = window.FZLang?window.FZLang.t('productos.todos'):'Todos';
   all.onclick = () => setCat(0);
   container.appendChild(all);
   addCursorTo(all);
@@ -415,7 +424,7 @@ async function loadProducts() {
         <div class="pfooter">
           <div class="pprice">${formatPrice(p.precio)}€</div>
           <div class="pstock-lbl ${sinStock?'out':stockBajo?'low':''}">
-            ${sinStock?'Sin stock':stockBajo?`⚠ Últimas ${p.stock}`:'✓ En stock'}
+            ${sinStock?window.FZLang?window.FZLang.t('productos.sin_stock'):'Sin stock':stockBajo?`⚠ Últimas ${p.stock}`:window.FZLang?window.FZLang.t('productos.en_stock'):'✓ En stock'}
           </div>
         </div>
         ${!sinStock?`<button class="padd-mobile" onclick="event.stopPropagation();addCart(${p.id},'${esc(p.nombre)}',false)">+ Añadir al carrito</button>`:''}

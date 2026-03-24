@@ -6,6 +6,15 @@
 <title>FightZone</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="../static/css/styles.css" rel="stylesheet">
+<style>
+/* ── Language toggle ── */
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,background .2s;font-family:'Syne',sans-serif;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
+</style>
+<script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </head>
 <body>
 
@@ -23,15 +32,16 @@
 <nav>
   <a href="#" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/" class="active">Inicio</a></li>
-    <li><a href="/productos">Productos</a></li>
-    <li><a href="/quienes-somos">Quienes Somos</a></li>
+    <li><a href="/" class="active" data-i18n="nav.inicio">Inicio</a></li>
+    <li><a href="/productos" data-i18n="nav.productos">Productos</a></li>
+    <li><a href="/quienes-somos" data-i18n="nav.quienes">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
-    <a href="/login">Mi cuenta</a>
+    <a href="/login" data-i18n="nav.cuenta">Mi cuenta</a>
     <a href="/carrito" class="nav-cta" id="cartBtn">
       🛒 Carrito <span class="cart-badge" id="cCount">0</span>
     </a>
+    <button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button>
     <button class="hamburger" id="burger" aria-label="Menú">
       <span></span><span></span><span></span>
     </button>
@@ -50,19 +60,19 @@
 <!-- ══ HERO ═══════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-left">
-    <div class="hero-pill"><span class="hero-pill-dot"></span> Colección Élite 2026</div>
+    <div class="hero-pill"><span class="hero-pill-dot"></span> <span data-i18n="index.pill">Colección Élite 2026</span></div>
     <h1 class="hero-h1">
-      El arte<br>de <span class="hi-red">luchar</span><br>
-      <span class="hi-outline">sin límites</span>
+      <span data-i18n="index.h1a">El arte</span><br>de <span class="hi-red" data-i18n="index.h1b">luchar</span><br>
+      <span class="hi-outline" data-i18n="index.h1c">sin límites</span>
     </h1>
-    <p class="hero-desc">Equipamiento forjado para campeones. Diseñado con precisión para rendir cuando más importa.</p>
+    <p class="hero-desc"><span data-i18n="index.desc">Equipamiento forjado para campeones. Diseñado con precisión para rendir cuando más importa.</span></p>
     <div class="hero-btns">
-      <a href="#shop" class="btn-primary">🔥 Explorar tienda</a>
+      <a href="#shop" class="btn-primary"><span data-i18n="index.explorar">🔥 Explorar tienda</span></a>
     </div>
     <div class="hero-stats">
-      <div class="hs"><div class="hs-val">200+</div><div class="hs-label">Productos</div></div>
+      <div class="hs"><div class="hs-val">200+</div><div class="hs-label" data-i18n="cats.guantes" style="display:none"></div><div class="hs-label" data-i18n="index.productos">Productos</div></div>
       <div class="hs-sep"></div>
-      <div class="hs"><div class="hs-val">15+</div><div class="hs-label">Marcas</div></div>
+      <div class="hs"><div class="hs-val">15+</div><div class="hs-label" data-i18n="index.marcas">Marcas</div></div>
     </div>
   </div>
 
@@ -74,11 +84,11 @@
     </div>
     <div class="fbadge fb1">
       <span>⚡</span>
-      <div><div>Envío rápido</div><div class="fb-sub">24-48h España</div></div>
+      <div><div data-i18n="index.envio">Envío rápido</div><div class="fb-sub" data-i18n="index.envio_sub">24-48h España</div></div>
     </div>
     <div class="fbadge fb3">
       <span>🔄</span>
-      <div><div>Devuelves gratis</div><div class="fb-sub">30 días</div></div>
+      <div><div data-i18n="index.devuelves">Devuelves gratis</div><div class="fb-sub" data-i18n="index.devuelves_sub">30 días</div></div>
     </div>
   </div>
 </section>
@@ -86,16 +96,16 @@
 <!-- ══ TICKER ════════════════════════════════════════ -->
 <div class="ticker">
   <div class="tick-track">
-    <span class="tick-item">Guantes de calidad</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Envío Gratis +50€</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Ofertas - hasta 30%</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Nuevos Sacos exclusivos</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Devolución 30 Días</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Guantes de calidad</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Envío Gratis +50€</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Ofertas - hasta 30%</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Nuevos Sacos exclusivos</span><span class="tick-item tick-sep">✦</span>
-    <span class="tick-item">Devolución 30 Días</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.1">Guantes de calidad</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.2">Envío Gratis +50€</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.3">Ofertas - hasta 30%</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.4">Nuevos Sacos exclusivos</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.5">Devolución 30 Días</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.1">Guantes de calidad</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.2">Envío Gratis +50€</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.3">Ofertas - hasta 30%</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.4">Nuevos Sacos exclusivos</span><span class="tick-item tick-sep">✦</span>
+    <span class="tick-item" data-i18n="ticker.5">Devolución 30 Días</span><span class="tick-item tick-sep">✦</span>
   </div>
 </div>
 
@@ -103,39 +113,39 @@
 <section class="cats-section">
   <div class="sec-wrap">
     <div class="sec-row">
-      <div><div class="sec-eyebrow">Explorar</div><h2 class="sec-h2">Todas las <i>categorías</i></h2></div>
-      <a href="/productos" class="link-more">Ver todo →</a>
+      <div><div class="sec-eyebrow" data-i18n="cats.eyebrow">Explorar</div><h2 class="sec-h2"><span data-i18n="cats.title">Todas las</span> <i data-i18n="cats.title_i">categorías</i></h2></div>
+      <a href="/productos" class="link-more"><span data-i18n="cats.vertodo">Ver todo →</span></a>
     </div>
     <div class="cats-grid">
       <a href="/productos?cat=1">
           <div class="ccat feat ani">
             <span class="ccat-icon">🥊</span>
-            <div class="ccat-name">Guantes</div>
-            <div class="ccat-count">48 productos</div>
+            <div class="ccat-name" data-i18n="cats.guantes">Guantes</div>
+            <div class="ccat-count"><span data-i18n="ticker.1" style="display:none"></span>48 <span data-i18n="cats.productos">productos</span></div>
             <div class="ccat-arrow">↗</div>
           </div>
       </a>
       <a href="/productos?cat=4">
         <div class="ccat ani d1">
           <span class="ccat-icon">🩱</span>
-          <div class="ccat-name">Ropa</div>
-          <div class="ccat-count">62 productos</div>
+          <div class="ccat-name" data-i18n="cats.ropa">Ropa</div>
+          <div class="ccat-count">62 <span data-i18n="cats.productos">productos</span></div>
           <div class="ccat-arrow">↗</div>
         </div>
       </a>
       <a href="/productos?cat=3">
         <div class="ccat ani d2">
           <span class="ccat-icon">🛡️</span>
-          <div class="ccat-name">Protección</div>
-          <div class="ccat-count">35 productos</div>
+          <div class="ccat-name" data-i18n="cats.proteccion">Protección</div>
+          <div class="ccat-count">35 <span data-i18n="cats.productos">productos</span></div>
           <div class="ccat-arrow">↗</div>
         </div>
       </a>
       <a href="/productos?cat=2">
         <div class="ccat ani d3">
           <span class="ccat-icon">💥</span>
-          <div class="ccat-name">Sacos</div>
-          <div class="ccat-count">21 productos</div>
+          <div class="ccat-name" data-i18n="cats.sacos">Sacos</div>
+          <div class="ccat-count">21 <span data-i18n="cats.productos">productos</span></div>
           <div class="ccat-arrow">↗</div>
         </div>
       </a>
@@ -149,18 +159,18 @@
   <div class="sec-wrap">
     <div class="feature-inner">
       <div class="feat-left">
-        <div class="feat-eyebrow">Producto del Mes</div>
+        <div class="feat-eyebrow" data-i18n="feat.eyebrow">Producto del Mes</div>
         <h2 class="feat-h">Saco <i>RX-100</i><br>Professional</h2>
-        <p class="feat-desc">Cuero genuino de primera calidad con relleno de élite. Diseñado para los entrenamientos más exigentes, durante años.</p>
+        <p class="feat-desc"><span data-i18n="feat.desc">Cuero genuino de primera calidad con relleno de élite. Diseñado para los entrenamientos más exigentes, durante años.</span></p>
         <div class="feat-price">
           <span class="feat-price-val">229,95€</span>
           <span class="feat-price-old">289€</span>
         </div>
-        <button class="btn-primary" onclick="addCart()" style="border:none;cursor:pointer;width:fit-content;">🛒 Añadir al carrito</button>
+        <button class="btn-primary" onclick="addCart()" style="border:none;cursor:pointer;width:fit-content;"><span data-i18n="feat.add">🛒 Añadir al carrito</span></button>
         <div class="feat-specs">
-          <div class="feat-spec"><div class="feat-spec-v">50kg</div><div class="feat-spec-k">Peso</div></div>
-          <div class="feat-spec"><div class="feat-spec-v">100%</div><div class="feat-spec-k">Cuero</div></div>
-          <div class="feat-spec"><div class="feat-spec-v">5 años</div><div class="feat-spec-k">Garantía</div></div>
+          <div class="feat-spec"><div class="feat-spec-v">50kg</div><div class="feat-spec-k" data-i18n="feat.peso">Peso</div></div>
+          <div class="feat-spec"><div class="feat-spec-v">100%</div><div class="feat-spec-k" data-i18n="feat.cuero">Cuero</div></div>
+          <div class="feat-spec"><div class="feat-spec-v" data-i18n="feat.anios">5 años</div><div class="feat-spec-k" data-i18n="feat.garantia">Garantía</div></div>
         </div>
       </div>
       <div class="feat-right">
@@ -174,32 +184,32 @@
 <section class="testi-section">
   <div class="sec-wrap">
     <div class="sec-row">
-      <div><div class="sec-eyebrow">Reseñas</div><h2 class="sec-h2">Lo que <i>dicen</i></h2></div>
-      <a href="#" class="link-more">Ver todas →</a>
+      <div><div class="sec-eyebrow" data-i18n="testi.eyebrow">Reseñas</div><h2 class="sec-h2"><span data-i18n="testi.title">Lo que</span> <i data-i18n="testi.title_i">dicen</i></h2></div>
+      <a href="#" class="link-more"><span data-i18n="testi.vertodas">Ver todas →</span></a>
     </div>
     <div class="testi-grid">
       <div class="tcard ani">
         <div class="tstars">★★★★★</div>
-        <p class="ttext">Los mejores guantes que he probado en mis 10 años entrenando. La calidad es brutal y aguantan sesiones muy intensas sin deformarse.</p>
+        <p class="ttext"><span data-i18n="testi.t1">Los mejores guantes que he probado en mis 10 años entrenando. La calidad es brutal y aguantan sesiones muy intensas sin deformarse.</span></p>
         <div class="tauthor">
           <div class="tavatar">🥊</div>
-          <div><div class="tname">Carlos Mendoza</div><div class="trole">Boxeador Profesional</div></div>
+          <div><div class="tname">Carlos Mendoza</div><div class="trole" data-i18n="testi.role1">Boxeador Profesional</div></div>
         </div>
       </div>
       <div class="tcard dark ani d1">
         <div class="tstars">★☆☆☆☆</div>
-        <p class="ttext">Vaya ruina de pagina, me han estafado, el envio tardo 3 semanas y la caja estaba rota.</p>
+        <p class="ttext"><span data-i18n="testi.t2">Vaya ruina de pagina, me han estafado, el envio tardo 3 semanas y la caja estaba rota.</span></p>
         <div class="tauthor">
           <div class="tavatar">💪</div>
-          <div><div class="tname" style="color:white">Ana Reyes</div><div class="trole">Entrenadora Muay Thai</div></div>
+          <div><div class="tname" style="color:white">Ana Reyes</div><div class="trole" data-i18n="testi.role2">Entrenadora Muay Thai</div></div>
         </div>
       </div>
       <div class="tcard ani d2">
         <div class="tstars">★★★★★</div>
-                <p class="ttext">Increíble variedad y atención al cliente de 10. Llegó en 24h perfectamente embalado. Mi tienda de referencia para todo el equipo.</p>
+                <p class="ttext"><span data-i18n="testi.t3">Increíble variedad y atención al cliente de 10. Llegó en 24h perfectamente embalado. Mi tienda de referencia para todo el equipo.</span></p>
         <div class="tauthor">
           <div class="tavatar">🏆</div>
-          <div><div class="tname">Javier Torres</div><div class="trole">Campeón Regional 2024</div></div>
+          <div><div class="tname">Javier Torres</div><div class="trole" data-i18n="testi.role3">Campeón Regional 2024</div></div>
         </div>
       </div>
     </div>
@@ -210,11 +220,11 @@
 <section class="nl-section">
   <div class="nl-inner">
     <div class="sec-eyebrow" style="justify-content:center;margin-bottom:1rem;">Newsletter</div>
-    <h2 class="nl-h">Entrena con <i>ventaja</i></h2>
-    <p class="nl-sub">Ofertas exclusivas, lanzamientos anticipados y consejos de los mejores entrenadores directo a tu bandeja.</p>
+    <h2 class="nl-h"><span data-i18n="nl.title">Entrena con</span> <i data-i18n="nl.title_i">ventaja</i></h2>
+    <p class="nl-sub"><span data-i18n="nl.sub">Ofertas exclusivas, lanzamientos anticipados y consejos de los mejores entrenadores directo a tu bandeja.</span></p>
     <div class="nl-form">
-      <input class="nl-input" type="email" placeholder="tu@email.com">
-      <button class="nl-btn">Unirme →</button>
+      <input class="nl-input" type="email" placeholder="tu@email.com" data-i18n="nl.placeholder">
+      <button class="nl-btn"><span data-i18n="nl.btn">Unirme →</span></button>
     </div>
   </div>
 </section>
@@ -225,7 +235,7 @@
     <div class="footer-top">
       <div>
         <div class="footer-logo"><span class="logo-dot"></span> FightZone</div>
-        <p class="footer-tagline">Equipamiento premium para atletas que no se conforman con menos.</p>
+        <p class="footer-tagline"><span data-i18n="footer.tagline">Equipamiento premium para atletas que no se conforman con menos.</span></p>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Tienda</div>
@@ -241,7 +251,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <div class="footer-copy">© 2026 FightZone — Todos los derechos reservados</div>
+      <div class="footer-copy"><span data-i18n="footer.copy">© 2026 FightZone — Todos los derechos reservados</span></div>
       <div class="socials">
         <a href="#" class="soc">ig</a>
         <a href="#" class="soc">tw</a>

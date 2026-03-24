@@ -159,7 +159,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
   .field-row-2{grid-template-columns:1fr;}
 }
 @media(max-width:420px){.form-card{padding:1.8rem 1.2rem;border-radius:18px;}}
+
+/* ── Language toggle ── */
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,background .2s;font-family:'Syne',sans-serif;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
 </style>
+<script src="/static/js/i18n.js"></script>
 </head>
 <body>
 <div class="cur" id="cur"></div>
@@ -206,8 +214,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
       <div id="formState">
         <div class="form-header">
           <div class="form-icon">🥊</div>
-          <h1 class="form-title">Crear <i>cuenta</i></h1>
-          <p class="form-subtitle">Es gratis, siempre lo será</p>
+          <h1 class="form-title"><span data-i18n="registro.title">Crear</span> <i data-i18n="registro.title_i">cuenta</i></h1>
+          <p class="form-subtitle"><span data-i18n="registro.sub">Es gratis, siempre lo será</span></p>
         </div>
 
         <div class="progress-bar">
@@ -273,7 +281,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
           </div>
 
           <div class="form-nav">
-            <button class="btn-action btn-next" id="next1">Continuar →</button>
+            <div style="display:flex;justify-content:flex-end;margin-bottom:.5rem;"><button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button></div>
+          <button class="btn-action btn-next" id="next1"><span data-i18n="registro.continuar">Continuar →</span></button>
           </div>
           <div class="form-footer"><p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p></div>
         </div>

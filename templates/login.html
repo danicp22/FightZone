@@ -111,7 +111,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
   .form-card{max-width:100%;border-radius:22px;padding:2.5rem 1.8rem;}
 }
 @media(max-width:420px){.form-card{padding:2rem 1.4rem;border-radius:18px;}}
+
+/* ── Language toggle ── */
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:flex;align-items:center;gap:.35rem;cursor:pointer;transition:border-color .2s,background .2s;font-family:'Syne',sans-serif;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
 </style>
+<script src="/static/js/i18n.js"></script>
 </head>
 <body>
 <div class="cur" id="cur"></div>
@@ -137,6 +145,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
   </div>
 
   <div class="panel-right">
+    <div style="display:flex;justify-content:flex-end;max-width:420px;margin:0 auto 1rem;"><button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button></div>
     <div class="form-card">
       <div id="formState">
         {% if error %}
@@ -145,12 +154,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
         <form action="/login_usuario" method="POST" id="loginForm">
         <div class="form-header">
           <div class="form-icon">🔐</div>
-          <h1 class="form-title">Iniciar <i>sesión</i></h1>
-          <p class="form-subtitle">Accede con tu cuenta de FightZone</p>
+          <h1 class="form-title"><span data-i18n="login.title">Iniciar</span> <i data-i18n="login.title_i">sesión</i></h1>
+          <p class="form-subtitle"><span data-i18n="login.sub">Accede con tu cuenta de FightZone</span></p>
         </div>
 
         <div class="field">
-          <label class="field-label" for="email">Correo electrónico</label>
+          <label class="field-label" for="email"><span data-i18n="login.email">Correo electrónico</span></label>
           <div class="field-wrap">
             <span class="field-icon">✉️</span>
             <input class="field-input" type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email">
@@ -159,7 +168,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
         </div>
 
         <div class="field">
-          <label class="field-label" for="pwd">Contraseña</label>
+          <label class="field-label" for="pwd"><span data-i18n="login.password">Contraseña</span></label>
           <div class="field-wrap">
             <span class="field-icon">🔒</span>
             <input class="field-input" type="password" id="pwd" name="password" placeholder="••••••••" autocomplete="current-password">
@@ -180,7 +189,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
           <div class="spinner"></div>
           <span class="btn-txt">Entrar a mi cuenta →</span>
         </button>
-        <div class="form-footer"><p>¿No tienes cuenta? <a href="/registro">Regístrate gratis</a></p></div>
+        <div class="form-footer"><p>¿No tienes cuenta? <a href="/registro"><span data-i18n="login.registro">Regístrate gratis</span></a></p></div>
         </form>
       </div>
 
