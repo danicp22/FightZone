@@ -78,7 +78,7 @@ main{padding-top:100px;padding-bottom:5rem;}
 /* GRID */
 .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3rem;}
 
-.pcard{background:var(--white);border-radius:22px;overflow:hidden;box-shadow:var(--sh-s);transition:transform .35s cubic-bezier(.34,1.4,.64,1),box-shadow .35s;}
+.pcard{background:var(--white);border-radius:22px;overflow:hidden;box-shadow:var(--sh-s);transition:transform .35s cubic-bezier(.34,1.4,.64,1),box-shadow .35s;cursor:pointer;}
 .pcard:hover{transform:translateY(-7px);box-shadow:var(--sh-l);}
 
 .pimg{height:220px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
@@ -111,7 +111,6 @@ main{padding-top:100px;padding-bottom:5rem;}
 .pstock-lbl.low{color:#E67E22;}
 .pstock-lbl.out{color:#E74C3C;}
 
-/* botón visible en móvil */
 .padd-mobile{display:none;width:100%;margin-top:.8rem;font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;border:none;padding:.6rem;border-radius:10px;cursor:pointer;}
 
 /* EMPTY */
@@ -135,7 +134,7 @@ main{padding-top:100px;padding-bottom:5rem;}
 .toast.up{transform:translateY(0);}
 .toast-icon{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r2));display:flex;align-items:center;justify-content:center;color:white;font-size:.85rem;flex-shrink:0;}
 
-/* SKELETON loader */
+/* SKELETON */
 .skeleton{background:linear-gradient(90deg,var(--sand) 25%,var(--sand2) 50%,var(--sand) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skel-card{background:var(--white);border-radius:22px;overflow:hidden;box-shadow:var(--sh-s);}
@@ -205,7 +204,7 @@ main{padding-top:100px;padding-bottom:5rem;}
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
     <li><a href="/">Inicio</a></li>
-    <li><a href="/productos"class="active">Productos</a></li>
+    <li><a href="/productos" class="active">Productos</a></li>
     <li><a href="/quienes-somos">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
@@ -227,7 +226,11 @@ main{padding-top:100px;padding-bottom:5rem;}
     {% else %}
     <a href="/login">Mi cuenta</a>
     {% endif %}
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()"><span class="lang-flag" id="langFlag">🇬🇧</span><span class="lang-label" id="langLabel">EN</span></button>
+    <!-- FIX: id="langToggleBtn" (sin onclick, lo gestiona i18n.js) -->
+    <button class="lang-btn" id="langToggleBtn">
+      <span class="lang-flag">🇬🇧</span>
+      <span class="lang-label">EN</span>
+    </button>
     <a href="/carrito" class="nav-cta">&#x1F6D2; Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
@@ -239,12 +242,10 @@ main{padding-top:100px;padding-bottom:5rem;}
 
 <main>
   <div class="wrap">
-    <!-- Header -->
     <div class="page-eyebrow">Catálogo</div>
     <h1 class="page-h1">Todos los <i>productos</i></h1>
     <p class="page-count" id="pageCount">Cargando productos…</p>
 
-    <!-- Buscador -->
     <div class="search-row">
       <div class="search-wrap">
         <span class="search-ic">🔍</span>
@@ -253,11 +254,8 @@ main{padding-top:100px;padding-bottom:5rem;}
       <button class="search-btn" onclick="applySearch()">Buscar</button>
     </div>
 
-    <!-- Toolbar -->
     <div class="toolbar">
-      <div class="cats" id="catFilters">
-        <!-- Se rellena dinámicamente -->
-      </div>
+      <div class="cats" id="catFilters"></div>
       <div class="order-wrap">
         <span class="order-lbl">Ordenar</span>
         <select class="order-sel" id="orderSel" onchange="applyOrder()">
@@ -269,16 +267,13 @@ main{padding-top:100px;padding-bottom:5rem;}
       </div>
     </div>
 
-    <!-- Grid -->
     <div class="pgrid" id="pgrid">
-      <!-- Skeleton inicial -->
       <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line short skeleton"></div><div class="skel-line med skeleton"></div><div class="skel-line full skeleton"></div></div></div>
       <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line short skeleton"></div><div class="skel-line med skeleton"></div><div class="skel-line full skeleton"></div></div></div>
       <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line short skeleton"></div><div class="skel-line med skeleton"></div><div class="skel-line full skeleton"></div></div></div>
       <div class="skel-card"><div class="skel-img skeleton"></div><div class="skel-body"><div class="skel-line short skeleton"></div><div class="skel-line med skeleton"></div><div class="skel-line full skeleton"></div></div></div>
     </div>
 
-    <!-- Paginación -->
     <div class="pagination" id="pagination"></div>
   </div>
 </main>
@@ -291,19 +286,12 @@ main{padding-top:100px;padding-bottom:5rem;}
 </footer>
 
 <script>
-// ═══════════════════════════════════════════════════
-//  CONFIG — cambia la URL base si tu Flask corre en otro puerto
-// ═══════════════════════════════════════════════════
 const API = '/api';
-
-// Emojis de fallback por categoría
 const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
-
-// Estado
 let state = { cat: 0, search: '', order: 'nombre', page: 1, perPage: 12 };
 let cartCount = 0;
 
-// ── Cursor ──────────────────────────────────────────
+// ── Cursor ──
 const cur=document.getElementById('cur'), curR=document.getElementById('curR');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
@@ -313,11 +301,11 @@ function addCursorTo(el){
   el.addEventListener('mouseleave',()=>{cur.classList.remove('xl');curR.classList.remove('xl');});
 }
 
-// ── Hamburger ───────────────────────────────────────
+// ── Hamburger ──
 const burger=document.getElementById('burger'), mobMenu=document.getElementById('mobMenu');
 burger.addEventListener('click',()=>{ burger.classList.toggle('open'); mobMenu.classList.toggle('open'); });
 
-// ── Toast ───────────────────────────────────────────
+// ── Toast ──
 const toast=document.getElementById('toast');
 function showToast(msg){
   document.getElementById('toastMsg').textContent=msg;
@@ -325,59 +313,54 @@ function showToast(msg){
   setTimeout(()=>toast.classList.remove('up'), 2800);
 }
 
-// ── Carrito ─────────────────────────────────────────
-async function addCart(id, nombre, sinStock) {
+// ── Carrito ──
+async function addCart(id, nombre, sinStock, e) {
+  if(e){ e.stopPropagation(); }
   if (sinStock) return;
   try {
-    // Llama a tu endpoint Flask: POST /api/carrito
-    await fetch(`${API}/carrito`, {
+    const r = await fetch(`${API}/carrito`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',     // envía la cookie de sesión Flask
+      credentials: 'include',
       body: JSON.stringify({ producto_id: id, cantidad: 1 })
     });
-  } catch(e) { /* sin servidor: igualmente muestra feedback */ }
+    if(r.status === 401){ window.location.href='/login'; return; }
+  } catch(e) {}
   cartCount++;
   document.getElementById('cCount').textContent = cartCount;
   showToast(`"${nombre}" añadido al carrito`);
 }
 
-// ── Cargar categorías ────────────────────────────────
+// ── Cargar categorías ──
 async function loadCats() {
   let cats = [];
   try {
     const res = await fetch(`${API}/categorias`);
     cats = await res.json();
   } catch(e) {
-    // Fallback hardcoded (igual que tu BD)
     cats = [{id:1,nombre:'Guantes'},{id:2,nombre:'Sacos'},{id:3,nombre:'Proteccion'},{id:4,nombre:'Ropa'},{id:5,nombre:'Vendas'}];
   }
-
   const container = document.getElementById('catFilters');
   container.innerHTML = '';
-
   const all = document.createElement('button');
   all.className = 'fil' + (state.cat===0?' on':'');
   all.textContent = 'Todos';
-  all.onclick = () => setCat(0);
+  all.onclick = (e) => setCat(0, e);
   container.appendChild(all);
   addCursorTo(all);
-
   cats.forEach(c => {
     const btn = document.createElement('button');
     btn.className = 'fil' + (state.cat===c.id?' on':'');
     btn.textContent = c.nombre;
-    btn.onclick = () => setCat(c.id);
+    btn.onclick = (e) => setCat(c.id, e);
     container.appendChild(btn);
     addCursorTo(btn);
   });
 }
 
-// ── Cargar productos ─────────────────────────────────
+// ── Cargar productos ──
 async function loadProducts() {
   const grid = document.getElementById('pgrid');
-
-  // Skeleton mientras carga
   grid.innerHTML = Array(4).fill(`
     <div class="skel-card">
       <div class="skel-img skeleton"></div>
@@ -389,19 +372,17 @@ async function loadProducts() {
     </div>`).join('');
 
   let data = { productos: [], total: 0 };
-
   try {
     const params = new URLSearchParams({
-      ...(state.cat   > 0   && { categoria_id: state.cat }),
+      ...(state.cat > 0 && { categoria_id: state.cat }),
       ...(state.search !== '' && { buscar: state.search }),
-      orden:    state.order,
-      pagina:   state.page,
+      orden: state.order,
+      pagina: state.page,
       por_pagina: state.perPage
     });
     const res = await fetch(`${API}/productos?${params}`);
     data = await res.json();
   } catch(e) {
-    // Si la API no está disponible: muestra un aviso
     grid.innerHTML = `
       <div class="empty">
         <span class="empty-icon">⚠️</span>
@@ -412,11 +393,9 @@ async function loadProducts() {
     return;
   }
 
-  // Actualizar contador
   document.getElementById('pageCount').textContent =
     `${data.total} producto${data.total!==1?'s':''} encontrado${data.total!==1?'s':''}`;
 
-  // Renderizar
   if (!data.productos.length) {
     grid.innerHTML = `
       <div class="empty">
@@ -439,14 +418,14 @@ async function loadProducts() {
       : '';
 
     return `
-    <div class="pcard ani ${delay}" data-id="${p.id}" onclick="window.location='/producto/'+p.id" style="cursor:pointer">
+    <div class="pcard ani ${delay}" data-id="${p.id}" onclick="window.location.href='/producto/${p.id}'">
       <div class="pimg">
         ${imgHtml}
         <span class="pimg-emoji" ${p.imagen?'style="display:none"':''}>${emoji}</span>
         <div class="pcat-tag">${esc(p.categoria_nombre??'')}</div>
         ${sinStock
           ? `<div class="pstock-out-overlay"><span>Sin stock</span></div>`
-          : `<div class="padd-wrap"><button class="padd-btn" onclick="event.stopPropagation();addCart(${p.id},'${esc(p.nombre)}',false)">+ Añadir</button></div>`
+          : `<div class="padd-wrap"><button class="padd-btn" onclick="addCart(${p.id},'${esc(p.nombre)}',false,event)">+ Añadir</button></div>`
         }
       </div>
       <div class="pinfo">
@@ -458,15 +437,13 @@ async function loadProducts() {
             ${sinStock?'Sin stock':stockBajo?`⚠ Últimas ${p.stock}`:'✓ En stock'}
           </div>
         </div>
-        ${!sinStock?`<button class="padd-mobile" onclick="event.stopPropagation();addCart(${p.id},'${esc(p.nombre)}',false)">+ Añadir al carrito</button>`:''}
+        ${!sinStock?`<button class="padd-mobile" onclick="addCart(${p.id},'${esc(p.nombre)}',false,event)">+ Añadir al carrito</button>`:''}
       </div>
     </div>`;
   }).join('');
 
-  // Cursor en las cards
   grid.querySelectorAll('.pcard, button, a').forEach(addCursorTo);
 
-  // Scroll reveal
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
   }, {threshold: 0.08});
@@ -475,56 +452,48 @@ async function loadProducts() {
   renderPagination(data.total);
 }
 
-// ── Paginación ───────────────────────────────────────
+// ── Paginación ──
 function renderPagination(total) {
   const totalPages = Math.ceil(total / state.perPage);
   const pg = document.getElementById('pagination');
   if (totalPages <= 1) { pg.innerHTML = ''; return; }
-
   let html = '';
   const btn = (label, page, extra='') =>
     `<button class="pg-btn${extra}" onclick="goPage(${page})">${label}</button>`;
-
   html += btn('←', state.page-1, state.page<=1?' disabled':'');
-
   const start = Math.max(1, state.page-2);
-  const end   = Math.min(totalPages, state.page+2);
-  if (start>1) { html+=btn(1,1); if(start>2) html+=`<span class="pg-dots">…</span>`; }
+  const end = Math.min(totalPages, state.page+2);
+  if(start>1){ html+=btn(1,1); if(start>2) html+=`<span class="pg-dots">…</span>`; }
   for(let i=start;i<=end;i++) html+=btn(i,i,i===state.page?' on':'');
-  if (end<totalPages) { if(end<totalPages-1) html+=`<span class="pg-dots">…</span>`; html+=btn(totalPages,totalPages); }
-
+  if(end<totalPages){ if(end<totalPages-1) html+=`<span class="pg-dots">…</span>`; html+=btn(totalPages,totalPages); }
   html += btn('→', state.page+1, state.page>=totalPages?' disabled':'');
   pg.innerHTML = html;
 }
 
-// ── Acciones ─────────────────────────────────────────
-function setCat(id) {
+// ── Acciones ──
+function setCat(id, e) {
   state.cat = id; state.page = 1;
   document.querySelectorAll('.fil').forEach(b => b.classList.remove('on'));
-  event.target.classList.add('on');
+  if(e && e.target) e.target.classList.add('on');
   loadProducts();
 }
-
 function applySearch() {
   state.search = document.getElementById('searchInput').value.trim();
   state.page = 1;
   loadProducts();
 }
-
 function applyOrder() {
   state.order = document.getElementById('orderSel').value;
   state.page = 1;
   loadProducts();
 }
-
 function goPage(p) {
   const totalPages = Math.ceil(parseInt(document.getElementById('pageCount').textContent) / state.perPage);
-  if (p < 1 || p > totalPages) return;
+  if(p < 1 || p > totalPages) return;
   state.page = p;
   loadProducts();
   window.scrollTo({top:0, behavior:'smooth'});
 }
-
 function resetFilters() {
   state = { cat:0, search:'', order:'nombre', page:1, perPage:12 };
   document.getElementById('searchInput').value = '';
@@ -533,15 +502,14 @@ function resetFilters() {
   loadProducts();
 }
 
-// ── Helpers ──────────────────────────────────────────
+// ── Helpers ──
 function esc(str) { return String(str).replace(/[<>"'&]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c])); }
 function formatPrice(n) { return parseFloat(n).toFixed(2).replace('.',','); }
 
-// Buscar al pulsar Enter
 document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key==='Enter') applySearch(); });
 document.getElementById('searchInput').style.cursor = 'text';
 
-// ── Init: leer categoría de la URL si viene del index ──
+// Leer categoría de la URL
 const _urlParams = new URLSearchParams(window.location.search);
 const _catParam = parseInt(_urlParams.get('cat'));
 if(_catParam) state.cat = _catParam;
@@ -558,72 +526,9 @@ loadProducts();
     m.addEventListener('click',function(e){e.stopPropagation();});
   }
 })();
-// ── Traductor ──
-var _D={
-  es:{'nav.inicio':'Inicio','nav.productos':'Productos','nav.quienes':'Quienes Somos',
-      'cats.eyebrow':'Explorar','cats.title':'Todas las','cats.title_i':'categor\u00edas','cats.vertodo':'Ver todo \u2192',
-      'cats.guantes':'Guantes','cats.ropa':'Ropa','cats.proteccion':'Protecci\u00f3n','cats.sacos':'Sacos',
-      'index.pill':'Colecci\u00f3n \u00c9lite 2026','index.h1a':'El arte','index.h1b':'luchar','index.h1c':'sin l\u00edmites',
-      'index.desc':'Equipamiento forjado para campeones. Dise\u00f1ado con precisi\u00f3n para rendir cuando m\u00e1s importa.',
-      'index.explorar':'Explorar tienda','index.envio':'Env\u00edo r\u00e1pido','index.envio_sub':'24-48h Espa\u00f1a',
-      'index.devuelves':'Devuelves gratis','index.devuelves_sub':'30 d\u00edas',
-      'feat.eyebrow':'Producto del Mes','feat.add':'Añadir al carrito','feat.peso':'Peso','feat.cuero':'Cuero','feat.garantia':'Garant\u00eda',
-      'testi.eyebrow':'Rese\u00f1as','testi.title':'Lo que','testi.title_i':'dicen','testi.vertodas':'Ver todas \u2192',
-      'testi.role1':'Boxeador Profesional','testi.role2':'Entrenadora Muay Thai','testi.role3':'Campe\u00f3n Regional 2024',
-      'nl.title':'Entrena con','nl.title_i':'ventaja','nl.btn':'Unirme \u2192',
-      'nl.sub':'Ofertas exclusivas, lanzamientos anticipados y consejos de los mejores entrenadores directo a tu bandeja.',
-      'ticker.1':'Guantes de calidad','ticker.2':'Env\u00edo Gratis +50\u20ac','ticker.3':'Ofertas - hasta 30%',
-      'ticker.4':'Nuevos Sacos exclusivos','ticker.5':'Devoluci\u00f3n 30 D\u00edas',
-      'footer.tagline':'Equipamiento premium para atletas que no se conforman con menos.',
-      'footer.copy':'\u00a9 2026 FightZone \u2014 Todos los derechos reservados',
-      'productos.title':'Todos los','productos.title_i':'productos',
-      'carrito.title':'Tu','carrito.title_i':'carrito',
-      'login.title':'Iniciar','login.title_i':'sesi\u00f3n','login.sub':'Accede con tu cuenta de FightZone',
-      'registro.title':'Crear','registro.title_i':'cuenta','registro.sub':'Es gratis, siempre lo ser\u00e1',
-      'info.jobs_eyebrow':'U\u00fanete al equipo','info.jobs_title':'Trabaja con','info.jobs_title_i':'nosotros',
-      'info.maps_btn':'Abrir en Google Maps'},
-  en:{'nav.inicio':'Home','nav.productos':'Products','nav.quienes':'About Us',
-      'cats.eyebrow':'Explore','cats.title':'All','cats.title_i':'categories','cats.vertodo':'View all \u2192',
-      'cats.guantes':'Gloves','cats.ropa':'Clothing','cats.proteccion':'Protection','cats.sacos':'Bags',
-      'index.pill':'Elite Collection 2026','index.h1a':'The art','index.h1b':'of fighting','index.h1c':'without limits',
-      'index.desc':'Equipment forged for champions. Designed with precision to perform when it matters most.',
-      'index.explorar':'Explore store','index.envio':'Fast shipping','index.envio_sub':'24-48h Spain',
-      'index.devuelves':'Free returns','index.devuelves_sub':'30 days',
-      'feat.eyebrow':'Product of the Month','feat.add':'Add to cart','feat.peso':'Weight','feat.cuero':'Leather','feat.garantia':'Warranty',
-      'testi.eyebrow':'Reviews','testi.title':'What they','testi.title_i':'say','testi.vertodas':'View all \u2192',
-      'testi.role1':'Professional Boxer','testi.role2':'Muay Thai Coach','testi.role3':'Regional Champion 2024',
-      'nl.title':'Train with','nl.title_i':'an edge','nl.btn':'Join \u2192',
-      'nl.sub':'Exclusive deals, early launches and tips from top coaches straight to your inbox.',
-      'ticker.1':'Quality gloves','ticker.2':'Free Shipping +50\u20ac','ticker.3':'Deals - up to 30% off',
-      'ticker.4':'New exclusive bags','ticker.5':'30-Day Returns',
-      'footer.tagline':'Premium equipment for athletes who settle for nothing less.',
-      'footer.copy':'\u00a9 2026 FightZone \u2014 All rights reserved',
-      'productos.title':'All','productos.title_i':'products',
-      'carrito.title':'Your','carrito.title_i':'cart',
-      'login.title':'Log','login.title_i':'in','login.sub':'Sign in to your FightZone account',
-      'registro.title':'Create','registro.title_i':'account','registro.sub':"It's free, always will be",
-      'info.jobs_eyebrow':'Join the team','info.jobs_title':'Work with','info.jobs_title_i':'us',
-      'info.maps_btn':'Open in Google Maps'}
-};
-function toggleLang(){
-  var c=localStorage.getItem('fz_lang')||'es';
-  localStorage.setItem('fz_lang',c==='es'?'en':'es');
-  _applyLang();
-}
-function _applyLang(){
-  var l=localStorage.getItem('fz_lang')||'es',d=_D[l]||_D.es;
-  document.querySelectorAll('[data-i18n]').forEach(function(el){
-    var v=d[el.getAttribute('data-i18n')];
-    if(v===undefined)return;
-    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')el.placeholder=v;
-    else el.textContent=v;
-  });
-  document.documentElement.lang=l;
-  var f=document.getElementById('langFlag'),lb=document.getElementById('langLabel');
-  if(l==='es'){if(f)f.textContent='\ud83c\uddec\ud83c\udde7';if(lb)lb.textContent='EN';}
-  else{if(f)f.textContent='\ud83c\uddea\ud83c\uddf8';if(lb)lb.textContent='ES';}
-}
-_applyLang();
 </script>
+
+<!-- FIX: i18n.js gestiona el botón langToggleBtn automáticamente -->
+<script src="/static/js/i18n.js"></script>
 </body>
 </html>
