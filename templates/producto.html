@@ -61,14 +61,7 @@ main{padding-top:88px;padding-bottom:5rem;}
 
 /* IMAGE SIDE */
 .product-img-wrap{position:sticky;top:88px;}
-.product-img-card{
-  border-radius:28px;overflow:hidden;
-  background:linear-gradient(145deg,#FFF0EE,#FFDBD6);
-  aspect-ratio:1;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:var(--sh-l);
-  position:relative;
-}
+.product-img-card{border-radius:28px;overflow:hidden;background:linear-gradient(145deg,#FFF0EE,#FFDBD6);aspect-ratio:1;display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-l);position:relative;}
 .product-img-card img{width:100%;height:100%;object-fit:cover;}
 .product-img-emoji{font-size:12rem;filter:drop-shadow(0 20px 40px rgba(255,77,28,.25));animation:float 5s ease-in-out infinite;}
 .product-cat-badge{position:absolute;top:1.2rem;left:1.2rem;font-family:'Syne',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.9);color:var(--mid);padding:.3rem .8rem;border-radius:100px;backdrop-filter:blur(8px);}
@@ -78,7 +71,6 @@ main{padding-top:88px;padding-bottom:5rem;}
 .product-stock-badge.out{background:rgba(231,76,60,.1);color:#E74C3C;}
 
 /* INFO SIDE */
-.product-info{}
 .product-eyebrow{font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--r1);display:flex;align-items:center;gap:.5rem;margin-bottom:.8rem;}
 .product-eyebrow::before{content:'';width:20px;height:2px;background:var(--r1);border-radius:2px;}
 .product-name{font-family:'Instrument Serif',serif;font-size:clamp(2.2rem,4vw,3.5rem);line-height:.95;letter-spacing:-.02em;color:var(--text);margin-bottom:1.8rem;}
@@ -88,11 +80,7 @@ main{padding-top:88px;padding-bottom:5rem;}
 .product-stock-text.in{color:#27AE60;}
 .product-stock-text.low{color:#E67E22;}
 .product-stock-text.out{color:#E74C3C;}
-
-/* Separador */
 .product-divider{height:1px;background:var(--sand2);margin:1.8rem 0;}
-
-/* Descripción */
 .product-desc-label{font-family:'Syne',sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);margin-bottom:.8rem;}
 .product-desc{font-size:.95rem;font-weight:300;line-height:1.85;color:var(--mid);}
 
@@ -112,7 +100,7 @@ main{padding-top:88px;padding-bottom:5rem;}
 .btn-back{display:flex;align-items:center;justify-content:center;gap:.5rem;background:transparent;color:var(--mid);border:1.5px solid var(--sand2);font-family:'Syne',sans-serif;font-size:.82rem;font-weight:600;padding:.85rem;border-radius:14px;transition:all .3s;cursor:pointer;width:100%;text-decoration:none;}
 .btn-back:hover{border-color:var(--text);color:var(--text);}
 
-/* Detalles extra */
+/* Meta */
 .product-meta{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:2rem;}
 .meta-item{background:var(--white);border-radius:14px;padding:1rem 1.2rem;box-shadow:var(--sh-s);display:flex;align-items:center;gap:.8rem;}
 .meta-icon{font-size:1.1rem;flex-shrink:0;}
@@ -176,21 +164,6 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 .lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
 .lang-btn:hover .lang-label{color:var(--r1);}
 </style>
-  <style>
-  .user-menu{position:relative;display:inline-flex;align-items:center;}
-  .user-btn{background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:.5rem;transition:color .2s;padding:0;}
-  .user-btn:hover{color:var(--r1);}
-  .user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r2));display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:white;font-family:'Syne',sans-serif;letter-spacing:0;box-shadow:0 2px 10px var(--glow);flex-shrink:0;}
-  .user-dropdown{position:absolute;right:0;top:calc(100% + 14px);background:white;border-radius:16px;box-shadow:0 16px 48px rgba(28,17,8,.13),0 2px 8px rgba(28,17,8,.05);border:1px solid rgba(28,17,8,.06);min-width:182px;padding:.5rem;z-index:9999;opacity:0;pointer-events:none;transform:translateY(6px) scale(.97);transform-origin:top right;transition:opacity .18s ease,transform .18s ease;}
-  .user-menu.open .user-dropdown{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
-  .user-dropdown::before{content:'';position:absolute;top:-5px;right:16px;width:10px;height:10px;background:white;border-left:1px solid rgba(28,17,8,.06);border-top:1px solid rgba(28,17,8,.06);transform:rotate(45deg);}
-  .dd-label{padding:.4rem .8rem .2rem;font-family:'Syne',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);opacity:.55;}
-  .user-dropdown a{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;color:var(--text);text-decoration:none;border-radius:10px;transition:background .15s,color .15s;}
-  .user-dropdown a:hover{background:rgba(255,77,28,.06);color:var(--r1);}
-  .dd-sep{height:1px;background:rgba(28,17,8,.06);margin:.3rem .3rem;}
-  .dd-logout{color:#C0392B!important;}
-  .dd-logout:hover{background:rgba(192,57,43,.06)!important;color:#C0392B!important;}
-  </style>
 </head>
 <body>
 
@@ -202,8 +175,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
     <li><a href="/productos">Productos</a></li>
-    <li><a href="/quienes-somos">Nosotros</a></li>
-    <li><a href="/contacto">Contacto</a></li>
+    <li><a href="/quienes-somos">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
     {% if usuario %}
@@ -224,15 +196,18 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
     {% else %}
     <a href="/login">Mi cuenta</a>
     {% endif %}
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()"><span class="lang-flag" id="langFlag">🇬🇧</span><span class="lang-label" id="langLabel">EN</span></button>
+    <!-- FIX: id="langToggleBtn" gestionado por i18n.js -->
+    <button class="lang-btn" id="langToggleBtn">
+      <span class="lang-flag">🇬🇧</span>
+      <span class="lang-label">EN</span>
+    </button>
     <a href="/carrito" class="nav-cta">&#x1F6D2; Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mob-menu" id="mobMenu">
   <a href="/productos">Productos</a>
-  <a href="/quienes-somos">Nosotros</a>
-  <a href="/contacto">Contacto</a>
+  <a href="/quienes-somos">Quienes Somos</a>
 </div>
 
 <main>
@@ -244,10 +219,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
       <span class="breadcrumb-sep">›</span>
       <span class="breadcrumb-current" id="breadcrumbName">Cargando…</span>
     </div>
-
-    <!-- Contenido dinámico -->
     <div id="content">
-      <!-- Skeleton de carga -->
       <div class="product-layout" id="skeleton">
         <div>
           <div class="skeleton" style="aspect-ratio:1;border-radius:28px;"></div>
@@ -302,7 +274,7 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('up'),2800);
 }
 
-// Obtener ID de la URL: /producto?id=3  o  /producto/3
+// Obtener ID
 function getProductId(){
   const params = new URLSearchParams(window.location.search);
   if(params.get('id')) return params.get('id');
@@ -314,7 +286,6 @@ function getProductId(){
 async function loadProduct(){
   const id = getProductId();
   if(!id){ showError('ID de producto no especificado.'); return; }
-
   let p;
   try {
     const res = await fetch(`${API}/productos/${id}`);
@@ -325,7 +296,6 @@ async function loadProduct(){
     return;
   }
 
-  // Breadcrumb
   document.title = `FightZone — ${p.nombre}`;
   document.getElementById('breadcrumbName').textContent = p.nombre;
 
@@ -337,8 +307,6 @@ async function loadProduct(){
 
   document.getElementById('content').innerHTML = `
     <div class="product-layout" style="animation:fadeUp .6s ease both;">
-
-      <!-- IMAGEN -->
       <div class="product-img-wrap">
         <div class="product-img-card">
           ${p.imagen
@@ -351,7 +319,6 @@ async function loadProduct(){
         </div>
       </div>
 
-      <!-- INFO -->
       <div class="product-info">
         <div class="product-eyebrow">${esc(p.categoria_nombre ?? 'Boxeo')}</div>
         <h1 class="product-name">${esc(p.nombre)}</h1>
@@ -368,7 +335,6 @@ async function loadProduct(){
 
         <div class="product-divider"></div>
 
-        <!-- Cantidad -->
         ${!sinStock ? `
         <div class="qty-row">
           <span class="qty-label">Cantidad</span>
@@ -379,7 +345,6 @@ async function loadProduct(){
           </div>
         </div>` : ''}
 
-        <!-- Acciones -->
         <div class="product-actions">
           <button class="btn-add" id="addBtn" ${sinStock?'disabled':''}>
             ${sinStock ? '😞 Sin stock' : '🛒 Añadir al carrito'}
@@ -387,7 +352,6 @@ async function loadProduct(){
           <a href="/productos" class="btn-back">← Volver al catálogo</a>
         </div>
 
-        <!-- Meta -->
         <div class="product-meta">
           <div class="meta-item">
             <span class="meta-icon">📦</span>
@@ -409,10 +373,8 @@ async function loadProduct(){
       </div>
     </div>`;
 
-  // Cursor en nuevos elementos
   document.querySelectorAll('.product-layout a,.product-layout button').forEach(curOn);
 
-  // Cantidad
   if(!sinStock){
     const qtyVal=document.getElementById('qtyVal');
     document.getElementById('qtyMinus').addEventListener('click',()=>{ if(+qtyVal.value>1) qtyVal.value=+qtyVal.value-1; });
@@ -446,17 +408,6 @@ function esc(s){ return String(s??'').replace(/[<>"'&]/g,c=>({'<':'&lt;','>':'&g
 function formatPrice(n){ return parseFloat(n).toFixed(2).replace('.',','); }
 
 // ── User dropdown ──
-const userBtn = document.getElementById('userBtn');
-const userMenu = document.getElementById('userMenu');
-if(userBtn && userMenu){
-  userBtn.addEventListener('click', e => { e.stopPropagation(); userMenu.classList.toggle('open'); });
-  document.addEventListener('click', () => userMenu.classList.remove('open'));
-  userMenu.addEventListener('click', e => e.stopPropagation());
-}
-
-loadProduct();
-
-// ── User dropdown ──
 (function(){
   var b=document.getElementById('userBtn'),m=document.getElementById('userMenu');
   if(b&&m){
@@ -465,72 +416,11 @@ loadProduct();
     m.addEventListener('click',function(e){e.stopPropagation();});
   }
 })();
-// ── Traductor ──
-var _D={
-  es:{'nav.inicio':'Inicio','nav.productos':'Productos','nav.quienes':'Quienes Somos',
-      'cats.eyebrow':'Explorar','cats.title':'Todas las','cats.title_i':'categor\u00edas','cats.vertodo':'Ver todo \u2192',
-      'cats.guantes':'Guantes','cats.ropa':'Ropa','cats.proteccion':'Protecci\u00f3n','cats.sacos':'Sacos',
-      'index.pill':'Colecci\u00f3n \u00c9lite 2026','index.h1a':'El arte','index.h1b':'luchar','index.h1c':'sin l\u00edmites',
-      'index.desc':'Equipamiento forjado para campeones. Dise\u00f1ado con precisi\u00f3n para rendir cuando m\u00e1s importa.',
-      'index.explorar':'Explorar tienda','index.envio':'Env\u00edo r\u00e1pido','index.envio_sub':'24-48h Espa\u00f1a',
-      'index.devuelves':'Devuelves gratis','index.devuelves_sub':'30 d\u00edas',
-      'feat.eyebrow':'Producto del Mes','feat.add':'Añadir al carrito','feat.peso':'Peso','feat.cuero':'Cuero','feat.garantia':'Garant\u00eda',
-      'testi.eyebrow':'Rese\u00f1as','testi.title':'Lo que','testi.title_i':'dicen','testi.vertodas':'Ver todas \u2192',
-      'testi.role1':'Boxeador Profesional','testi.role2':'Entrenadora Muay Thai','testi.role3':'Campe\u00f3n Regional 2024',
-      'nl.title':'Entrena con','nl.title_i':'ventaja','nl.btn':'Unirme \u2192',
-      'nl.sub':'Ofertas exclusivas, lanzamientos anticipados y consejos de los mejores entrenadores directo a tu bandeja.',
-      'ticker.1':'Guantes de calidad','ticker.2':'Env\u00edo Gratis +50\u20ac','ticker.3':'Ofertas - hasta 30%',
-      'ticker.4':'Nuevos Sacos exclusivos','ticker.5':'Devoluci\u00f3n 30 D\u00edas',
-      'footer.tagline':'Equipamiento premium para atletas que no se conforman con menos.',
-      'footer.copy':'\u00a9 2026 FightZone \u2014 Todos los derechos reservados',
-      'productos.title':'Todos los','productos.title_i':'productos',
-      'carrito.title':'Tu','carrito.title_i':'carrito',
-      'login.title':'Iniciar','login.title_i':'sesi\u00f3n','login.sub':'Accede con tu cuenta de FightZone',
-      'registro.title':'Crear','registro.title_i':'cuenta','registro.sub':'Es gratis, siempre lo ser\u00e1',
-      'info.jobs_eyebrow':'U\u00fanete al equipo','info.jobs_title':'Trabaja con','info.jobs_title_i':'nosotros',
-      'info.maps_btn':'Abrir en Google Maps'},
-  en:{'nav.inicio':'Home','nav.productos':'Products','nav.quienes':'About Us',
-      'cats.eyebrow':'Explore','cats.title':'All','cats.title_i':'categories','cats.vertodo':'View all \u2192',
-      'cats.guantes':'Gloves','cats.ropa':'Clothing','cats.proteccion':'Protection','cats.sacos':'Bags',
-      'index.pill':'Elite Collection 2026','index.h1a':'The art','index.h1b':'of fighting','index.h1c':'without limits',
-      'index.desc':'Equipment forged for champions. Designed with precision to perform when it matters most.',
-      'index.explorar':'Explore store','index.envio':'Fast shipping','index.envio_sub':'24-48h Spain',
-      'index.devuelves':'Free returns','index.devuelves_sub':'30 days',
-      'feat.eyebrow':'Product of the Month','feat.add':'Add to cart','feat.peso':'Weight','feat.cuero':'Leather','feat.garantia':'Warranty',
-      'testi.eyebrow':'Reviews','testi.title':'What they','testi.title_i':'say','testi.vertodas':'View all \u2192',
-      'testi.role1':'Professional Boxer','testi.role2':'Muay Thai Coach','testi.role3':'Regional Champion 2024',
-      'nl.title':'Train with','nl.title_i':'an edge','nl.btn':'Join \u2192',
-      'nl.sub':'Exclusive deals, early launches and tips from top coaches straight to your inbox.',
-      'ticker.1':'Quality gloves','ticker.2':'Free Shipping +50\u20ac','ticker.3':'Deals - up to 30% off',
-      'ticker.4':'New exclusive bags','ticker.5':'30-Day Returns',
-      'footer.tagline':'Premium equipment for athletes who settle for nothing less.',
-      'footer.copy':'\u00a9 2026 FightZone \u2014 All rights reserved',
-      'productos.title':'All','productos.title_i':'products',
-      'carrito.title':'Your','carrito.title_i':'cart',
-      'login.title':'Log','login.title_i':'in','login.sub':'Sign in to your FightZone account',
-      'registro.title':'Create','registro.title_i':'account','registro.sub':"It's free, always will be",
-      'info.jobs_eyebrow':'Join the team','info.jobs_title':'Work with','info.jobs_title_i':'us',
-      'info.maps_btn':'Open in Google Maps'}
-};
-function toggleLang(){
-  var c=localStorage.getItem('fz_lang')||'es';
-  localStorage.setItem('fz_lang',c==='es'?'en':'es');
-  _applyLang();
-}
-function _applyLang(){
-  var l=localStorage.getItem('fz_lang')||'es',d=_D[l]||_D.es;
-  document.querySelectorAll('[data-i18n]').forEach(function(el){
-    var v=d[el.getAttribute('data-i18n')];
-    if(v===undefined)return;
-    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')el.placeholder=v;
-    else el.textContent=v;
-  });
-  document.documentElement.lang=l;
-  var f=document.getElementById('langFlag'),lb=document.getElementById('langLabel');
-  if(l==='es'){if(f)f.textContent='\ud83c\uddec\ud83c\udde7';if(lb)lb.textContent='EN';}
-  else{if(f)f.textContent='\ud83c\uddea\ud83c\uddf8';if(lb)lb.textContent='ES';}
-}
-_applyLang();
+
+loadProduct();
 </script>
+
+<!-- FIX: i18n.js gestiona langToggleBtn automáticamente -->
+<script src="/static/js/i18n.js"></script>
 </body>
 </html>
