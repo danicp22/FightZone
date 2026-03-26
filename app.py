@@ -643,6 +643,114 @@ def api_carrito_item(producto_id):
     return jsonify({"ok": True})
 
 
+
+# ══════════════════════════════════════════════════════
+#  PEDIDOS
+# ══════════════════════════════════════════════════════
+
+@app.route("/api/pedidos", methods=["POST"])
+def api_crear_pedido():
+    if "usuario_id" not in session:
+        return jsonify({"error": "No autenticado"}), 401
+
+    data  = request.get_json(force=True)
+    items = data.get("items", [])
+    total = data.get("total", 0)
+
+    if not items:
+        return jsonify({"error": "El carrito está vacío"}), 400
+
+    usuario_id = session["usuario_id"]
+    con = conectar()
+    cur = con.cursor()
+    try:
+        # Crear pedido
+        cur.execute(
+            "INSERT INTO pedidos (usuario_id, total) VALUES (%s, %s)",
+            (usuario_id, float(total))
+        )
+        pedido_id = cur.lastrowid
+
+        # Insertar líneas del pedido
+        for item in items:
+            cur.execute("""
+                INSERT INTO pedido_items (pedido_id, producto_id, nombre, precio, cantidad)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (pedido_id,
+                  item.get("producto_id"),
+                  item.get("nombre", ""),
+                  float(item.get("precio", 0)),
+                  int(item.get("cantidad", 1))))
+
+            # Reducir stock
+            cur.execute("""
+                UPDATE productos SET stock = GREATEST(0, stock - %s)
+                WHERE id = %s
+            """, (int(item.get("cantidad", 1)), item.get("producto_id")))
+
+        # Vaciar carrito
+        carrito_id = get_or_create_carrito(usuario_id)
+        cur.execute("DELETE FROM carrito_items WHERE carrito_id = %s", (carrito_id,))
+        con.commit()
+        return jsonify({"ok": True, "pedido_id": pedido_id}), 201
+    except Exception as e:
+        con.rollback()
+        print(f"[api_crear_pedido] {e}")
+        return jsonify({"error": str(e)}), 500
+    finally:
+        con.close()
+
+
+@app.route("/api/pedidos", methods=["GET"])
+def api_listar_pedidos():
+    if session.get("rol") != "admin":
+        return jsonify({"error": "No autorizado"}), 403
+    try:
+        con = conectar()
+        cur = con.cursor(dictionary=True)
+        cur.execute("""
+            SELECT p.id, p.total, p.estado, p.fecha,
+                   u.nombre AS usuario_nombre, u.email AS usuario_email
+            FROM pedidos p
+            JOIN usuarios u ON p.usuario_id = u.id
+            ORDER BY p.fecha DESC
+        """)
+        pedidos = cur.fetchall()
+        for p in pedidos:
+            if p.get("fecha"):
+                p["fecha"] = p["fecha"].isoformat()
+            p["total"] = float(p["total"])
+            # Cargar items de cada pedido
+            cur.execute("""
+                SELECT nombre, precio, cantidad
+                FROM pedido_items WHERE pedido_id = %s
+            """, (p["id"],))
+            p["items"] = cur.fetchall()
+            for i in p["items"]:
+                i["precio"] = float(i["precio"])
+        con.close()
+        return jsonify(pedidos)
+    except Exception as e:
+        print(f"[api_listar_pedidos] {e}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/pedidos/<int:id>/estado", methods=["PUT"])
+def api_actualizar_estado_pedido(id):
+    if session.get("rol") != "admin":
+        return jsonify({"error": "No autorizado"}), 403
+    data   = request.get_json(force=True)
+    estado = data.get("estado")
+    estados_validos = ["pendiente", "procesando", "enviado", "entregado", "cancelado"]
+    if estado not in estados_validos:
+        return jsonify({"error": "Estado no válido"}), 400
+    con = conectar()
+    cur = con.cursor()
+    cur.execute("UPDATE pedidos SET estado = %s WHERE id = %s", (estado, id))
+    con.commit()
+    con.close()
+    return jsonify({"ok": True})
+
 # ══════════════════════════════════════════════════════
 #  ARRANQUE
 # ══════════════════════════════════════════════════════

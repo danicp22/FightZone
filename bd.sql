@@ -62,3 +62,26 @@ GRANT ALL PRIVILEGES ON *.* TO "daniel"@"localhost";
 FLUSH PRIVILEGES;
 
 ALTER TABLE productos MODIFY imagen VARCHAR(1000) NOT NULL DEFAULT '';
+
+
+-- Añadir para pedidos
+ 
+CREATE TABLE IF NOT EXISTS pedidos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    estado ENUM('pendiente','procesando','enviado','entregado','cancelado') DEFAULT 'pendiente',
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
+ 
+CREATE TABLE IF NOT EXISTS pedido_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pedido_id INT NOT NULL,
+    producto_id INT NOT NULL,
+    nombre VARCHAR(150) NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    cantidad INT NOT NULL,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
+    FOREIGN KEY (producto_id) REFERENCES productos(id)
+);

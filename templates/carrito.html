@@ -629,13 +629,32 @@ function applyCoupon(){
 }
 
 async function checkout(){
+  if(!cart.length) return;
+  const btn = document.querySelector('.btn-checkout');
+  if(btn) { btn.disabled=true; btn.textContent='Procesando...'; }
   try {
-    await fetch(`${API}/pedidos`, {
+    const r = await fetch(`${API}/pedidos`, {
       method:'POST', credentials:'include',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ items: cart, envio: shipping, total: total(), cupon: coupon?.code||null })
+      body: JSON.stringify({
+        items: cart.map(i=>({
+          producto_id: i.producto_id,
+          nombre:      i.nombre,
+          precio:      i.precio,
+          cantidad:    i.cantidad
+        })),
+        total: total()
+      })
     });
-  } catch(e){}
+    if(!r.ok) {
+      const err = await r.json();
+      alert('Error al procesar el pedido: ' + (err.error||'inténtalo de nuevo'));
+      if(btn) { btn.disabled=false; btn.textContent='Finalizar compra →'; }
+      return;
+    }
+  } catch(e){
+    console.error('Error checkout:', e);
+  }
   document.getElementById('successModal').classList.add('open');
   cart=[];
 }
