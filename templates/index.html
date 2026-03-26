@@ -183,27 +183,144 @@
   <div class="sec-wrap">
     <div class="feature-inner">
       <div class="feat-left">
-        <div class="feat-eyebrow">Producto del Mes</div>
-        <h2 class="feat-h">Saco <i>RX-100</i><br>Professional</h2>
-        <p class="feat-desc">Cuero genuino de primera calidad con relleno de élite. Diseñado para los entrenamientos más exigentes, durante años.</p>
+        <div class="feat-eyebrow" data-i18n="feat.eyebrow">Producto del Mes</div>
+
+        <h2 class="feat-h" id="featuredName">Cargando producto...</h2>
+
+        <p class="feat-desc">
+          <span id="featuredDesc">Cargando descripción...</span>
+        </p>
+
         <div class="feat-price">
-          <span class="feat-price-val">229,95€</span>
-          <span class="feat-price-old">289€</span>
+          <span class="feat-price-val" id="featuredPrice">—</span>
+          <span class="feat-price-old" id="featuredOldPrice" style="display:none;"></span>
         </div>
-        <button class="btn-primary" onclick="addCart()" style="border:none;cursor:pointer;width:fit-content;">🛒 Añadir al carrito</button>
+
+        <button
+          class="btn-primary"
+          id="featuredAddBtn"
+          style="border:none;cursor:pointer;width:fit-content;"
+          disabled
+        >
+          <span data-i18n="feat.add">🛒 Añadir al carrito</span>
+        </button>
+
         <div class="feat-specs">
-          <div class="feat-spec"><div class="feat-spec-v">50kg</div><div class="feat-spec-k">Peso</div></div>
-          <div class="feat-spec"><div class="feat-spec-v">100%</div><div class="feat-spec-k">Cuero</div></div>
-          <div class="feat-spec"><div class="feat-spec-v">5 años</div><div class="feat-spec-k">Garantía</div></div>
+          <div class="feat-spec">
+            <div class="feat-spec-v" id="featuredStock">—</div>
+            <div class="feat-spec-k">Stock</div>
+          </div>
+          <div class="feat-spec">
+            <div class="feat-spec-v" id="featuredCategory">—</div>
+            <div class="feat-spec-k">Categoría</div>
+          </div>
+          <div class="feat-spec">
+            <div class="feat-spec-v">24-48h</div>
+            <div class="feat-spec-k">Envío</div>
+          </div>
         </div>
       </div>
+
       <div class="feat-right">
-        <div class="feat-emoji">🎯</div>
+        <img
+          id="featuredImg"
+          alt=""
+          style="display:none;max-width:420px;width:100%;border-radius:24px;object-fit:cover;"
+        >
+        <div class="feat-emoji" id="featuredEmoji">🎯</div>
       </div>
     </div>
   </div>
 </section>
 
+<script>
+const FEATURE_PRODUCT_ID = 2;
+
+async function loadFeaturedProduct() {
+  const nameEl = document.getElementById('featuredName');
+  const descEl = document.getElementById('featuredDesc');
+  const priceEl = document.getElementById('featuredPrice');
+  const oldPriceEl = document.getElementById('featuredOldPrice');
+  const stockEl = document.getElementById('featuredStock');
+  const catEl = document.getElementById('featuredCategory');
+  const imgEl = document.getElementById('featuredImg');
+  const emojiEl = document.getElementById('featuredEmoji');
+  const addBtn = document.getElementById('featuredAddBtn');
+
+  try {
+    const res = await fetch(`${API}/productos?por_pagina=200`);
+    const data = await res.json();
+    const p = (data.productos || []).find(prod => String(prod.id) === String(FEATURE_PRODUCT_ID));
+
+    if (!p) {
+      nameEl.textContent = 'Producto del mes';
+      descEl.textContent = 'No se ha encontrado el producto.';
+      priceEl.textContent = '—';
+      addBtn.disabled = true;
+      return;
+    }
+
+    nameEl.textContent = p.nombre || 'Producto del mes';
+    descEl.textContent = p.descripcion || 'Producto destacado de FightZone.';
+    priceEl.textContent = `${Number(p.precio).toFixed(2).replace('.', ',')}€`;
+    oldPriceEl.style.display = 'none';
+
+    stockEl.textContent = p.stock ?? '—';
+    catEl.textContent = p.categoria_nombre || '—';
+
+    addBtn.disabled = false;
+    addBtn.onclick = async function (e) {
+      if (e) e.stopPropagation();
+
+      try {
+        const r = await fetch(`${API}/carrito`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ producto_id: p.id, cantidad: 1 })
+        });
+
+        if (r.status === 401) {
+          window.location.href = '/login';
+          return;
+        }
+
+        showToast(`"${p.nombre}" añadido al carrito`);
+
+        if (typeof cartCount !== 'undefined') {
+          cartCount += 1;
+          const c = document.getElementById('cCount');
+          if (c) c.textContent = cartCount;
+        }
+      } catch (err) {
+        showToast('No se pudo añadir al carrito');
+      }
+    };
+
+    if (p.imagen) {
+      imgEl.src = p.imagen;
+      imgEl.alt = p.nombre || 'Producto del mes';
+      imgEl.style.display = 'block';
+      emojiEl.style.display = 'none';
+
+      imgEl.onerror = function () {
+        imgEl.style.display = 'none';
+        emojiEl.style.display = 'flex';
+      };
+    } else {
+      imgEl.style.display = 'none';
+      emojiEl.style.display = 'flex';
+    }
+  } catch (err) {
+    nameEl.textContent = 'Producto del mes';
+    descEl.textContent = 'No se ha podido cargar el producto.';
+    priceEl.textContent = '—';
+    addBtn.disabled = true;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadFeaturedProduct);
+</script>
 <!-- ══ TESTIMONIALS ══════════════════════════════════ -->
 <section class="testi-section">
   <div class="sec-wrap">
