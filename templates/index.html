@@ -66,7 +66,7 @@
     {% else %}
     <a href="/login">Mi cuenta</a>
     {% endif %}
-    <button class="lang-btn" id="langBtn" onclick="toggleLang()"><span class="lang-flag" id="langFlag">🇬🇧</span><span class="lang-label" id="langLabel">EN</span></button>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()"><span class="lang-flag" id="langFlag">EN</span><span class="lang-label" id="langLabel">EN</span></button>
     <a href="/carrito" class="nav-cta" id="cartBtn">&#x1F6D2; Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
@@ -209,7 +209,6 @@
   <div class="sec-wrap">
     <div class="sec-row">
       <div><div class="sec-eyebrow">Reseñas</div><h2 class="sec-h2">Lo que <i>dicen</i></h2></div>
-      <a href="#" class="link-more">Ver todas →</a>
     </div>
     <div class="testi-grid">
       <div class="tcard ani">
@@ -263,7 +262,7 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Tienda</div>
-        <ul><li><a href="categorias/guantes.html">Guantes</a></li><li><a href="categorias/sacos.html">Sacos</a></li><li><a href="categorias/ropa.html">Ropa</a></li><li><a href="categorias/vendas.html">Vendas</a></li><li><a href="categorias/proteccion.html">Protección</a></li></ul>
+        <ul><li><a href="/productos?cat=1">Guantes</a></li><li><a href="/productos?cat=2">Sacos</a></li><li><a href="/productos?cat=4">Ropa</a></li><li><a href="/productos?cat=5">Vendas</a></li><li><a href="/productos?cat=3">Protección</a></li></ul>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Ayuda</div>
@@ -353,15 +352,6 @@ if (window.innerWidth > 540) {
   document.querySelectorAll('.mobile-cart-btn').forEach(b => b.style.display = 'none');
 }
 
-// ── User dropdown ──
-(function(){
-  var b=document.getElementById('userBtn'),m=document.getElementById('userMenu');
-  if(b&&m){
-    b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('open');});
-    document.addEventListener('click',function(){if(m)m.classList.remove('open');});
-    m.addEventListener('click',function(e){e.stopPropagation();});
-  }
-})();
 // ── Traductor ──
 var _D={
   es:{'nav.inicio':'Inicio','nav.productos':'Productos','nav.quienes':'Quienes Somos',
@@ -428,6 +418,31 @@ function _applyLang(){
   else{if(f)f.textContent='\ud83c\uddea\ud83c\uddf8';if(lb)lb.textContent='ES';}
 }
 _applyLang();
+
+// ── User dropdown ──
+(function(){
+  var b=document.getElementById('userBtn'),m=document.getElementById('userMenu');
+  if(b&&m){
+    b.addEventListener('click',function(e){e.stopPropagation();m.classList.toggle('open');});
+    document.addEventListener('click',function(){if(m)m.classList.remove('open');});
+    m.addEventListener('click',function(e){e.stopPropagation();});
+  }
+})();
+// ── Traductor ES/EN ──
+var _D={
+  es:{'nav.inicio':'Inicio','nav.productos':'Productos','nav.quienes':'Quienes Somos','cats.eyebrow':'Explorar','cats.title':'Todas las','cats.title_i':'categorias','cats.vertodo':'Ver todo','cats.guantes':'Guantes','cats.ropa':'Ropa','cats.proteccion':'Proteccion','cats.sacos':'Sacos','index.pill':'Coleccion Elite 2026','index.h1a':'El arte','index.h1b':'luchar','index.h1c':'sin limites','index.desc':'Equipamiento forjado para campeones.','index.explorar':'Explorar tienda','index.envio':'Envio rapido','index.envio_sub':'24-48h Espana','index.devuelves':'Devuelves gratis','index.devuelves_sub':'30 dias','feat.eyebrow':'Producto del Mes','feat.add':'Anadir al carrito','feat.peso':'Peso','feat.cuero':'Cuero','feat.garantia':'Garantia','testi.eyebrow':'Resenas','testi.title':'Lo que','testi.title_i':'dicen','testi.vertodas':'Ver todas','testi.role1':'Boxeador Profesional','testi.role2':'Entrenadora Muay Thai','testi.role3':'Campeon Regional 2024','nl.title':'Entrena con','nl.title_i':'ventaja','nl.btn':'Unirme','nl.sub':'Ofertas exclusivas y consejos directo a tu bandeja.','ticker.1':'Guantes de calidad','ticker.2':'Envio Gratis +50','ticker.3':'Ofertas hasta 30%','ticker.4':'Nuevos Sacos exclusivos','ticker.5':'Devolucion 30 Dias','footer.tagline':'Equipamiento premium para atletas.','footer.copy':'2026 FightZone - Todos los derechos reservados','productos.title':'Todos los','productos.title_i':'productos','carrito.title':'Tu','carrito.title_i':'carrito','login.title':'Iniciar','login.title_i':'sesion','login.sub':'Accede con tu cuenta de FightZone','registro.title':'Crear','registro.title_i':'cuenta','registro.sub':'Es gratis, siempre lo sera','info.jobs_eyebrow':'Unete al equipo','info.jobs_title':'Trabaja con','info.jobs_title_i':'nosotros','info.maps_btn':'Abrir en Google Maps'},
+  en:{'nav.inicio':'Home','nav.productos':'Products','nav.quienes':'About Us','cats.eyebrow':'Explore','cats.title':'All','cats.title_i':'categories','cats.vertodo':'View all','cats.guantes':'Gloves','cats.ropa':'Clothing','cats.proteccion':'Protection','cats.sacos':'Bags','index.pill':'Elite Collection 2026','index.h1a':'The art','index.h1b':'of fighting','index.h1c':'without limits','index.desc':'Equipment forged for champions.','index.explorar':'Explore store','index.envio':'Fast shipping','index.envio_sub':'24-48h Spain','index.devuelves':'Free returns','index.devuelves_sub':'30 days','feat.eyebrow':'Product of the Month','feat.add':'Add to cart','feat.peso':'Weight','feat.cuero':'Leather','feat.garantia':'Warranty','testi.eyebrow':'Reviews','testi.title':'What they','testi.title_i':'say','testi.vertodas':'View all','testi.role1':'Professional Boxer','testi.role2':'Muay Thai Coach','testi.role3':'Regional Champion 2024','nl.title':'Train with','nl.title_i':'an edge','nl.btn':'Join','nl.sub':'Exclusive deals and tips straight to your inbox.','ticker.1':'Quality gloves','ticker.2':'Free Shipping +50','ticker.3':'Deals up to 30% off','ticker.4':'New exclusive bags','ticker.5':'30-Day Returns','footer.tagline':'Premium equipment for athletes.','footer.copy':'2026 FightZone - All rights reserved','productos.title':'All','productos.title_i':'products','carrito.title':'Your','carrito.title_i':'cart','login.title':'Log','login.title_i':'in','login.sub':'Sign in to your FightZone account','registro.title':'Create','registro.title_i':'account','registro.sub':"It's free, always will be",'info.jobs_eyebrow':'Join the team','info.jobs_title':'Work with','info.jobs_title_i':'us','info.maps_btn':'Open in Google Maps'}
+};
+function toggleLang(){var c=localStorage.getItem('fz_lang')||'es';localStorage.setItem('fz_lang',c==='es'?'en':'es');_applyLang();}
+function _applyLang(){
+  var l=localStorage.getItem('fz_lang')||'es',d=_D[l]||_D.es;
+  document.querySelectorAll('[data-i18n]').forEach(function(el){var v=d[el.getAttribute('data-i18n')];if(v===undefined)return;if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')el.placeholder=v;else el.textContent=v;});
+  document.documentElement.lang=l;
+  var f=document.getElementById('langFlag'),lb=document.getElementById('langLabel');
+  if(f)f.textContent=l==='es'?'EN':'ES';
+  if(lb)lb.textContent=l==='es'?'EN':'ES';
+}
+(function(){var btn=document.getElementById('langBtn')||document.getElementById('langToggleBtn');if(btn)btn.onclick=toggleLang;_applyLang();})();
 </script>
 </body>
 </html>
