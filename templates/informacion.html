@@ -258,9 +258,9 @@ footer{background:var(--dark);padding:3rem 2rem;}
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/productos">Productos</a></li>
-    <li><a href="/quienes-somos" class="active">Quienes Somos</a></li>
+    <li><a href="/" data-i18n="nav.inicio">Inicio</a></li>
+    <li><a href="/productos" data-i18n="nav.productos">Productos</a></li>
+    <li><a href="/quienes-somos" class="active" data-i18n="nav.quienes">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
     {% if usuario %}
@@ -275,6 +275,8 @@ footer{background:var(--dark);padding:3rem 2rem;}
         <a href="/admin">⚙️ Panel admin</a>
         <div class="dd-sep"></div>
         {% endif %}
+        <a href="/mis-pedidos">📦 Mis pedidos</a>
+        <div class="dd-sep"></div>
         <a href="/logout" class="dd-logout">→ Cerrar sesión</a>
       </div>
     </div>
@@ -287,20 +289,20 @@ footer{background:var(--dark);padding:3rem 2rem;}
   </div>
 </nav>
 <div class="mob-menu" id="mobMenu">
-  <a href="/">Inicio</a>
-  <a href="/productos">Productos</a>
-  <a href="/quienes-somos">Quienes Somos</a>
+  <a href="/" data-i18n="nav.inicio">Inicio</a>
+  <a href="/productos" data-i18n="nav.productos">Productos</a>
+  <a href="/quienes-somos" data-i18n="nav.quienes">Quienes Somos</a>
 </div>
 
 <!-- ══ HERO ═══════════════════════════════════════════ -->
 <section class="hero">
   <div class="hero-bg-text">FZ</div>
   <div class="hero-left">
-    <div class="hero-pill"><span class="hero-pill-dot"></span> Nuestra historia</div>
+    <div class="hero-pill"><span class="hero-pill-dot"></span> <span data-i18n="info.hero_pill">Nuestra historia</span></div>
     <h1 class="hero-h1">
-      Vivimos el<br>boxeo con<br><i>pasión</i>
+      <span data-i18n="info.hero_h1a">Vivimos el</span><br><span data-i18n="info.hero_h1b">boxeo con</span><br><i data-i18n="info.hero_h1c">pasión</i>
     </h1>
-    <p class="hero-desc">
+    <p class="hero-desc" data-i18n="info.hero_desc">
       En FightZone vivimos el boxeo con pasión. Combinamos producto, asesoramiento y comunidad para que entrenes mejor, compitas con seguridad y disfrutes cada golpe.
     </p>
   </div>
@@ -336,8 +338,8 @@ footer{background:var(--dark);padding:3rem 2rem;}
   <div class="wrap">
     <div class="que-inner">
       <div class="que-left ani">
-        <div class="sec-eyebrow">Qué hacemos</div>
-        <h2 class="sec-h2">Producto que<br><i>realmente funciona</i></h2>
+        <div class="sec-eyebrow" data-i18n="info.que_eyebrow">Qué hacemos</div>
+        <h2 class="sec-h2"><span data-i18n="info.que_h2a">Producto que</span><br><i data-i18n="info.que_h2b">realmente funciona</i></h2>
         <p class="que-desc">
           Seleccionamos equipamiento de alta calidad para boxeo: guantes, sacos, protecciones, ropa técnica y accesorios. Probamos marcas, escuchamos a atletas y ajustamos el catálogo para que encuentres lo que realmente funciona.
         </p>
@@ -363,22 +365,22 @@ footer{background:var(--dark);padding:3rem 2rem;}
 <!-- ══ VALORES ════════════════════════════════════════ -->
 <section class="valores-section">
   <div class="wrap">
-    <div class="sec-eyebrow ani">Nuestra esencia</div>
-    <h2 class="sec-h2 ani">Lo que nos<br><i>define</i></h2>
+    <div class="sec-eyebrow ani" data-i18n="info.vals_eyebrow">Nuestra esencia</div>
+    <h2 class="sec-h2 ani"><span data-i18n="info.vals_h2a">Lo que nos</span><br><i data-i18n="info.vals_h2b">define</i></h2>
     <div class="valores-grid">
       <div class="vcard ani">
         <span class="vcard-icon">💪</span>
-        <div class="vcard-title">Trabajo constante</div>
+        <div class="vcard-title" data-i18n="info.val1_title">Trabajo constante</div>
         <p class="vcard-desc">Creemos en el trabajo constante, la seguridad y el respeto por el deporte. Los resultados vienen del esfuerzo diario.</p>
       </div>
       <div class="vcard dark ani d1">
         <span class="vcard-icon">🛡️</span>
-        <div class="vcard-title">Seguridad ante todo</div>
+        <div class="vcard-title" data-i18n="info.val2_title">Seguridad ante todo</div>
         <p class="vcard-desc">Apoyamos a la escena local, colaboramos con gimnasios y cuidamos que cada compra sea una mejora real en tu entrenamiento.</p>
       </div>
       <div class="vcard ani d2">
         <span class="vcard-icon">🤜</span>
-        <div class="vcard-title">Respeto por el deporte</div>
+        <div class="vcard-title" data-i18n="info.val3_title">Respeto por el deporte</div>
         <p class="vcard-desc">Si te apasionan los deportes de contacto, aquí tienes tu esquina. Somos el punto de encuentro de quienes lo dan todo cada sesión.</p>
       </div>
     </div>
@@ -390,8 +392,8 @@ footer{background:var(--dark);padding:3rem 2rem;}
   <div class="wrap">
     <div class="donde-inner">
       <div class="donde-left ani">
-        <div class="sec-eyebrow">Dónde estamos</div>
-        <h2 class="sec-h2">Ven a<br><i>visitarnos</i></h2>
+        <div class="sec-eyebrow" data-i18n="info.donde_eyebrow">Dónde estamos</div>
+        <h2 class="sec-h2"><span data-i18n="info.donde_h2a">Ven a</span><br><i data-i18n="info.donde_h2b">visitarnos</i></h2>
         <p class="donde-desc">
           Estamos en València. Puedes visitarnos, recoger pedidos o probar material seleccionado. Nuestro equipo estará encantado de asesorarte.
         </p>
@@ -407,7 +409,7 @@ footer{background:var(--dark);padding:3rem 2rem;}
         </div>
 
         <a href="https://maps.app.goo.gl/WGXYCKboVYLA32PG6" target="_blank" rel="noopener" class="btn-maps">
-          📌 Abrir en Google Maps
+          📌 <span data-i18n="info.maps_btn">Abrir en Google Maps</span>
         </a>
       </div>
 
@@ -433,8 +435,8 @@ footer{background:var(--dark);padding:3rem 2rem;}
 
       <!-- IZQUIERDA: texto -->
       <div class="jobs-left ani">
-        <div class="sec-eyebrow">Únete al equipo</div>
-        <h2 class="jobs-h">Trabaja con<br><i>nosotros</i></h2>
+        <div class="sec-eyebrow" data-i18n="info.jobs_eyebrow">Únete al equipo</div>
+        <h2 class="jobs-h"><span data-i18n="info.jobs_title">Trabaja con</span><br><i data-i18n="info.jobs_title_i">nosotros</i></h2>
         <p class="jobs-desc">
           En FightZone buscamos personas apasionadas por el deporte de combate.
           Si quieres formar parte de un equipo joven y en crecimiento, envíanos tu candidatura.
@@ -544,7 +546,7 @@ footer{background:var(--dark);padding:3rem 2rem;}
       <a href="#" class="soc">X</a>
       <a href="#" class="soc">YT</a>
     </div>
-    <p class="footer-copy">© 2026 FightZone — Todos los derechos reservados</p>
+    <p class="footer-copy" data-i18n="footer.copy">© 2026 FightZone — Todos los derechos reservados</p>
   </div>
 </footer>
 
@@ -627,72 +629,7 @@ function submitJobs(){
     m.addEventListener('click',function(e){e.stopPropagation();});
   }
 })();
-// ── Traductor ──
-var _D={
-  es:{'nav.inicio':'Inicio','nav.productos':'Productos','nav.quienes':'Quienes Somos',
-      'cats.eyebrow':'Explorar','cats.title':'Todas las','cats.title_i':'categor\u00edas','cats.vertodo':'Ver todo \u2192',
-      'cats.guantes':'Guantes','cats.ropa':'Ropa','cats.proteccion':'Protecci\u00f3n','cats.sacos':'Sacos',
-      'index.pill':'Colecci\u00f3n \u00c9lite 2026','index.h1a':'El arte','index.h1b':'luchar','index.h1c':'sin l\u00edmites',
-      'index.desc':'Equipamiento forjado para campeones. Dise\u00f1ado con precisi\u00f3n para rendir cuando m\u00e1s importa.',
-      'index.explorar':'Explorar tienda','index.envio':'Env\u00edo r\u00e1pido','index.envio_sub':'24-48h Espa\u00f1a',
-      'index.devuelves':'Devuelves gratis','index.devuelves_sub':'30 d\u00edas',
-      'feat.eyebrow':'Producto del Mes','feat.add':'Añadir al carrito','feat.peso':'Peso','feat.cuero':'Cuero','feat.garantia':'Garant\u00eda',
-      'testi.eyebrow':'Rese\u00f1as','testi.title':'Lo que','testi.title_i':'dicen','testi.vertodas':'Ver todas \u2192',
-      'testi.role1':'Boxeador Profesional','testi.role2':'Entrenadora Muay Thai','testi.role3':'Campe\u00f3n Regional 2024',
-      'nl.title':'Entrena con','nl.title_i':'ventaja','nl.btn':'Unirme \u2192',
-      'nl.sub':'Ofertas exclusivas, lanzamientos anticipados y consejos de los mejores entrenadores directo a tu bandeja.',
-      'ticker.1':'Guantes de calidad','ticker.2':'Env\u00edo Gratis +50\u20ac','ticker.3':'Ofertas - hasta 30%',
-      'ticker.4':'Nuevos Sacos exclusivos','ticker.5':'Devoluci\u00f3n 30 D\u00edas',
-      'footer.tagline':'Equipamiento premium para atletas que no se conforman con menos.',
-      'footer.copy':'\u00a9 2026 FightZone \u2014 Todos los derechos reservados',
-      'productos.title':'Todos los','productos.title_i':'productos',
-      'carrito.title':'Tu','carrito.title_i':'carrito',
-      'login.title':'Iniciar','login.title_i':'sesi\u00f3n','login.sub':'Accede con tu cuenta de FightZone',
-      'registro.title':'Crear','registro.title_i':'cuenta','registro.sub':'Es gratis, siempre lo ser\u00e1',
-      'info.jobs_eyebrow':'U\u00fanete al equipo','info.jobs_title':'Trabaja con','info.jobs_title_i':'nosotros',
-      'info.maps_btn':'Abrir en Google Maps'},
-  en:{'nav.inicio':'Home','nav.productos':'Products','nav.quienes':'About Us',
-      'cats.eyebrow':'Explore','cats.title':'All','cats.title_i':'categories','cats.vertodo':'View all \u2192',
-      'cats.guantes':'Gloves','cats.ropa':'Clothing','cats.proteccion':'Protection','cats.sacos':'Bags',
-      'index.pill':'Elite Collection 2026','index.h1a':'The art','index.h1b':'of fighting','index.h1c':'without limits',
-      'index.desc':'Equipment forged for champions. Designed with precision to perform when it matters most.',
-      'index.explorar':'Explore store','index.envio':'Fast shipping','index.envio_sub':'24-48h Spain',
-      'index.devuelves':'Free returns','index.devuelves_sub':'30 days',
-      'feat.eyebrow':'Product of the Month','feat.add':'Add to cart','feat.peso':'Weight','feat.cuero':'Leather','feat.garantia':'Warranty',
-      'testi.eyebrow':'Reviews','testi.title':'What they','testi.title_i':'say','testi.vertodas':'View all \u2192',
-      'testi.role1':'Professional Boxer','testi.role2':'Muay Thai Coach','testi.role3':'Regional Champion 2024',
-      'nl.title':'Train with','nl.title_i':'an edge','nl.btn':'Join \u2192',
-      'nl.sub':'Exclusive deals, early launches and tips from top coaches straight to your inbox.',
-      'ticker.1':'Quality gloves','ticker.2':'Free Shipping +50\u20ac','ticker.3':'Deals - up to 30% off',
-      'ticker.4':'New exclusive bags','ticker.5':'30-Day Returns',
-      'footer.tagline':'Premium equipment for athletes who settle for nothing less.',
-      'footer.copy':'\u00a9 2026 FightZone \u2014 All rights reserved',
-      'productos.title':'All','productos.title_i':'products',
-      'carrito.title':'Your','carrito.title_i':'cart',
-      'login.title':'Log','login.title_i':'in','login.sub':'Sign in to your FightZone account',
-      'registro.title':'Create','registro.title_i':'account','registro.sub':"It's free, always will be",
-      'info.jobs_eyebrow':'Join the team','info.jobs_title':'Work with','info.jobs_title_i':'us',
-      'info.maps_btn':'Open in Google Maps'}
-};
-function toggleLang(){
-  var c=localStorage.getItem('fz_lang')||'es';
-  localStorage.setItem('fz_lang',c==='es'?'en':'es');
-  _applyLang();
-}
-function _applyLang(){
-  var l=localStorage.getItem('fz_lang')||'es',d=_D[l]||_D.es;
-  document.querySelectorAll('[data-i18n]').forEach(function(el){
-    var v=d[el.getAttribute('data-i18n')];
-    if(v===undefined)return;
-    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA')el.placeholder=v;
-    else el.textContent=v;
-  });
-  document.documentElement.lang=l;
-  var f=document.getElementById('langFlag'),lb=document.getElementById('langLabel');
-  if(l==='es'){if(f)f.textContent='\ud83c\uddec\ud83c\udde7';if(lb)lb.textContent='EN';}
-  else{if(f)f.textContent='\ud83c\uddea\ud83c\uddf8';if(lb)lb.textContent='ES';}
-}
-_applyLang();
 </script>
+<script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </body>
 </html>

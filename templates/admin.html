@@ -170,6 +170,37 @@ button, .sidebar-link, .act-btn, .btn-save, .btn-cancel, .modal-confirm, .modal-
 .pedido-items{font-size:.75rem;color:var(--mid);margin-top:.25rem;line-height:1.6;}
 .estado-select{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:600;border:1.5px solid var(--sand2);border-radius:8px;padding:.3rem .5rem;background:var(--cream);color:var(--text);cursor:pointer;outline:none;}
 .estado-select:focus{border-color:var(--r1);}
+.act-view{background:rgba(52,152,219,.08);color:#2980B9;}
+.act-view:hover{background:rgba(52,152,219,.18);}
+/* ── Order detail modal ── */
+.order-modal{max-width:560px;text-align:left;padding:0;}
+.om-header{padding:1.5rem 1.8rem 1rem;border-bottom:1px solid var(--sand2);display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.om-id{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--text);}
+.om-date{font-size:.75rem;color:var(--mid);margin-top:.2rem;}
+.om-close{background:var(--cream);border:1.5px solid var(--sand2);border-radius:8px;padding:.4rem .8rem;font-family:'Syne',sans-serif;font-size:.72rem;font-weight:600;color:var(--mid);cursor:pointer;transition:all .2s;white-space:nowrap;}
+.om-close:hover{border-color:var(--text);color:var(--text);}
+.om-body{padding:1.5rem 1.8rem;display:flex;flex-direction:column;gap:1.2rem;max-height:70vh;overflow-y:auto;}
+.om-section{}
+.om-section-title{font-family:'Syne',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--mid);margin-bottom:.55rem;}
+.om-client{font-size:.88rem;font-weight:600;color:var(--text);}
+.om-email{font-size:.75rem;color:var(--mid);}
+.om-item-row{display:flex;justify-content:space-between;align-items:center;padding:.45rem 0;border-bottom:1px solid var(--sand);font-size:.84rem;}
+.om-item-row:last-child{border-bottom:none;}
+.om-item-name{color:var(--text);font-weight:500;}
+.om-item-meta{font-size:.72rem;color:var(--mid);}
+.om-item-price{font-family:'Instrument Serif',serif;font-size:1rem;color:var(--text);}
+.om-total-row{display:flex;justify-content:space-between;align-items:baseline;padding:.6rem 0 0;border-top:2px solid var(--sand2);margin-top:.3rem;}
+.om-total-lbl{font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text);}
+.om-total-val{font-family:'Instrument Serif',serif;font-size:1.6rem;color:var(--text);}
+.om-addr-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .8rem;font-size:.84rem;}
+.om-addr-item{display:flex;flex-direction:column;gap:.12rem;}
+.om-addr-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);}
+.om-addr-val{color:var(--text);font-weight:500;}
+.om-no-addr{font-size:.83rem;color:var(--mid);font-style:italic;}
+.om-footer{padding:1rem 1.8rem;border-top:1px solid var(--sand2);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;}
+.om-footer-lbl{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);}
+.om-estado-select{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:600;border:1.5px solid var(--sand2);border-radius:10px;padding:.45rem .8rem;background:var(--cream);color:var(--text);cursor:pointer;outline:none;transition:border-color .2s;}
+.om-estado-select:focus{border-color:var(--r1);}
 </style>
 </head>
 <body>
@@ -187,6 +218,47 @@ button, .sidebar-link, .act-btn, .btn-save, .btn-cancel, .modal-confirm, .modal-
     <div class="modal-btns">
       <button class="modal-cancel" onclick="closeModal()">Cancelar</button>
       <button class="modal-confirm" id="modalConfirmBtn">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="orderModal">
+  <div class="modal order-modal">
+    <div class="om-header">
+      <div>
+        <div class="om-id">Pedido <span id="omId">#—</span></div>
+        <div class="om-date" id="omDate">—</div>
+      </div>
+      <button class="om-close" onclick="closeOrderModal()">✕ Cerrar</button>
+    </div>
+    <div class="om-body">
+      <div class="om-section">
+        <div class="om-section-title">Cliente</div>
+        <div class="om-client" id="omClient">—</div>
+        <div class="om-email" id="omEmail">—</div>
+      </div>
+      <div class="om-section">
+        <div class="om-section-title">Productos</div>
+        <div id="omItems">—</div>
+        <div class="om-total-row">
+          <span class="om-total-lbl">Total</span>
+          <span class="om-total-val" id="omTotal">—</span>
+        </div>
+      </div>
+      <div class="om-section">
+        <div class="om-section-title">Dirección de envío</div>
+        <div id="omAddress">—</div>
+      </div>
+    </div>
+    <div class="om-footer">
+      <span class="om-footer-lbl">Estado</span>
+      <select class="om-estado-select" id="omEstadoSelect" onchange="cambiarEstadoModal(this.value)">
+        <option value="pendiente">Pendiente</option>
+        <option value="procesando">Procesando</option>
+        <option value="enviado">Enviado</option>
+        <option value="entregado">Entregado</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
     </div>
   </div>
 </div>
@@ -221,7 +293,7 @@ button, .sidebar-link, .act-btn, .btn-save, .btn-cancel, .modal-confirm, .modal-
         <div class="sidebar-avatar">👤</div>
         <div>
           <div class="sidebar-username">Administrador</div>
-          <div class="sidebar-role"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1677727b7f7856707f717e626c7978733875797b">[email&#160;protected]</a></div>
+          <div class="sidebar-role">admin@fightzone.com</div>
         </div>
       </div>
     </div>
@@ -370,9 +442,10 @@ button, .sidebar-link, .act-btn, .btn-save, .btn-cancel, .modal-confirm, .modal-
                 <th>Total</th>
                 <th>Fecha</th>
                 <th>Estado</th>
+                <th>Detalle</th>
               </tr>
             </thead>
-            <tbody id="pedidosTable"><tr><td colspan="6" class="table-empty">Cargando...</td></tr></tbody>
+            <tbody id="pedidosTable"><tr><td colspan="7" class="table-empty">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -381,7 +454,7 @@ button, .sidebar-link, .act-btn, .btn-save, .btn-cancel, .modal-confirm, .modal-
   </main>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const API = '/api';
 const EMOJIS = { Guantes:'🥊', Sacos:'🎯', Proteccion:'🪖', Ropa:'👕', Vendas:'🩹' };
 
@@ -612,17 +685,20 @@ function fmt(n){ return parseFloat(n).toFixed(2).replace('.',','); }
 
 
 // ── Pedidos ──────────────────────────────────────────
+let allPedidos = [];
+let currentOrderId = null;
+
 async function loadPedidos(){
   try{
     const r = await fetch(`${API}/pedidos`, {credentials:'include'});
-    if(!r.ok){ document.getElementById('pedidosTable').innerHTML='<tr><td colspan="6" class="table-empty">Error al cargar pedidos.</td></tr>'; return; }
-    const pedidos = await r.json();
-    document.getElementById('pedidosCount').textContent = pedidos.length + ' pedido' + (pedidos.length!==1?'s':'');
-    if(!pedidos.length){
-      document.getElementById('pedidosTable').innerHTML='<tr><td colspan="6" class="table-empty">No hay pedidos todavía.</td></tr>';
+    if(!r.ok){ document.getElementById('pedidosTable').innerHTML='<tr><td colspan="7" class="table-empty">Error al cargar pedidos.</td></tr>'; return; }
+    allPedidos = await r.json();
+    document.getElementById('pedidosCount').textContent = allPedidos.length + ' pedido' + (allPedidos.length!==1?'s':'');
+    if(!allPedidos.length){
+      document.getElementById('pedidosTable').innerHTML='<tr><td colspan="7" class="table-empty">No hay pedidos todavía.</td></tr>';
       return;
     }
-    document.getElementById('pedidosTable').innerHTML = pedidos.map(p => {
+    document.getElementById('pedidosTable').innerHTML = allPedidos.map(p => {
       const fecha = new Date(p.fecha).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
       const itemsStr = p.items.map(i=>`${esc(i.nombre)} x${i.cantidad}`).join(', ');
       return `<tr>
@@ -631,7 +707,7 @@ async function loadPedidos(){
           <div style="font-weight:600;">${esc(p.usuario_nombre)}</div>
           <div style="font-size:.72rem;color:var(--mid);">${esc(p.usuario_email)}</div>
         </td>
-        <td><div class="pedido-items">${esc(itemsStr)}</div></td>
+        <td><div class="pedido-items">${esc(itemsStr.length>60?itemsStr.slice(0,60)+'…':itemsStr)}</div></td>
         <td><span style="font-family:'Instrument Serif',serif;font-size:1.05rem;">${fmt(p.total)}€</span></td>
         <td style="font-size:.78rem;color:var(--mid);">${fecha}</td>
         <td>
@@ -641,9 +717,64 @@ async function loadPedidos(){
             ).join('')}
           </select>
         </td>
+        <td><button class="act-btn act-view" title="Ver detalle" onclick='openOrderModal(${p.id})'>🔍</button></td>
       </tr>`;
     }).join('');
   } catch(e){ console.error('Error pedidos:', e); }
+}
+
+function openOrderModal(id){
+  const p = allPedidos.find(x=>x.id===id);
+  if(!p) return;
+  currentOrderId = id;
+  const fecha = new Date(p.fecha).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('omId').textContent = '#'+p.id;
+  document.getElementById('omDate').textContent = fecha;
+  document.getElementById('omClient').textContent = p.usuario_nombre;
+  document.getElementById('omEmail').textContent = p.usuario_email;
+  document.getElementById('omTotal').textContent = fmt(p.total)+'€';
+
+  const itemsHTML = p.items.length ? p.items.map(i=>`
+    <div class="om-item-row">
+      <div>
+        <div class="om-item-name">${esc(i.nombre)}</div>
+        <div class="om-item-meta">Cantidad: ${i.cantidad} · Unitario: ${fmt(i.precio)}€</div>
+      </div>
+      <div class="om-item-price">${fmt(i.precio*i.cantidad)}€</div>
+    </div>`).join('') : '<div style="font-size:.83rem;color:var(--mid);">Sin productos</div>';
+  document.getElementById('omItems').innerHTML = itemsHTML;
+
+  let addrHTML = '';
+  if(p.direccion_nombre){
+    addrHTML = `<div class="om-addr-grid">
+      <div class="om-addr-item"><span class="om-addr-label">Nombre</span><span class="om-addr-val">${esc(p.direccion_nombre)}</span></div>
+      <div class="om-addr-item"><span class="om-addr-label">Teléfono</span><span class="om-addr-val">${esc(p.direccion_telefono||'—')}</span></div>
+      <div class="om-addr-item" style="grid-column:1/-1"><span class="om-addr-label">Calle</span><span class="om-addr-val">${esc(p.direccion_calle||'—')}</span></div>
+      <div class="om-addr-item"><span class="om-addr-label">Ciudad</span><span class="om-addr-val">${esc(p.direccion_ciudad||'—')}</span></div>
+      <div class="om-addr-item"><span class="om-addr-label">C.P.</span><span class="om-addr-val">${esc(p.direccion_cp||'—')}</span></div>
+      <div class="om-addr-item"><span class="om-addr-label">País</span><span class="om-addr-val">${esc(p.direccion_pais||'—')}</span></div>
+    </div>`;
+  } else {
+    addrHTML = '<div class="om-no-addr">No hay dirección registrada para este pedido</div>';
+  }
+  document.getElementById('omAddress').innerHTML = addrHTML;
+
+  const sel = document.getElementById('omEstadoSelect');
+  sel.value = p.estado || 'pendiente';
+
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function closeOrderModal(){
+  document.getElementById('orderModal').classList.remove('open');
+  currentOrderId = null;
+}
+
+async function cambiarEstadoModal(estado){
+  if(!currentOrderId) return;
+  await actualizarEstado(currentOrderId, estado);
+  const p = allPedidos.find(x=>x.id===currentOrderId);
+  if(p) p.estado = estado;
 }
 
 async function actualizarEstado(id, estado){
@@ -653,7 +784,7 @@ async function actualizarEstado(id, estado){
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({estado})
     });
-    if(r.ok) showToast('Estado actualizado');
+    if(r.ok){ showToast('Estado actualizado'); loadPedidos(); }
     else showToast('Error al actualizar', true);
   } catch(e){ showToast('Error al actualizar', true); }
 }

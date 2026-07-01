@@ -102,6 +102,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
 
 @media(max-width:860px){
   .nav-links{display:none;}
@@ -119,7 +120,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
 .lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
 .lang-btn:hover .lang-label{color:var(--r1);}
 </style>
-<script src="/static/js/i18n.js"></script>
 </head>
 <body>
 <div class="cur" id="cur"></div>
@@ -127,7 +127,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
 
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
-  <a href="/registro" class="nav-cta">Crear cuenta</a>
+  <div style="display:flex;align-items:center;gap:.8rem;">
+    <button class="lang-btn" id="langBtn"><span class="lang-flag" id="langFlag">🇬🇧</span><span class="lang-label" id="langLabel">EN</span></button>
+    <a href="/registro" class="nav-cta">Crear cuenta</a>
+  </div>
 </nav>
 
 <div class="page">
@@ -145,7 +148,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5re
   </div>
 
   <div class="panel-right">
-    <div style="display:flex;justify-content:flex-end;max-width:420px;margin:0 auto 1rem;"><button class="lang-btn" id="langToggleBtn" title="Switch language"><span class="lang-flag">🇬🇧</span><span class="lang-label">EN</span></button></div>
     <div class="form-card">
       <div id="formState">
         {% if error %}
@@ -217,18 +219,34 @@ eyeBtn.addEventListener('click',()=>{ const s=pwdInp.type==='password'; pwdInp.t
 
 ['email','pwd'].forEach(id=>document.getElementById(id).addEventListener('input',()=>document.getElementById(id).classList.remove('err')));
 
-// Validación antes de enviar a Flask
+// Validación en tiempo real (blur)
+document.getElementById('email').addEventListener('blur',function(){
+  if(this.value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim()))
+    this.classList.add('err');
+});
+document.getElementById('pwd').addEventListener('blur',function(){
+  if(this.value==='') this.classList.add('err');
+});
+
+// Validación antes de enviar
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   const em = document.getElementById('email');
   const pw = document.getElementById('pwd');
   let ok = true;
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim())){ em.classList.add('err'); ok=false; }
   if(!pw.value){ pw.classList.add('err'); ok=false; }
-  if(!ok){ e.preventDefault(); return; }
-  // Mostrar spinner mientras carga
-  const btn = document.getElementById('loginBtn');
-  btn.classList.add('loading');
+  if(!ok){
+    e.preventDefault();
+    // Shake animation en el form-card
+    const card=document.querySelector('.form-card');
+    card.style.animation='none';
+    card.offsetHeight; // reflow
+    card.style.animation='shake .4s ease';
+    return;
+  }
+  document.getElementById('loginBtn').classList.add('loading');
 });
 </script>
+<script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </body>
 </html>

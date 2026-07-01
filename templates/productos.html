@@ -203,9 +203,9 @@ main{padding-top:100px;padding-bottom:5rem;}
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/">Inicio</a></li>
-    <li><a href="/productos" class="active">Productos</a></li>
-    <li><a href="/quienes-somos">Quienes Somos</a></li>
+    <li><a href="/" data-i18n="nav.inicio">Inicio</a></li>
+    <li><a href="/productos" class="active" data-i18n="nav.productos">Productos</a></li>
+    <li><a href="/quienes-somos" data-i18n="nav.quienes">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
     {% if usuario %}
@@ -220,30 +220,31 @@ main{padding-top:100px;padding-bottom:5rem;}
         <a href="/admin">⚙️ Panel admin</a>
         <div class="dd-sep"></div>
         {% endif %}
+        <a href="/mis-pedidos">📦 Mis pedidos</a>
+        <div class="dd-sep"></div>
         <a href="/logout" class="dd-logout">→ Cerrar sesión</a>
       </div>
     </div>
     {% else %}
     <a href="/login">Mi cuenta</a>
     {% endif %}
-    <!-- FIX: id="langToggleBtn" (sin onclick, lo gestiona i18n.js) -->
-    <button class="lang-btn" id="langToggleBtn">
-      <span class="lang-flag">🇬🇧</span>
-      <span class="lang-label">EN</span>
+    <button class="lang-btn" id="langBtn">
+      <span class="lang-flag" id="langFlag">🇬🇧</span>
+      <span class="lang-label" id="langLabel">EN</span>
     </button>
     <a href="/carrito" class="nav-cta">&#x1F6D2; Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mob-menu" id="mobMenu">
-  <a href="/">Inicio</a>
-  <a href="/quienes-somos">Quienes Somos</a>
+  <a href="/" data-i18n="nav.inicio">Inicio</a>
+  <a href="/quienes-somos" data-i18n="nav.quienes">Quienes Somos</a>
 </div>
 
 <main>
   <div class="wrap">
     <div class="page-eyebrow">Catálogo</div>
-    <h1 class="page-h1">Todos los <i>productos</i></h1>
+    <h1 class="page-h1"><span data-i18n="productos.title">Todos los</span> <i data-i18n="productos.title_i">productos</i></h1>
     <p class="page-count" id="pageCount">Cargando productos…</p>
 
     <div class="search-row">
@@ -281,7 +282,7 @@ main{padding-top:100px;padding-bottom:5rem;}
 <footer style="background:var(--dark);padding:2.5rem 2rem;">
   <div style="max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
     <a href="/" class="logo" style="color:white;"><span class="logo-dot"></span> FightZone</a>
-    <p style="font-size:.75rem;color:rgba(255,255,255,.25);">© 2026 FightZone — Todos los derechos reservados</p>
+    <p style="font-size:.75rem;color:rgba(255,255,255,.25);" data-i18n="footer.copy">© 2026 FightZone — Todos los derechos reservados</p>
   </div>
 </footer>
 
@@ -528,7 +529,6 @@ loadProducts();
 })();
 </script>
 
-<!-- FIX: i18n.js gestiona el botón langToggleBtn automáticamente -->
-<script src="/static/js/i18n.js"></script>
+<script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </body>
 </html>

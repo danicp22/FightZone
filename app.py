@@ -2,19 +2,23 @@ from flask import Flask, render_template, request, redirect, session, url_for, j
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "fightzone_clave_secreta_2026"
+app.secret_key = os.getenv("SECRET_KEY", "fightzone_clave_secreta_2026")
 
 # ══════════════════════════════════════════════════════
 #  BASE DE DATOS
 # ══════════════════════════════════════════════════════
 
 DB_CONFIG = {
-    "host":     "localhost",
-    "database": "FightZone",
-    "user":     "daniel",
-    "password": "Dani12345&"
+    "host":     os.getenv("DB_HOST", "localhost"),
+    "database": os.getenv("DB_NAME", "FightZone"),
+    "user":     os.getenv("DB_USER", "daniel"),
+    "password": os.getenv("DB_PASSWORD", "")
 }
 
 
@@ -78,6 +82,35 @@ def get_or_create_carrito(usuario_id):
         carrito_id = cur.lastrowid
     con.close()
     return carrito_id
+
+
+# ══════════════════════════════════════════════════════
+#  MIGRACIÓN: añadir columnas de dirección a pedidos
+# ══════════════════════════════════════════════════════
+
+def migrate_db():
+    try:
+        con = conectar()
+        cur = con.cursor()
+        cur.execute("SHOW COLUMNS FROM pedidos")
+        existing = {row[0] for row in cur.fetchall()}
+        cols = {
+            "direccion_nombre":   "VARCHAR(200)",
+            "direccion_telefono": "VARCHAR(20)",
+            "direccion_calle":    "VARCHAR(300)",
+            "direccion_ciudad":   "VARCHAR(100)",
+            "direccion_cp":       "VARCHAR(10)",
+            "direccion_pais":     "VARCHAR(100) DEFAULT 'España'",
+        }
+        for col, typedef in cols.items():
+            if col not in existing:
+                cur.execute(f"ALTER TABLE pedidos ADD COLUMN {col} {typedef}")
+        con.commit()
+        con.close()
+    except Exception as e:
+        print(f"[migrate_db] {e}")
+
+migrate_db()
 
 
 # ══════════════════════════════════════════════════════
@@ -710,7 +743,10 @@ def api_listar_pedidos():
         cur = con.cursor(dictionary=True)
         cur.execute("""
             SELECT p.id, p.total, p.estado, p.fecha,
-                   u.nombre AS usuario_nombre, u.email AS usuario_email
+                   u.nombre AS usuario_nombre, u.email AS usuario_email,
+                   p.direccion_nombre, p.direccion_telefono,
+                   p.direccion_calle, p.direccion_ciudad,
+                   p.direccion_cp, p.direccion_pais
             FROM pedidos p
             JOIN usuarios u ON p.usuario_id = u.id
             ORDER BY p.fecha DESC
@@ -750,6 +786,169 @@ def api_actualizar_estado_pedido(id):
     con.commit()
     con.close()
     return jsonify({"ok": True})
+
+# ══════════════════════════════════════════════════════
+#  CHECKOUT
+# ══════════════════════════════════════════════════════
+
+@app.route("/checkout")
+@login_requerido
+def checkout_page():
+    carrito_id = get_or_create_carrito(session["usuario_id"])
+    con = conectar()
+    cur = con.cursor(dictionary=True)
+    cur.execute("""
+        SELECT ci.id AS item_id, ci.cantidad,
+               p.id AS producto_id, p.nombre, p.precio, p.imagen,
+               c.nombre AS categoria_nombre
+        FROM carrito_items ci
+        JOIN productos p ON ci.producto_id = p.id
+        LEFT JOIN categorias c ON p.categoria_id = c.id
+        WHERE ci.carrito_id = %s
+    """, (carrito_id,))
+    items = cur.fetchall()
+    con.close()
+    if not items:
+        return redirect(url_for("carrito"))
+    for i in items:
+        i["precio"] = float(i["precio"])
+    subtotal = sum(i["precio"] * i["cantidad"] for i in items)
+    envio = 0.0 if subtotal >= 50 else 4.95
+    total = subtotal + envio
+    return render_template("checkout.html",
+                           items=items, subtotal=subtotal,
+                           envio=envio, total=total,
+                           cart_count=get_cart_count(),
+                           usuario=session.get("usuario_nombre"))
+
+
+@app.route("/confirmar-pedido", methods=["POST"])
+@login_requerido
+def confirmar_pedido():
+    nombre   = request.form.get("nombre",   "").strip()
+    telefono = request.form.get("telefono", "").strip()
+    calle    = request.form.get("calle",    "").strip()
+    ciudad   = request.form.get("ciudad",   "").strip()
+    cp       = request.form.get("cp",       "").strip()
+    pais     = request.form.get("pais",     "España").strip()
+
+    if not all([nombre, telefono, calle, ciudad, cp]):
+        return redirect(url_for("checkout_page"))
+
+    usuario_id = session["usuario_id"]
+    carrito_id = get_or_create_carrito(usuario_id)
+    con = conectar()
+    cur = con.cursor(dictionary=True)
+    cur.execute("""
+        SELECT ci.cantidad, p.id AS producto_id, p.nombre, p.precio
+        FROM carrito_items ci
+        JOIN productos p ON ci.producto_id = p.id
+        WHERE ci.carrito_id = %s
+    """, (carrito_id,))
+    items = cur.fetchall()
+    if not items:
+        con.close()
+        return redirect(url_for("carrito"))
+
+    subtotal = sum(float(i["precio"]) * i["cantidad"] for i in items)
+    envio = 0.0 if subtotal >= 50 else 4.95
+    total = subtotal + envio
+
+    pedido_id = None
+    try:
+        cur2 = con.cursor()
+
+        # Asegurar que las columnas de dirección existen (por si migrate_db falló)
+        cur2.execute("SHOW COLUMNS FROM pedidos")
+        cols_existentes = {row[0] for row in cur2.fetchall()}
+        cols_dir = {
+            "direccion_nombre":   "VARCHAR(200)",
+            "direccion_telefono": "VARCHAR(20)",
+            "direccion_calle":    "VARCHAR(300)",
+            "direccion_ciudad":   "VARCHAR(100)",
+            "direccion_cp":       "VARCHAR(10)",
+            "direccion_pais":     "VARCHAR(100) DEFAULT 'España'",
+        }
+        for col, typedef in cols_dir.items():
+            if col not in cols_existentes:
+                cur2.execute(f"ALTER TABLE pedidos ADD COLUMN {col} {typedef}")
+
+        cur2.execute("""
+            INSERT INTO pedidos (usuario_id, total,
+                direccion_nombre, direccion_telefono,
+                direccion_calle, direccion_ciudad, direccion_cp, direccion_pais)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+        """, (usuario_id, total, nombre, telefono, calle, ciudad, cp, pais))
+        pedido_id = cur2.lastrowid
+        for item in items:
+            cur2.execute("""
+                INSERT INTO pedido_items (pedido_id, producto_id, nombre, precio, cantidad)
+                VALUES (%s,%s,%s,%s,%s)
+            """, (pedido_id, item["producto_id"], item["nombre"], float(item["precio"]), item["cantidad"]))
+            cur2.execute("""
+                UPDATE productos SET stock = GREATEST(0, stock - %s) WHERE id = %s
+            """, (item["cantidad"], item["producto_id"]))
+        cur2.execute("DELETE FROM carrito_items WHERE carrito_id = %s", (carrito_id,))
+        con.commit()
+    except Exception as e:
+        con.rollback()
+        print(f"[confirmar_pedido] {e}")
+        pedido_id = None
+    finally:
+        con.close()
+
+    if not pedido_id:
+        return redirect(url_for("checkout_page"))
+    return redirect(url_for("pedido_confirmado", id=pedido_id))
+
+
+@app.route("/pedido/confirmado/<int:id>")
+@login_requerido
+def pedido_confirmado(id):
+    con = conectar()
+    cur = con.cursor(dictionary=True)
+    cur.execute("SELECT * FROM pedidos WHERE id = %s AND usuario_id = %s",
+                (id, session["usuario_id"]))
+    pedido = cur.fetchone()
+    if not pedido:
+        con.close()
+        return redirect(url_for("index"))
+    cur.execute("SELECT * FROM pedido_items WHERE pedido_id = %s", (id,))
+    items = cur.fetchall()
+    con.close()
+    pedido["total"] = float(pedido["total"])
+    for i in items:
+        i["precio"] = float(i["precio"])
+    return render_template("pedido_confirmado.html",
+                           pedido=pedido, items=items,
+                           cart_count=get_cart_count(),
+                           usuario=session.get("usuario_nombre"))
+
+
+# ══════════════════════════════════════════════════════
+#  MIS PEDIDOS
+# ══════════════════════════════════════════════════════
+
+@app.route("/mis-pedidos")
+@login_requerido
+def mis_pedidos():
+    con = conectar()
+    cur = con.cursor(dictionary=True)
+    cur.execute("SELECT * FROM pedidos WHERE usuario_id = %s ORDER BY fecha DESC",
+                (session["usuario_id"],))
+    pedidos = cur.fetchall()
+    for p in pedidos:
+        p["total"] = float(p["total"])
+        cur.execute("SELECT * FROM pedido_items WHERE pedido_id = %s", (p["id"],))
+        p["lineas"] = cur.fetchall()
+        for i in p["lineas"]:
+            i["precio"] = float(i["precio"])
+    con.close()
+    return render_template("mis-pedidos.html",
+                           pedidos=pedidos,
+                           cart_count=get_cart_count(),
+                           usuario=session.get("usuario_nombre"))
+
 
 # ══════════════════════════════════════════════════════
 #  ARRANQUE

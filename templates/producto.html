@@ -174,8 +174,9 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 <nav>
   <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
   <ul class="nav-links">
-    <li><a href="/productos">Productos</a></li>
-    <li><a href="/quienes-somos">Quienes Somos</a></li>
+    <li><a href="/" data-i18n="nav.inicio">Inicio</a></li>
+    <li><a href="/productos" data-i18n="nav.productos">Productos</a></li>
+    <li><a href="/quienes-somos" data-i18n="nav.quienes">Quienes Somos</a></li>
   </ul>
   <div class="nav-right">
     {% if usuario %}
@@ -190,24 +191,26 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
         <a href="/admin">⚙️ Panel admin</a>
         <div class="dd-sep"></div>
         {% endif %}
+        <a href="/mis-pedidos">📦 Mis pedidos</a>
+        <div class="dd-sep"></div>
         <a href="/logout" class="dd-logout">→ Cerrar sesión</a>
       </div>
     </div>
     {% else %}
     <a href="/login">Mi cuenta</a>
     {% endif %}
-    <!-- FIX: id="langToggleBtn" gestionado por i18n.js -->
-    <button class="lang-btn" id="langToggleBtn">
-      <span class="lang-flag">🇬🇧</span>
-      <span class="lang-label">EN</span>
+    <button class="lang-btn" id="langBtn">
+      <span class="lang-flag" id="langFlag">🇬🇧</span>
+      <span class="lang-label" id="langLabel">EN</span>
     </button>
     <a href="/carrito" class="nav-cta">&#x1F6D2; Carrito <span class="cart-badge" id="cCount">{{ cart_count }}</span></a>
     <button class="hamburger" id="burger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mob-menu" id="mobMenu">
-  <a href="/productos">Productos</a>
-  <a href="/quienes-somos">Quienes Somos</a>
+  <a href="/" data-i18n="nav.inicio">Inicio</a>
+  <a href="/productos" data-i18n="nav.productos">Productos</a>
+  <a href="/quienes-somos" data-i18n="nav.quienes">Quienes Somos</a>
 </div>
 
 <main>
@@ -242,7 +245,7 @@ footer{background:var(--dark);padding:2.5rem 2rem;}
 <footer>
   <div class="footer-inner">
     <a href="/" class="logo" style="color:white;"><span class="logo-dot"></span> FightZone</a>
-    <p class="footer-copy">© 2025 FightZone — Todos los derechos reservados</p>
+    <p class="footer-copy" data-i18n="footer.copy">© 2026 FightZone — Todos los derechos reservados</p>
   </div>
 </footer>
 
@@ -420,7 +423,6 @@ function formatPrice(n){ return parseFloat(n).toFixed(2).replace('.',','); }
 loadProduct();
 </script>
 
-<!-- FIX: i18n.js gestiona langToggleBtn automáticamente -->
-<script src="/static/js/i18n.js"></script>
+<script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
 </body>
 </html>

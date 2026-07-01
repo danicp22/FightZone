@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FightZone — Pedido confirmado</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --r1:#FF4D1C;--r2:#FF8C42;--r3:#FFB347;
+  --dark:#0F0A08;--sand:#F2E8D9;--sand2:#E8D9C0;
+  --cream:#FAF6F0;--mid:#8C7B6B;--text:#1C1108;
+  --glow:rgba(255,77,28,.35);--white:#fff;
+  --ok:#27AE60;
+  --sh-s:0 4px 16px rgba(28,17,8,.07);--sh-m:0 8px 32px rgba(28,17,8,.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{min-height:100svh;background:var(--cream);color:var(--text);font-family:'Outfit',sans-serif;overflow-x:hidden;cursor:none;}
+body::after{content:'';position:fixed;inset:0;z-index:9990;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");opacity:.45;}
+.cur{position:fixed;width:10px;height:10px;background:var(--r1);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:multiply;}
+.cur-r{position:fixed;width:40px;height:40px;border:1.5px solid var(--r1);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .16s;opacity:.5;}
+.cur.xl{width:17px;height:17px;}.cur-r.xl{width:60px;height:60px;opacity:1;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;padding:0 2.5rem;display:flex;align-items:center;justify-content:space-between;background:rgba(250,246,240,.92);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,77,28,.1);}
+.logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:.4rem;}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r3));box-shadow:0 0 10px var(--glow);animation:blink 2.5s ease-in-out infinite;}
+.nav-right{display:flex;align-items:center;gap:.8rem;}
+.lang-btn{background:none;border:1.5px solid rgba(140,123,107,.3);border-radius:100px;padding:.35rem .75rem;display:inline-flex;align-items:center;gap:.35rem;cursor:pointer;font-family:"Syne",sans-serif;transition:border-color .2s,background .2s;}
+.lang-btn:hover{border-color:var(--r1);background:rgba(255,77,28,.05);}
+.lang-flag{font-size:.85rem;line-height:1;}
+.lang-label{font-size:.68rem;font-weight:700;letter-spacing:.08em;color:var(--mid);transition:color .2s;}
+.lang-btn:hover .lang-label{color:var(--r1);}
+.nav-cta{font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;text-decoration:none;padding:.5rem 1.2rem;border-radius:100px;box-shadow:0 4px 18px var(--glow);transition:all .2s;display:flex;align-items:center;gap:.4rem;}
+.nav-cta:hover{box-shadow:0 6px 26px rgba(255,77,28,.5);transform:translateY(-1px);}
+.cart-badge{background:white;color:var(--r1);font-size:.58rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.user-menu{position:relative;display:inline-flex;align-items:center;}
+.user-btn{background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif;font-size:.8rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--mid);display:flex;align-items:center;gap:.5rem;transition:color .2s;padding:0;}
+.user-btn:hover{color:var(--r1);}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--r1),var(--r2));display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:white;font-family:'Syne',sans-serif;box-shadow:0 2px 10px var(--glow);flex-shrink:0;}
+.user-dropdown{position:absolute;right:0;top:calc(100% + 14px);background:white;border-radius:16px;box-shadow:0 16px 48px rgba(28,17,8,.13);border:1px solid rgba(28,17,8,.06);min-width:182px;padding:.5rem;z-index:9999;opacity:0;pointer-events:none;transform:translateY(6px) scale(.97);transform-origin:top right;transition:opacity .18s,transform .18s;}
+.user-menu.open .user-dropdown{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
+.user-dropdown::before{content:'';position:absolute;top:-5px;right:16px;width:10px;height:10px;background:white;border-left:1px solid rgba(28,17,8,.06);border-top:1px solid rgba(28,17,8,.06);transform:rotate(45deg);}
+.dd-label{padding:.4rem .8rem .2rem;font-family:'Syne',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mid);opacity:.55;}
+.user-dropdown a{display:flex;align-items:center;gap:.5rem;padding:.5rem .8rem;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;color:var(--text);text-decoration:none;border-radius:10px;transition:background .15s,color .15s;}
+.user-dropdown a:hover{background:rgba(255,77,28,.06);color:var(--r1);}
+.dd-sep{height:1px;background:rgba(28,17,8,.06);margin:.3rem .3rem;}
+.dd-logout{color:#C0392B!important;}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 2rem;}
+main{padding-top:100px;padding-bottom:5rem;}
+
+/* SUCCESS HERO */
+.success-hero{text-align:center;padding:2rem 0 3rem;animation:fadeUp .6s ease both;}
+.success-badge{display:inline-flex;width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--ok),#2ECC71);align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:1.5rem;box-shadow:0 12px 40px rgba(39,174,96,.3);animation:popIn .5s cubic-bezier(.34,1.4,.64,1) both;}
+.success-id{font-family:'Syne',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--mid);margin-bottom:.8rem;}
+.success-id span{color:var(--r1);}
+.success-title{font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3.2rem);line-height:.95;color:var(--text);margin-bottom:.8rem;}
+.success-title i{font-style:italic;color:var(--ok);}
+.success-desc{font-size:.9rem;color:var(--mid);font-weight:300;line-height:1.7;max-width:480px;margin:0 auto 2rem;}
+.perks{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.perk{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--mid);}
+.cta-row{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;}
+.btn-primary{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--r1),var(--r2));color:white;text-decoration:none;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;padding:.9rem 1.8rem;border-radius:12px;box-shadow:0 6px 22px var(--glow);transition:all .3s;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,77,28,.5);}
+.btn-secondary{display:inline-flex;align-items:center;gap:.5rem;background:none;border:1.5px solid var(--sand2);color:var(--mid);text-decoration:none;font-family:'Syne',sans-serif;font-size:.85rem;font-weight:600;padding:.9rem 1.8rem;border-radius:12px;transition:all .2s;}
+.btn-secondary:hover{border-color:var(--text);color:var(--text);}
+
+/* CARDS */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.detail-card{background:var(--white);border-radius:20px;box-shadow:var(--sh-s);overflow:hidden;}
+.detail-card-header{padding:1rem 1.4rem;border-bottom:1px solid var(--sand2);display:flex;align-items:center;gap:.6rem;}
+.detail-card-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--r1),var(--r2));display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;}
+.detail-card-title{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;}
+.detail-card-body{padding:1.2rem 1.4rem;}
+.detail-row{display:flex;flex-direction:column;gap:.15rem;margin-bottom:.7rem;}
+.detail-row:last-child{margin-bottom:0;}
+.detail-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);}
+.detail-value{font-size:.88rem;color:var(--text);font-weight:500;}
+
+/* ORDER STATUS */
+.status-badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .8rem;border-radius:100px;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.status-pendiente{background:rgba(255,179,71,.15);color:#B7700D;}
+.status-procesando{background:rgba(52,152,219,.12);color:#2980B9;}
+.status-enviado{background:rgba(155,89,182,.12);color:#8E44AD;}
+.status-entregado{background:rgba(39,174,96,.12);color:var(--ok);}
+.status-cancelado{background:rgba(231,76,60,.1);color:#C0392B;}
+
+/* ITEMS TABLE */
+.items-card{background:var(--white);border-radius:20px;box-shadow:var(--sh-s);overflow:hidden;margin-bottom:2rem;}
+.items-card-header{padding:1rem 1.4rem;border-bottom:1px solid var(--sand2);display:flex;align-items:center;gap:.6rem;}
+.order-item{display:flex;align-items:center;gap:1rem;padding:1rem 1.4rem;border-bottom:1px solid var(--sand);font-size:.88rem;}
+.order-item:last-child{border-bottom:none;}
+.order-item-emoji{width:40px;height:40px;border-radius:10px;background:linear-gradient(145deg,#FFF0EE,#FFDBD6);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.order-item-name{flex:1;font-weight:500;color:var(--text);}
+.order-item-qty{font-size:.78rem;color:var(--mid);font-weight:300;}
+.order-item-price{font-family:'Instrument Serif',serif;font-size:1.05rem;color:var(--text);white-space:nowrap;}
+
+.totals-row{display:flex;justify-content:space-between;padding:.5rem 1.4rem;font-size:.88rem;}
+.totals-row .lbl{color:var(--mid);font-weight:300;}
+.totals-row .val{font-weight:500;}
+.totals-total{display:flex;justify-content:space-between;align-items:baseline;padding:1rem 1.4rem;border-top:1px solid var(--sand2);background:rgba(255,77,28,.03);}
+.totals-total .lbl{font-family:'Syne',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.totals-total .val{font-family:'Instrument Serif',serif;font-size:1.8rem;}
+
+footer{background:var(--dark);padding:2.5rem 2rem;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.footer-copy{font-size:.72rem;color:rgba(255,255,255,.2);}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+
+@media(max-width:700px){
+  .detail-grid{grid-template-columns:1fr;}
+  .cta-row{flex-direction:column;align-items:center;}
+  nav{padding:0 1.2rem;}.wrap{padding:0 1.2rem;}
+  main{padding-top:80px;}
+}
+</style>
+</head>
+<body>
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+
+<nav>
+  <a href="/" class="logo"><span class="logo-dot"></span> FightZone</a>
+  <div class="nav-right">
+    {% if usuario %}
+    <div class="user-menu" id="userMenu">
+      <button class="user-btn" id="userBtn">
+        <div class="user-avatar">{{ usuario[0]|upper }}</div>
+        {{ usuario }}
+      </button>
+      <div class="user-dropdown">
+        <div class="dd-label">Mi cuenta</div>
+        {% if session.get('rol') == 'admin' %}
+        <a href="/admin">⚙️ Panel admin</a>
+        <div class="dd-sep"></div>
+        {% endif %}
+        <a href="/mis-pedidos">📦 Mis pedidos</a>
+        <div class="dd-sep"></div>
+        <a href="/logout" class="dd-logout">→ Cerrar sesión</a>
+      </div>
+    </div>
+    {% else %}
+    <a href="/login">Mi cuenta</a>
+    {% endif %}
+    <button class="lang-btn" id="langBtn"><span class="lang-flag" id="langFlag">🇬🇧</span><span class="lang-label" id="langLabel">EN</span></button>
+    <a href="/carrito" class="nav-cta">🛒 Carrito <span class="cart-badge">{{ cart_count }}</span></a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="success-hero">
+      <div class="success-badge">✓</div>
+      <div class="success-id">Pedido <span>#{{ pedido.id }}</span></div>
+      <h1 class="success-title">¡Pedido <i>confirmado!</i></h1>
+      <p class="success-desc">Tu pedido ha sido procesado correctamente. En breve recibirás una confirmación y te mantendremos informado del estado del envío.</p>
+      <div class="perks">
+        <div class="perk">📦 Preparando tu pedido</div>
+        <div class="perk">🚀 Envío en 24-48h</div>
+        <div class="perk">🔄 30 días devolución</div>
+      </div>
+      <div class="cta-row">
+        <a href="/mis-pedidos" class="btn-primary">📋 Ver mis pedidos</a>
+        <a href="/productos" class="btn-secondary">← Seguir comprando</a>
+      </div>
+    </div>
+
+    <!-- ITEMS DEL PEDIDO -->
+    <div class="items-card">
+      <div class="items-card-header">
+        <div class="detail-card-icon">🛒</div>
+        <span class="detail-card-title">Productos del pedido</span>
+      </div>
+      {% for item in items %}
+      <div class="order-item">
+        <div class="order-item-emoji">📦</div>
+        <div class="order-item-name">
+          {{ item.nombre }}
+          <div class="order-item-qty">{{ item.cantidad }} unidad{{ 'es' if item.cantidad > 1 else '' }} · {{ "%.2f"|format(item.precio) }}€/ud</div>
+        </div>
+        <span class="order-item-price">{{ "%.2f"|format(item.precio * item.cantidad) }}€</span>
+      </div>
+      {% endfor %}
+      <div class="totals-row">
+        <span class="lbl">Subtotal</span>
+        <span class="val">{{ "%.2f"|format(pedido.total) }}€</span>
+      </div>
+      <div class="totals-total">
+        <span class="lbl">Total pagado</span>
+        <span class="val">{{ "%.2f"|format(pedido.total) }}€</span>
+      </div>
+    </div>
+
+    <!-- DETALLE PEDIDO + DIRECCIÓN -->
+    <div class="detail-grid">
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <div class="detail-card-icon">📋</div>
+          <span class="detail-card-title">Datos del pedido</span>
+        </div>
+        <div class="detail-card-body">
+          <div class="detail-row">
+            <span class="detail-label">Número de pedido</span>
+            <span class="detail-value">#{{ pedido.id }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Fecha</span>
+            <span class="detail-value">{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') if pedido.fecha else '—' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Estado</span>
+            <span class="status-badge status-{{ pedido.estado }}">
+              {% if pedido.estado == 'pendiente' %}⏳{% elif pedido.estado == 'procesando' %}⚙️{% elif pedido.estado == 'enviado' %}🚀{% elif pedido.estado == 'entregado' %}✅{% else %}❌{% endif %}
+              {{ pedido.estado|capitalize }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {% if pedido.get('direccion_nombre') %}
+      <div class="detail-card">
+        <div class="detail-card-header">
+          <div class="detail-card-icon">📍</div>
+          <span class="detail-card-title">Dirección de envío</span>
+        </div>
+        <div class="detail-card-body">
+          <div class="detail-row">
+            <span class="detail-label">Destinatario</span>
+            <span class="detail-value">{{ pedido.direccion_nombre }}</span>
+          </div>
+          {% if pedido.get('direccion_telefono') %}
+          <div class="detail-row">
+            <span class="detail-label">Teléfono</span>
+            <span class="detail-value">{{ pedido.direccion_telefono }}</span>
+          </div>
+          {% endif %}
+          <div class="detail-row">
+            <span class="detail-label">Dirección</span>
+            <span class="detail-value">{{ pedido.get('direccion_calle','') }}, {{ pedido.get('direccion_ciudad','') }}, {{ pedido.get('direccion_cp','') }}</span>
+          </div>
+          {% if pedido.get('direccion_pais') %}
+          <div class="detail-row">
+            <span class="detail-label">País</span>
+            <span class="detail-value">{{ pedido.direccion_pais }}</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <a href="/" class="logo" style="color:white;"><span class="logo-dot"></span> FightZone</a>
+    <p class="footer-copy" data-i18n="footer.copy">© 2026 FightZone — Todos los derechos reservados</p>
+  </div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.classList.add('xl');curR.classList.add('xl');});
+  el.addEventListener('mouseleave',()=>{cur.classList.remove('xl');curR.classList.remove('xl');});
+});
+const userBtn=document.getElementById('userBtn'),userMenu=document.getElementById('userMenu');
+if(userBtn&&userMenu){
+  userBtn.addEventListener('click',e=>{e.stopPropagation();userMenu.classList.toggle('open');});
+  document.addEventListener('click',()=>userMenu&&userMenu.classList.remove('open'));
+  userMenu.addEventListener('click',e=>e.stopPropagation());
+}
+</script>
+<script src="{{ url_for('static', filename='js/i18n.js') }}"></script>
+</body>
+</html>
